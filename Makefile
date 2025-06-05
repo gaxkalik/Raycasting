@@ -1,28 +1,31 @@
-CC = clang++
-CFLAGS = -L/opt/homebrew/lib -lglfw -framework OpenGL
+CLANG = clang++
+CFLAGS = -L/opt/homebrew/lib -lglfw -framework OpenGL -DGL_SILENCE_DEPRECATION -w
 INCLUDE = -I./include -I/opt/homebrew/include
 VPATH = src
 RM = rm -rf
 
-GENERAL = \
+GENERAL =
 
 NAME = a
-SRCS = $(addsuffix .cpp, $(GENERAL))\
-		src/glad.c main.cpp
+SRCS = $(addsuffix .cpp, $(GENERAL)) src/glad.c main.cpp
 
 OBJ_DIR = obj
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+#OBJS := $(OBJS:%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ_DIR) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CLANG) $(CFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJ_DIR):
-	mkdir -p obj
+	mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: %.cpp Makefile
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	$(CLANG) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+
+$(OBJ_DIR)/%.o: %.c Makefile
+	$(CLANG) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 clean:
 	$(RM) $(OBJ_DIR)
