@@ -36,3 +36,13 @@ const int	raycast::mapParse(const char *filename) {
 	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;
 }
+
+void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const {
+	if (x == mapWidth || x < 0 || y == mapHeight || y < 0 || map[y][x] == '1')
+		return;
+	map[y][x] = '1';
+	floodFill(x + 1, y, map);
+	floodFill(x - 1, y, map);
+	floodFill(x, y + 1, map);
+	floodFill(x, y - 1, map);
+}

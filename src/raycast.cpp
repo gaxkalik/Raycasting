@@ -24,6 +24,21 @@ const int raycast::initGame(const char *filename) {
 		std::cerr << "Failed to parse map" << std::endl;
 		return 1;
 	}
+
+
+
+	// TO MAP VALIDATOR
+	std::vector<std::string> *map = new std::vector<std::string>(this->map->begin(), this->map->end());
+	floodFill(playerX, playerY, *map);
+	for (int i = 0; i < map->size(); ++i) {
+		if (!(*map)[i].find('0'))
+			return 1;
+	}
+	delete map;
+	//
+
+
+
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return 1;
