@@ -15,14 +15,18 @@ class raycast
 
 		const int	initGame(const char *filename);
 		const int	mapParse(const char *filename);
+		const int	startGame(void);
+		void		renderMinimap(void) const;
 
 	private:
 		GLFWwindow					*window;
+		int							screenWidth;
+		int							screenHeight;
 		std::vector<std::string>	*map;
 		int							mapWidth;
 		int							mapHeight;
-		int							playerX;
-		int							playerY;
+		double						playerX;
+		double						playerY;
 };
 
 #endif

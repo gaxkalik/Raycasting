@@ -26,12 +26,13 @@ const int	raycast::mapParse(const char *filename) {
 	for (int y = 0; y < mapHeight; ++y) {
 		for (int x = 0; x < mapWidth; ++x) {
 			if ((*map)[y][x] == 'P') {
-				playerX = x;
-				playerY = y;
+				(*map)[y][x] = '0';
+				playerX = x + 0.4;
+				playerY = y + 0.4;
 			}
 		}
 	}
-	std::cout << "Player coords x: " << playerX << ", y: " << playerY << std::endl;
-	std::cout<< "Map width: " << mapWidth << ", Map height: " << mapHeight << std::endl;
+	std::cout << "Player coords x: " << playerX << " y: " << playerY << std::endl;
+	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;
 }

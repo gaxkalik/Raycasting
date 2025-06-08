@@ -12,6 +12,11 @@ int main(int argc, char **argv) {
 		std::cerr << "Failed to initialize game" << std::endl;
 		return 1;
 	}
-
+	if (game->startGame()) {
+		delete game;
+		std::cerr << "Failed to start game" << std::endl;
+		return 1;
+	}
+	delete game;
 	return 0;
 }
