@@ -17,6 +17,8 @@ class raycast
 		const int	mapParse(const char *filename);
 		const int	startGame(void);
 		void		renderMinimap(void) const;
+		const int	checkValidity(void) const;
+		void		floodFill(const int x, const int y, std::vector<std::string> &map) const;
 
 	private:
 		GLFWwindow					*window;
