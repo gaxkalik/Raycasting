@@ -9,7 +9,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.moveUp = false;
 	}
-	else if (key == 83) {
+	if (key == 83) {
 		if (action)
 			keys.moveDown = true;
 		else
@@ -21,10 +21,26 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.moveLeft = false;
 	}
-	else if (key == 68) {
+	if (key == 68) {
 		if (action)
 			keys.moveRight = true;
 		else
 			keys.moveRight = false;
 	}
+	if (key == 256)
+		if (action)
+			keys.esc = true;
+}
+
+void	raycast::playerInput(void) {
+	if (keys.moveUp && (*map)[playerY - 0.01][playerX] != '1')
+		pl->setY(-0.01);
+	if (keys.moveDown && (*map)[playerY + 0.01][playerX] != '1')
+		pl->setY(0.01);
+	if (keys.moveLeft && (*map)[playerY][playerX - 0.01] != '1')
+		pl->setX(-0.01);
+	if (keys.moveRight && (*map)[playerY][playerX + 0.01] != '1')
+		pl->setX(0.01);
+	if (keys.esc)
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }

@@ -18,5 +18,6 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	delete game;
+	// system("leaks rc");
 	return 0;
 }

@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 #include "player.hpp"
 
@@ -19,11 +20,12 @@ class raycast
 		raycast();
 		~raycast();
 
+		const int	startGame(void);
+		const int	checkValidity(void) const;
 		const int	initGame(const char *filename);
 		const int	mapParse(const char *filename);
-		const int	startGame(void);
+		void		playerInput(void);
 		void		renderMinimap(void) const;
-		const int	checkValidity(void) const;
 		void		floodFill(const int x, const int y, std::vector<std::string> &map) const;
 
 	private:

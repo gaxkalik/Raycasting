@@ -4,10 +4,11 @@
 #include "raycast.hpp"
 
 struct keyPressed {
-	bool moveUp = false;
-	bool moveDown = false;
-	bool moveLeft = false;
-	bool moveRight = false;
+	bool	esc = false;
+	bool	moveUp = false;
+	bool	moveDown = false;
+	bool	moveLeft = false;
+	bool	moveRight = false;
 };
 
 class player

@@ -52,19 +52,9 @@ const int	raycast::startGame(void) {
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	while (!glfwWindowShouldClose(window)) {
-		
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		if (keys.moveUp && (*map)[playerY - 0.01][playerX] != '1')
-			pl->setY(-0.01);
-		if (keys.moveDown && (*map)[playerY + 0.01][playerX] != '1')
-			pl->setY(0.01);
-		if (keys.moveLeft && (*map)[playerY][playerX - 0.01] != '1')
-			pl->setX(-0.01);
-		if (keys.moveRight && (*map)[playerY][playerX + 0.01] != '1')
-			pl->setX(0.01);
 		renderMinimap();
-
+		playerInput();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
