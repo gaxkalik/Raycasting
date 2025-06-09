@@ -1,7 +1,5 @@
 #include "player.hpp"
 
-player::player(){};
+player::player(): pX(0), pY(0) {};
+
 player::~player(){};
-
-player::player(double X, double Y): playerX(X), playerY(Y) {};
-

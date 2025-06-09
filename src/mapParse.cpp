@@ -27,18 +27,18 @@ const int	raycast::mapParse(const char *filename) {
 	for (int y = 0; y < mapHeight; ++y) {
 		for (int x = 0; x < mapWidth; ++x) {
 			if ((*map)[y][x] == 'P') {
-				playerX = x + 0.4;
-				playerY = y + 0.4;
+				pl->setX(x + 0.4);
+				pl->setY(y + 0.4);
 			}
 		}
 	}
-
+	
 	if(checkValidity())
-		return 1;
-
+	return 1;
+	
 	(*map)[playerY][playerX] = '0';
 
-	std::cout << "Player coords x: " << playerX << " y: " << playerY << std::endl;
+	std::cout << "Player coords x: " << pl->getX() << " y: " << pl->getY() << std::endl;
 	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;
 }
@@ -107,7 +107,7 @@ const int raycast::checkValidity() const
 	}
 
 
-	floodFill(playerX, playerY, *map);
+	floodFill(pl->getX(), pl->getY(), *map);
 	for (int i = 0; i < map->size(); ++i) 
 		if (!(*map)[i].find('0'))
 		{
@@ -118,7 +118,7 @@ const int raycast::checkValidity() const
 
 	if (!foundPlayer)
 	{
-		cerr << "No payer in the map \n";
+		cerr << "No player in the map \n";
 		delete map;
 		return 1;
 	}

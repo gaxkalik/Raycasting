@@ -8,6 +8,9 @@
 
 #include "player.hpp"
 
+#define playerX pl->getX()
+#define playerY pl->getY()
+
 class player;
 
 class raycast
@@ -31,8 +34,6 @@ class raycast
 		int							mapWidth;
 		int							mapHeight;
 		player						*pl;
-		double						playerX;
-		double						playerY;
 };
 
 #endif

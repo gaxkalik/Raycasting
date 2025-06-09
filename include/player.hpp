@@ -14,15 +14,15 @@ class player
 {
 	public:
 		player();
-		player(double, double);
-		double	getX(void) const;
-		void	setX(double);
-		double	getY(void) const;
-		void	setY(double);
 		~player();
+
+		double	getX(void) const { return pX; }
+		void	setX(double X) { pX += X; }
+		double	getY(void) const {return pY; }
+		void	setY(double Y) { pY += Y; }
 	private:
-		double	playerX;
-		double	playerY;
+		double	pX;
+		double	pY;
 };
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

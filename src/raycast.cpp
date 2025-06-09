@@ -10,19 +10,20 @@ raycast::raycast() {
 	mapHeight = 0;
 	screenWidth = 0;
 	screenHeight = 0;
-	playerX = 0;
-	playerY = 0;
 	std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
 raycast::~raycast() {
 	if (map)
 		delete map;
+	if (pl)
+		delete pl;
 	glfwTerminate();
 	std::cout << "[ Raycast destructor called ]" << std::endl;
 }
 
 const int raycast::initGame(const char *filename) {
+	pl = new player();
 	if (mapParse(filename)) {
 		std::cerr << "Failed to parse map" << std::endl;
 		return 1;
@@ -32,7 +33,6 @@ const int raycast::initGame(const char *filename) {
 		return 1;
 	}
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	pl = new player(playerX, playerY);
 	screenWidth = mode->width * 2;
 	screenHeight = mode->height * 2;
 	std::cout << "Screen: " << screenWidth << ":" << screenHeight << std::endl;
@@ -56,13 +56,13 @@ const int	raycast::startGame(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (keys.moveUp && (*map)[playerY - 0.01][playerX] != '1')
-			playerY -= 0.01;
+			pl->setY(-0.01);
 		if (keys.moveDown && (*map)[playerY + 0.01][playerX] != '1')
-			playerY += 0.01;
+			pl->setY(0.01);
 		if (keys.moveLeft && (*map)[playerY][playerX - 0.01] != '1')
-			playerX -= 0.01;
+			pl->setX(-0.01);
 		if (keys.moveRight && (*map)[playerY][playerX + 0.01] != '1')
-			playerX += 0.01;
+			pl->setX(0.01);
 		renderMinimap();
 
 		glfwSwapBuffers(window);
