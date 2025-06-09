@@ -34,13 +34,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void	raycast::playerInput(void) {
 	if (keys.moveUp && (*map)[playerY - 0.01][playerX] != '1')
-		pl->setY(-0.01);
+		pl->setY(-0.02);
 	if (keys.moveDown && (*map)[playerY + 0.01][playerX] != '1')
-		pl->setY(0.01);
+		pl->setY(0.02);
 	if (keys.moveLeft && (*map)[playerY][playerX - 0.01] != '1')
-		pl->setX(-0.01);
+		pl->setX(-0.02);
 	if (keys.moveRight && (*map)[playerY][playerX + 0.01] != '1')
-		pl->setX(0.01);
+		pl->setX(0.02);
 	if (keys.esc)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
