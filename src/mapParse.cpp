@@ -1,5 +1,6 @@
 #include "raycast.hpp"
 
+
 const int	raycast::mapParse(const char *filename) {
 	std::ifstream	file;
 
@@ -26,23 +27,111 @@ const int	raycast::mapParse(const char *filename) {
 	for (int y = 0; y < mapHeight; ++y) {
 		for (int x = 0; x < mapWidth; ++x) {
 			if ((*map)[y][x] == 'P') {
-				(*map)[y][x] = '0';
 				playerX = x + 0.4;
 				playerY = y + 0.4;
 			}
 		}
 	}
+
+	if(checkValidity())
+		return 1;
+
+	(*map)[playerY][playerX] = '0';
+
 	std::cout << "Player coords x: " << playerX << " y: " << playerY << std::endl;
 	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;
 }
 
-void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const {
-	if (x == mapWidth || x < 0 || y == mapHeight || y < 0 || map[y][x] == '1')
+using std::string;
+using std::cout;
+using std::cerr;
+
+
+void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const
+{
+	if (x == mapWidth+2 || x < 0 || y == mapHeight+2 || y < 0 || map[y][x] == '1')
 		return;
 	map[y][x] = '1';
 	floodFill(x + 1, y, map);
 	floodFill(x - 1, y, map);
 	floodFill(x, y + 1, map);
 	floodFill(x, y - 1, map);
+}
+
+
+
+const int raycast::checkValidity() const
+{
+	bool foundPlayer = false;
+
+	for (int line = 0; line < (*map).size(); ++line)
+	{
+		string currentLine = map->at(line);
+
+		for (int calumn = 0; calumn < currentLine.size(); ++calumn)
+		{
+			char currentChar = currentLine[calumn];
+			
+			if (currentChar != '0' && currentChar != '1' && currentChar != 'P' && currentChar != '\n')
+			{
+				cerr << "Invalid element in map! \n";
+				return 1; 
+			}
+			else if (currentChar == 'P')
+			{
+				if (foundPlayer)
+				{
+					cerr << "More than 1 palyer on the map \n";
+					return 1;
+				}
+				else
+					foundPlayer = true;
+			}
+
+		}
+	}
+		
+	std::vector<std::string> *map = new std::vector<std::string>(this->map->begin(), this->map->end());
+	string firstLineB = "";
+	for(int i = 0; i < mapWidth; ++i)
+		firstLineB += "B";
+
+
+	map->insert(map->begin(), firstLineB);
+	map->push_back(firstLineB);
+
+	for (string &s : *map)
+	{
+		s = "B" + s + "B";
+	}
+
+
+	floodFill(playerX, playerY, *map);
+	for (int i = 0; i < map->size(); ++i) 
+		if (!(*map)[i].find('0'))
+		{
+			delete map;
+			return 1;
+		}
+	
+
+	if (!foundPlayer)
+	{
+		cerr << "No payer in the map \n";
+		delete map;
+		return 1;
+	}
+	
+	if ((*map)[0].find('B'))
+	{
+		cerr<< "Map is not playable\n";
+		delete map;
+	 	return 1;
+	}
+	
+	cout << "Map is playable\n";
+	delete map;
+	return 0;
+
 }
