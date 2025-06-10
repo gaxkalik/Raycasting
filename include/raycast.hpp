@@ -12,9 +12,12 @@
 #define playerX pl->getX()
 #define playerY pl->getY()
 
-class player;
+inline int	screenWidth;
+inline int	screenHeight;
 
-class raycast
+class	player;
+
+class	raycast
 {
 	public:
 		raycast();
@@ -22,20 +25,25 @@ class raycast
 
 		const int	startGame(void);
 		const int	checkValidity(void) const;
-		const int	initGame(const char *filename);
-		const int	mapParse(const char *filename);
+		const int	initGame(const char *);
+		const int	mapParse(const char *);
 		void		playerInput(void);
 		void		renderMinimap(void) const;
-		void		floodFill(const int x, const int y, std::vector<std::string> &map) const;
+		void		renderMinimapTopL(void) const;
+		void		renderMinimapTopR(void) const;
+		void		renderMinimapBottomL(void) const;
+		void		renderMinimapBottomR(void) const;
+		void		floodFill(const int, const int, std::vector<std::string> &) const;
 
 	private:
 		GLFWwindow					*window;
-		int							screenWidth;
-		int							screenHeight;
 		std::vector<std::string>	*map;
 		int							mapWidth;
 		int							mapHeight;
 		player						*pl;
 };
+
+void	window_size_callback(GLFWwindow*, int, int);
+void	key_callback(GLFWwindow*, int, int, int, int);
 
 #endif

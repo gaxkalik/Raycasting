@@ -1,5 +1,10 @@
 #include "raycast.hpp"
 
+void window_size_callback(GLFWwindow* window, int width, int height) {
+	screenWidth = width * 2;
+	screenHeight = height * 2;
+}
+
 void	raycast::renderMinimap(void) const {
 	int	minimapSize;
 
@@ -11,44 +16,39 @@ void	raycast::renderMinimap(void) const {
 		minimapSize = screenHeight / 4;
 	else
 		minimapSize = screenWidth / 4;
-	glViewport(0, 0, minimapSize, minimapSize);
+	glViewport(screenWidth - minimapSize, 0, minimapSize, minimapSize);
 	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, mapWidth, mapHeight, 0, -1, 1);
+	glOrtho(0, 8, 8, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	glColor3f(0, 0, 0);
-	glBegin(GL_QUADS);
-	glVertex2f(0, 0);
-	glVertex2f(0, minimapSize);
-	glVertex2f(minimapSize, minimapSize);
-	glVertex2f(minimapSize, 0);
-	glEnd();
-	for (int y = 0; y < mapHeight; ++y) {
-		for (int x = 0; x < mapWidth; ++x) {
-			if ((*map)[y][x] == '1') {
-				glColor3f(0.5f, 0.5f, 0.5f); // Gray for walls
+
+	for (double y = -4; y < 4; y += 0.05) {
+		for (double x = -4; x < 4; x += 0.05) {
+			if (playerX + x >= 0 && playerY + y >=0 && playerX + x < mapWidth &&
+					playerY + y < mapHeight &&
+						(*map)[playerY + y][playerX + x] == '1') {
+				glColor3f(0.5f, 0.5f, 0.5f); // Gray
 			} else {
-				glColor3f(1.0f, 1.0f, 1.0f); // White for empty space
+				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
 			glBegin(GL_QUADS);
-			glVertex2f(x + 0.1f, y + 0.1f);
-			glVertex2f(x + 0.9f, y + 0.1f);
-			glVertex2f(x + 0.9f, y + 0.9f);
-			glVertex2f(x + 0.1f, y + 0.9f);
+			glVertex2f(x + 4, y + 4);
+			glVertex2f(x + 5, y + 4);
+			glVertex2f(x + 5, y + 5);
+			glVertex2f(x + 4, y + 5);
 			glEnd();
 		}
 	}
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(playerX, playerY);
-	glVertex2f(playerX + 0.2f, playerY);
-	glVertex2f(playerX + 0.2f, playerY + 0.2f);
-	glVertex2f(playerX, playerY + 0.2f);
+	glVertex2f(4, 4);
+	glVertex2f(4 + 0.2f, 4);
+	glVertex2f(4 + 0.2f, 4 + 0.2f);
+	glVertex2f(4, 4 + 0.2f);
 	glEnd();
 }

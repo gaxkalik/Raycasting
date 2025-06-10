@@ -3,6 +3,8 @@
 
 #include "raycast.hpp"
 
+#define playerStep 0.02
+
 struct keyPressed {
 	bool	esc = false;
 	bool	moveUp = false;
@@ -25,7 +27,5 @@ class player
 		double	pX;
 		double	pY;
 };
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 #endif

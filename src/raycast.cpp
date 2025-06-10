@@ -8,8 +8,6 @@ raycast::raycast() {
 	pl = nullptr;
 	mapWidth = 0;
 	mapHeight = 0;
-	screenWidth = 0;
-	screenHeight = 0;
 	std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
@@ -51,6 +49,7 @@ const int	raycast::startGame(void) {
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetWindowSizeCallback(window, window_size_callback);
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		renderMinimap();
