@@ -12,9 +12,6 @@
 #define playerX pl->getX()
 #define playerY pl->getY()
 
-inline int	screenWidth;
-inline int	screenHeight;
-
 class	player;
 
 class	raycast
@@ -34,16 +31,18 @@ class	raycast
 		void		renderMinimapBottomL(void) const;
 		void		renderMinimapBottomR(void) const;
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
+		static void	window_size_callback(GLFWwindow*, int, int);
 
 	private:
 		GLFWwindow					*window;
+		int							screenWidth;
+		int							screenHeight;
 		std::vector<std::string>	*map;
 		int							mapWidth;
 		int							mapHeight;
 		player						*pl;
 };
 
-void	window_size_callback(GLFWwindow*, int, int);
 void	key_callback(GLFWwindow*, int, int, int, int);
 
 #endif

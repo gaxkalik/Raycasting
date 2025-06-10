@@ -1,8 +1,9 @@
 #include "raycast.hpp"
 
-void window_size_callback(GLFWwindow* window, int width, int height) {
-	screenWidth = width * 2;
-	screenHeight = height * 2;
+void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
+	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
+	rc->screenWidth = width * 2;
+	rc->screenHeight = height * 2;
 }
 
 void	raycast::renderMinimap(void) const {

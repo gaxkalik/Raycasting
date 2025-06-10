@@ -8,6 +8,8 @@ raycast::raycast() {
 	pl = nullptr;
 	mapWidth = 0;
 	mapHeight = 0;
+	screenWidth = 0;
+	screenHeight = 0;
 	std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
@@ -42,6 +44,7 @@ const int raycast::initGame(const char *filename) {
 const int	raycast::startGame(void) {
 	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", NULL, NULL);
 
+	glfwSetWindowUserPointer(window, this);
 	if (!window) {
 		glfwTerminate();
 		std::cerr << "Failed to create GLFW window" << std::endl;
