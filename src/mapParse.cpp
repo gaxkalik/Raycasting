@@ -34,7 +34,7 @@ const int	raycast::mapParse(const char *filename) {
 	}
 	
 	if(checkValidity())
-	return 1;
+		return 1;
 	
 	(*map)[playerY][playerX] = '0';
 
@@ -50,7 +50,7 @@ using std::cerr;
 
 void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const
 {
-	if (x == mapWidth+2 || x < 0 || y == mapHeight+2 || y < 0 || map[y][x] == '1')
+	if (x == mapWidth + 2 || x < 0 || y == mapHeight + 2 || y < 0 || map[y][x] == '1')
 		return;
 	map[y][x] = '1';
 	floodFill(x + 1, y, map);
@@ -97,24 +97,19 @@ const int raycast::checkValidity() const
 	for(int i = 0; i < mapWidth; ++i)
 		firstLineB += "B";
 
-
 	map->insert(map->begin(), firstLineB);
 	map->push_back(firstLineB);
 
 	for (string &s : *map)
-	{
 		s = "B" + s + "B";
-	}
 
-
-	floodFill(pl->getX(), pl->getY(), *map);
-	for (int i = 0; i < map->size(); ++i) 
-		if (!(*map)[i].find('0'))
-		{
+	floodFill(playerX + 1, playerY + 1, *map);
+	for (int i = 0; i < map->size(); ++i) {
+		if ((*map)[i].find('0') != std::string::npos) {
 			delete map;
 			return 1;
 		}
-	
+	}
 
 	if (!foundPlayer)
 	{
@@ -123,7 +118,7 @@ const int raycast::checkValidity() const
 		return 1;
 	}
 	
-	if ((*map)[0].find('B'))
+	if ((*map)[0].find('B') == std::string::npos)
 	{
 		cerr<< "Map is not playable\n";
 		delete map;

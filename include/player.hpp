@@ -3,7 +3,7 @@
 
 #include "raycast.hpp"
 
-#define playerStep 0.02
+#define playerStep 0.05
 
 struct keyPressed {
 	bool	esc = false;
