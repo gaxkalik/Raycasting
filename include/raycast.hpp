@@ -30,6 +30,8 @@ class	raycast
 		void		renderMinimapTopR(void) const;
 		void		renderMinimapBottomL(void) const;
 		void		renderMinimapBottomR(void) const;
+		void		asd(void);
+		void		as(void);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 		static void	window_size_callback(GLFWwindow*, int, int);
 
