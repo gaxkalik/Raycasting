@@ -26,10 +26,7 @@ class	raycast
 		const int	mapParse(const char *);
 		void		playerInput(void);
 		void		renderMinimap(void) const;
-		void		renderMinimapTopL(void) const;
-		void		renderMinimapTopR(void) const;
-		void		renderMinimapBottomL(void) const;
-		void		renderMinimapBottomR(void) const;
+		void		renderMapCreateToolField(void);
 		void		asd(void);
 		void		as(void);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
@@ -39,12 +36,24 @@ class	raycast
 		GLFWwindow					*window;
 		int							screenWidth;
 		int							screenHeight;
+		int							screenBuffWidth;
+		int							screenBuffHeight;
+		int							tileWidth;
+		int							tileHeight;
+		double						cursorX;
+		double						cursorY;
+		double						cursorRealX;
+		double						cursorRealY;
+		double						cursorMultX;
+		double						cursorMultY;
 		std::vector<std::string>	*map;
+		std::vector<std::string>	*newMap;
 		int							mapWidth;
 		int							mapHeight;
 		player						*pl;
 };
 
-void	key_callback(GLFWwindow*, int, int, int, int);
+void		key_callback(GLFWwindow*, int, int, int, int);
+const int	inRange(const double, const double, const double);
 
 #endif

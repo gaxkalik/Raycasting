@@ -11,6 +11,7 @@ struct keyPressed {
 	bool	moveDown = false;
 	bool	moveLeft = false;
 	bool	moveRight = false;
+	bool	openMap = false;
 };
 
 class player

@@ -1,0 +1,54 @@
+#include "raycast.hpp"
+
+void	raycast::renderMapCreateToolField() {
+	int	viewPortSize = std::min(screenBuffWidth, screenBuffHeight);
+
+	glViewport((screenBuffWidth - viewPortSize / 1.2) / 2, (screenBuffHeight - viewPortSize / 1.2) / 2, viewPortSize / 1.2, viewPortSize / 1.2);
+	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, 32, 32, 0, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	for (double y = 0; y < 32; ++y) {
+		for (double x = 0; x < 32; ++x) {
+			if (y < 32 && x < 32 && (*newMap)[y][x] == '1') {
+				// std::cout << y * tileHeight << std::endl;
+				// while (1);
+				glColor3f(0.3f, 0.3f, 0.3f); // Gray
+				glBegin(GL_QUADS);
+				glVertex2f(x, y);
+				glVertex2f(x + 1.0f, y);
+				glVertex2f(x + 1.0f, y + 1.0f);
+				glVertex2f(x, y + 1.0f);
+				glEnd();
+			} else {
+				glColor3f(1.0f, 1.0f, 1.0f); // White
+				glBegin(GL_QUADS);
+				glVertex2f(x + 0.45f, y + 0.2f);
+				glVertex2f(x + 0.55f, y + 0.2f);
+				glVertex2f(x + 0.55f, y + 0.8f);
+				glVertex2f(x + 0.45f, y + 0.8f);
+
+				glVertex2f(x + 0.2f, y + 0.45f);
+				glVertex2f(x + 0.2f, y + 0.55f);
+				glVertex2f(x + 0.8f, y + 0.55f);
+				glVertex2f(x + 0.8f, y + 0.45f);
+				glEnd();
+			}
+
+		}
+	}
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}

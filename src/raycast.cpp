@@ -5,6 +5,7 @@ extern	keyPressed keys;
 raycast::raycast() {
 	window = nullptr;
 	map = nullptr;
+	newMap = nullptr;
 	pl = nullptr;
 	mapWidth = 0;
 	mapHeight = 0;
@@ -18,6 +19,8 @@ raycast::~raycast() {
 		delete map;
 	if (pl)
 		delete pl;
+	if (newMap)
+		delete newMap;
 	glfwTerminate();
 	std::cout << "[ Raycast destructor called ]" << std::endl;
 }
@@ -33,17 +36,16 @@ const int raycast::initGame(const char *filename) {
 		return 1;
 	}
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	screenWidth = mode->width * 2;
-	screenHeight = mode->height * 2;
+	screenWidth = mode->width;
+	screenHeight = mode->height;
 	std::cout << "Screen: " << screenWidth << ":" << screenHeight << std::endl;
-	// screenWidth = 500;
-	// screenHeight = 1024;
 	return 0;
 }
 
 const int	raycast::startGame(void) {
 	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", NULL, NULL);
 
+	glfwGetFramebufferSize(window, &screenBuffWidth, &screenBuffHeight);
 	glfwSetWindowUserPointer(window, this);
 	if (!window) {
 		glfwTerminate();
@@ -55,7 +57,6 @@ const int	raycast::startGame(void) {
 	glfwSetWindowSizeCallback(window, window_size_callback);
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderMinimap();
 		playerInput();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
