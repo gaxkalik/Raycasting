@@ -7,6 +7,7 @@ raycast::raycast() {
 	map = nullptr;
 	newMap = nullptr;
 	pl = nullptr;
+	scenes = nullptr;
 	mapWidth = 0;
 	mapHeight = 0;
 	screenWidth = 0;
@@ -21,6 +22,8 @@ raycast::~raycast() {
 		delete pl;
 	if (newMap)
 		delete newMap;
+	if (scenes)
+		delete scenes;
 	glfwTerminate();
 	std::cout << "[ Raycast destructor called ]" << std::endl;
 }
@@ -35,29 +38,42 @@ const int raycast::initGame(const char *filename) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return 1;
 	}
+
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	screenWidth = mode->width;
 	screenHeight = mode->height;
+	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", NULL, NULL);
+	glfwGetFramebufferSize(window, &screenBuffWidth, &screenBuffHeight);
 	std::cout << "Screen: " << screenWidth << ":" << screenHeight << std::endl;
+
+	int	size = std::min(screenBuffWidth, screenBuffHeight) / 4;
+	scenes = new std::vector<scene>();
+
+	newScene();
+
+	addObjectToScene(&(*scenes)[0], 0, size, 0, size, "minimap");
 	return 0;
 }
 
-const int	raycast::startGame(void) {
-	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", NULL, NULL);
+void	raycast::newScene(void) {
+	scenes->emplace_back(scene());
+}
 
-	glfwGetFramebufferSize(window, &screenBuffWidth, &screenBuffHeight);
+const int	raycast::startGame(void) {
 	glfwSetWindowUserPointer(window, this);
 	if (!window) {
 		glfwTerminate();
 		std::cerr << "Failed to create GLFW window" << std::endl;
 		return 1;
 	}
+	currScene = &(*scenes)[0];
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetWindowSizeCallback(window, window_size_callback);
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		playerInput();
+		renderScene(*currScene);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

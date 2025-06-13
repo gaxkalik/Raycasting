@@ -1,5 +1,7 @@
 #include "raycast.hpp"
 
+#define minimap (*scenes[0])
+
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
 	rc->screenWidth = width;
@@ -7,8 +9,21 @@ void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	glfwGetFramebufferSize(window, &rc->screenBuffWidth, &rc->screenBuffHeight);
 }
 
-void	raycast::renderMinimap(void) const {
-	int viewPortSize = std::min(screenBuffWidth, screenBuffHeight) / 4;
+void	raycast::addObjectToScene(scene *sc, const int &x1, const int &x2, const int &y1, const int &y2, const std::string &name) {
+	sc->addObject(name, obj(x1, x2, y1, y2, name));
+}
+
+void	raycast::renderScene(scene &sc) {
+	std::map<std::string, obj> &objs = sc.getObjs();
+	auto	it = objs.begin();
+
+	for (; it != objs.end(); ++it) {
+		if (it->first == "minimap")
+			renderMinimap(it->second.getSizeX());
+	}
+}
+
+void	raycast::renderMinimap(const int &viewPortSize) {
 	double	viewPortCenterX = playerX;
 	double	viewPortCenterY = playerY;
 

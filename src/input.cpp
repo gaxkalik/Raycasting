@@ -39,7 +39,6 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void	raycast::playerInput(void) {
 	if (keys.openMap == false) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		renderMinimap();
 		if (keys.moveUp && (*map)[playerY - playerStep][playerX] != '1')
 			pl->setY(-playerStep);
 		if (keys.moveDown && (*map)[playerY + playerStep][playerX] != '1')
