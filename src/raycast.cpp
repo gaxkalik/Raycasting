@@ -46,19 +46,21 @@ const int raycast::initGame(const char *filename) {
 	glfwGetFramebufferSize(window, &screenBuffWidth, &screenBuffHeight);
 	std::cout << "Screen: " << screenWidth << ":" << screenHeight << std::endl;
 
-	int	size = std::min(screenBuffWidth, screenBuffHeight) / 4;
+	int	size = std::min(screenBuffWidth, screenBuffHeight);
 	scenes = new std::vector<scene>();
 
 	newScene();
-	addObjectToScene(&(*scenes)[0], 0, size, 0, size, "minimap");
+	addObjectToScene((*scenes)[0], 0, 0, size / 4, size / 4, "minimap");
 
 	newScene();
-	addObjectToScene(&(*scenes)[1], (screenBuffWidth - size / 1.2) / 2, (screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, "mapCreate");
+	addObjectToScene((*scenes)[1], 0, 0, 256, 256, "buttonBrush1");
+	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
+	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	return 0;
 }
 
 void	raycast::newScene(void) {
-	scenes->emplace_back(scene());
+	scenes->emplace_back();
 }
 
 const int	raycast::startGame(void) {

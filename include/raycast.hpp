@@ -13,9 +13,11 @@
 
 #define playerX pl->getX()
 #define playerY pl->getY()
+#define OBJ (it->second)
 
 class	player;
 class	scene;
+class	obj;
 
 class	raycast
 {
@@ -29,32 +31,27 @@ class	raycast
 		const int	mapParse(const char *);
 		void		playerInput(void);
 		void		renderScene(scene &);
-		void		renderMinimap(const int &);
+		void		renderBotton(const int &, const int &, const int &, const int &);
+		void		renderMinimap(const int &, const int &, const int &, const int &);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
-		void		addObjectToScene(scene *, const int &, const int &, const int &, const int &, const std::string &);
+		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);
+		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
+		obj	*cursorOnObj(const double &cursorX, const double &cursorY) const;
 		static void	window_size_callback(GLFWwindow*, int, int);
 
 	private:
+		scene						*currScene;
+		player						*pl;
 		GLFWwindow					*window;
-		int							screenWidth;
-		int							screenHeight;
-		int							screenBuffWidth;
-		int							screenBuffHeight;
-		double						cursorX;
-		double						cursorY;
-		double						cursorRealX;
-		double						cursorRealY;
 		std::vector<scene>			*scenes;
 		std::vector<std::string>	*map;
 		std::vector<std::string>	*newMap;
-		scene						*currScene;
-		int							tileWidth;
-		int							tileHeight;
-		int							mapWidth;
-		int							mapHeight;
-		player						*pl;
+		int							mapWidth, mapHeight;
+		int							screenWidth, screenHeight;
+		int							screenBuffWidth, screenBuffHeight;
+		double						cursorX, cursorY;
 };
 
 void		key_callback(GLFWwindow*, int, int, int, int);

@@ -1,7 +1,5 @@
 #include "raycast.hpp"
 
-#define OBJ (it->second)
-
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
 	rc->screenWidth = width;
@@ -9,23 +7,44 @@ void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	glfwGetFramebufferSize(window, &rc->screenBuffWidth, &rc->screenBuffHeight);
 }
 
-void	raycast::addObjectToScene(scene *sc, const int &x1, const int &x2, const int &y1, const int &y2, const std::string &name) {
-	sc->addObject(name, obj(x1, x2, y1, y2, name));
+void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const std::string &name) {
+	sc.addObject(name, obj(x, y, sizeX, sizeY, name));
+}
+
+void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile, const std::string &name) {
+	std::cout << &sc << std::endl;
+	sc.addObject(name, obj(x, y, sizeX, sizeY, tile, name));
+}
+
+void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const int &height) {
+	// glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	// glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(x1, y1, width, height);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(0, 0);
+	glVertex2f(1, 0);
+	glVertex2f(1,1);
+	glVertex2f(0,1);
+	glEnd();
 }
 
 void	raycast::renderScene(scene &sc) {
-	std::map<std::string, obj> &objs = sc.getObjs();
-	auto	it = objs.begin();
+	const std::map<std::string, obj> &objs = sc.getObjs();
 
-	for (; it != objs.end(); ++it) {
+	for (auto it = objs.begin(); it != objs.end(); ++it) {
+		std::cout << it->first << std::endl;
 		if (it->first == "minimap")
-			renderMinimap(it->second.getSizeX());
-		if (it->first == "mapCreate")
-			renderMapCreateToolField(OBJ.getX1(), OBJ.getX2(), OBJ.getY1(), OBJ.getY2());
+			renderMinimap(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		else if (it->first == "mapCreate")
+			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		else if (it->first == "buttonBrush1")
+			renderBotton(0,0,256,256);
 	}
 }
 
-void	raycast::renderMinimap(const int &viewPortSize) {
+void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
 	double	viewPortCenterX = playerX;
 	double	viewPortCenterY = playerY;
 
@@ -33,7 +52,7 @@ void	raycast::renderMinimap(const int &viewPortSize) {
 		std::cerr << "Window or map not initialized." << std::endl;
 		return;
 	}
-	glViewport(0, 0, viewPortSize, viewPortSize);
+	glViewport(x1, y1, width, height);
 	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

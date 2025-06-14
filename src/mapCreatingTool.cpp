@@ -1,7 +1,7 @@
 #include "raycast.hpp"
 
-void	raycast::renderMapCreateToolField(const int &x1, const int &x2, const int &y1, const int &y2) {
-	glViewport(x1, y1, x2, y2);
+void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &width, const int &height) {
+	glViewport(x1, y1, width, height);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -44,9 +44,10 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &x2, const int &
 		}
 	}
 
+	
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
-
+	
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
