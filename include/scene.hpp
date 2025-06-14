@@ -25,6 +25,10 @@ class obj
 		void	setText(const std::string &);
 		int		getSizeX(void);
 		int		getSizeY(void);
+		int		getX1(void);
+		int		getY1(void);
+		int		getX2(void);
+		int		getY2(void);
 		~obj() {};
 	private:
 		int			_x1;

@@ -49,6 +49,7 @@ void	raycast::playerInput(void) {
 			pl->setX(playerStep);
 	}
 	else if (keys.openMap) {
+		currScene = &(*scenes)[1];
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1) {
 			glfwGetCursorPos(window, &cursorRealX, &cursorRealY);
@@ -84,7 +85,6 @@ void	raycast::playerInput(void) {
 				(*newMap)[(cursorY - y1) / tileHeight ][(cursorX - x1) / tileWidth ] = '1';
 			}
 		}
-		renderMapCreateToolField();
 	}
 	if (keys.esc)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);

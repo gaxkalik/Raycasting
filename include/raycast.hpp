@@ -30,7 +30,7 @@ class	raycast
 		void		playerInput(void);
 		void		renderScene(scene &);
 		void		renderMinimap(const int &);
-		void		renderMapCreateToolField(void);
+		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene *, const int &, const int &, const int &, const int &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;

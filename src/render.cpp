@@ -1,6 +1,6 @@
 #include "raycast.hpp"
 
-#define minimap (*scenes[0])
+#define OBJ (it->second)
 
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
@@ -20,6 +20,8 @@ void	raycast::renderScene(scene &sc) {
 	for (; it != objs.end(); ++it) {
 		if (it->first == "minimap")
 			renderMinimap(it->second.getSizeX());
+		if (it->first == "mapCreate")
+			renderMapCreateToolField(OBJ.getX1(), OBJ.getX2(), OBJ.getY1(), OBJ.getY2());
 	}
 }
 

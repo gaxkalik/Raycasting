@@ -1,9 +1,7 @@
 #include "raycast.hpp"
 
-void	raycast::renderMapCreateToolField() {
-	int	viewPortSize = std::min(screenBuffWidth, screenBuffHeight);
-
-	glViewport((screenBuffWidth - viewPortSize / 1.2) / 2, (screenBuffHeight - viewPortSize / 1.2) / 2, viewPortSize / 1.2, viewPortSize / 1.2);
+void	raycast::renderMapCreateToolField(const int &x1, const int &x2, const int &y1, const int &y2) {
+	glViewport(x1, y1, x2, y2);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

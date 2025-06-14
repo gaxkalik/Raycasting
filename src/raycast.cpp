@@ -50,8 +50,10 @@ const int raycast::initGame(const char *filename) {
 	scenes = new std::vector<scene>();
 
 	newScene();
-
 	addObjectToScene(&(*scenes)[0], 0, size, 0, size, "minimap");
+
+	newScene();
+	addObjectToScene(&(*scenes)[1], (screenBuffWidth - size / 1.2) / 2, (screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, "mapCreate");
 	return 0;
 }
 

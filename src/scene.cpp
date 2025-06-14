@@ -22,6 +22,10 @@ void	scene::addObject(const std::string &name, const obj &o) {
 
 int	obj::getSizeX(void) { return sizeX; }
 int	obj::getSizeY(void) { return sizeY; }
+int	obj::getX1(void) { return _y2; }
+int	obj::getY1(void) { return _y1; }
+int	obj::getX2(void) { return _x2; }
+int	obj::getY2(void) { return _y2; }
 
 obj::obj(const int &x1, const int &x2, const int &y1, const int &y2, const std::string &name) {
 		_x1 = x1;
