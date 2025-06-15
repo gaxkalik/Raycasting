@@ -12,6 +12,7 @@ raycast::raycast() {
 	mapHeight = 0;
 	screenWidth = 0;
 	screenHeight = 0;
+	brush = '0';
 	std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
@@ -26,6 +27,21 @@ raycast::~raycast() {
 		delete scenes;
 	glfwTerminate();
 	std::cout << "[ Raycast destructor called ]" << std::endl;
+}
+
+void	raycast::addBottonsToScene(void) {
+	std::map<std::string, obj>	&tmp = (*scenes)[1].getObjs();
+
+	auto it = tmp.find("mapCreate");
+	int tileWidth = it->second.getTileWidth();
+	int tileHegiht = it->second.getTileHeight();
+	int x = it->second.getX1();
+	int y = it->second.getY1() - tileHegiht;
+
+	std::cout << "y - " << y << std::endl;
+	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
+	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
+	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
 }
 
 const int raycast::initGame(const char *filename) {
@@ -53,9 +69,9 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[0], 0, 0, size / 4, size / 4, "minimap");
 
 	newScene();
-	addObjectToScene((*scenes)[1], 0, 0, 256, 256, "buttonBrush1");
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
+	addBottonsToScene();
 	return 0;
 }
 

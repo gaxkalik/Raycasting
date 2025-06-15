@@ -29,7 +29,7 @@ obj::obj(const int &x, const int &y, const int &sizeX, const int &sizeY, const s
 		_height = sizeY;
 		_tileWidth = 0;
 		_tileHeight = 0;
-		_brush = '0';
+		_color = "black";
 }
 
 obj::obj(const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile,const std::string &name) {
@@ -43,5 +43,19 @@ obj::obj(const int &x, const int &y, const int &sizeX, const int &sizeY, const i
 		_height = sizeY;
 		_tileWidth = _width / tile;
 		_tileHeight = _height / tile;
-		_brush = '0';
+		_color = "red";
+}
+
+obj::obj(const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile,const std::string &name, const std::string &color) {
+		_x1 = x;
+		_x2 = x + sizeX;
+		_y1 = y;
+		_y2 = y + sizeY;
+		_name = name;
+		_text = "text";
+		_width = sizeX;
+		_height = sizeY;
+		_tileWidth = _width / tile;
+		_tileHeight = _height / tile;
+		_color = color;
 }

@@ -14,7 +14,7 @@ const int	raycast::mapParse(const char *filename) {
 	map = new std::vector<std::string>();
 	newMap = new std::vector<std::string>();
 	for (int i = 0; i < 32; ++i)
-		newMap->push_back("000000000000000000000000000000000");
+		newMap->push_back("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 
 	while (std::getline(file, line)) {
 		map->push_back(line);

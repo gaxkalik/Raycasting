@@ -12,35 +12,67 @@ void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int 
 }
 
 void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile, const std::string &name) {
-	std::cout << &sc << std::endl;
 	sc.addObject(name, obj(x, y, sizeX, sizeY, tile, name));
 }
 
-void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const int &height) {
-	// glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	// glClear(GL_COLOR_BUFFER_BIT);
-	glViewport(x1, y1, width, height);
+void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile, const std::string &name, const std::string &color) {
+	sc.addObject(name, obj(x, y, sizeX, sizeY, tile, name, color));
+}
 
-	glColor3f(1.0f, 0.0f, 0.0f);
+void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const int &height, const std::string &color) {
+	glViewport(x1, y1, width, height);
+	
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, 1, 1, 0, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x1, y1, width, height);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	if (color == "white")
+		glColor3f(1.0f, 1.0f, 1.0f);
+	else if (color == "gray")
+		glColor3f(0.3f, 0.3f, 0.3f);
+	else if (color == "red")
+		glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
 	glVertex2f(1, 0);
 	glVertex2f(1,1);
 	glVertex2f(0,1);
 	glEnd();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glDisable(GL_SCISSOR_TEST);
 }
 
 void	raycast::renderScene(scene &sc) {
 	const std::map<std::string, obj> &objs = sc.getObjs();
 
 	for (auto it = objs.begin(); it != objs.end(); ++it) {
-		std::cout << it->first << std::endl;
 		if (it->first == "minimap")
 			renderMinimap(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
 		else if (it->first == "mapCreate")
 			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		else if (it->first == "buttonBrush0")
+			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 		else if (it->first == "buttonBrush1")
-			renderBotton(0,0,256,256);
+			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
+		else if (it->first == "buttonBrushP")
+			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 	}
 }
 
@@ -53,6 +85,8 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 		return;
 	}
 	glViewport(x1, y1, width, height);
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x1, y1, width, height);
 	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -107,4 +141,5 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
+	glDisable(GL_SCISSOR_TEST);
 }
