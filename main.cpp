@@ -7,6 +7,7 @@ int main(int argc, char **argv) {
 	}
 	raycast *game = new raycast();
 
+	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 	if (game->initGame(argv[1])) {
 		delete game;
 		std::cerr << "Failed to initialize game" << std::endl;
@@ -18,5 +19,6 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	delete game;
+	// system("leaks rc");
 	return 0;
 }

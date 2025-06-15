@@ -1,54 +1,110 @@
 #include "raycast.hpp"
 
-void	raycast::renderMinimap(void) const {
-	int	minimapSize;
+void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
+	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
+	rc->screenWidth = width;
+	rc->screenHeight = height;
+	glfwGetFramebufferSize(window, &rc->screenBuffWidth, &rc->screenBuffHeight);
+}
+
+void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const std::string &name) {
+	sc.addObject(name, obj(x, y, sizeX, sizeY, name));
+}
+
+void	raycast::addObjectToScene(scene &sc, const int &x, const int &y, const int &sizeX, const int &sizeY, const int &tile, const std::string &name) {
+	std::cout << &sc << std::endl;
+	sc.addObject(name, obj(x, y, sizeX, sizeY, tile, name));
+}
+
+void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const int &height) {
+	// glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	// glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(x1, y1, width, height);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(0, 0);
+	glVertex2f(1, 0);
+	glVertex2f(1,1);
+	glVertex2f(0,1);
+	glEnd();
+}
+
+void	raycast::renderScene(scene &sc) {
+	const std::map<std::string, obj> &objs = sc.getObjs();
+
+	for (auto it = objs.begin(); it != objs.end(); ++it) {
+		std::cout << it->first << std::endl;
+		if (it->first == "minimap")
+			renderMinimap(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		else if (it->first == "mapCreate")
+			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		else if (it->first == "buttonBrush1")
+			renderBotton(0,0,256,256);
+	}
+}
+
+void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
+	double	viewPortCenterX = playerX;
+	double	viewPortCenterY = playerY;
 
 	if (!window || !map) {
 		std::cerr << "Window or map not initialized." << std::endl;
 		return;
 	}
-	if (screenHeight <= screenWidth)
-		minimapSize = screenHeight / 4;
-	else
-		minimapSize = screenWidth / 4;
-	glViewport(0, 0, minimapSize, minimapSize);
+	glViewport(x1, y1, width, height);
 	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, mapWidth, mapHeight, 0, -1, 1);
+	glOrtho(0, 8, 8, 0, -1, 1);
+
 	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	glLoadIdentity();
-	
-	glColor3f(0, 0, 0);
-	glBegin(GL_QUADS);
-	glVertex2f(0, 0);
-	glVertex2f(0, minimapSize);
-	glVertex2f(minimapSize, minimapSize);
-	glVertex2f(minimapSize, 0);
-	glEnd();
-	for (int y = 0; y < mapHeight; ++y) {
-		for (int x = 0; x < mapWidth; ++x) {
-			if ((*map)[y][x] == '1') {
-				glColor3f(0.5f, 0.5f, 0.5f); // Gray for walls
+
+	if (playerX + 4 > mapWidth)
+		viewPortCenterX = mapWidth - 4;
+	if (playerY + 4 > mapHeight)
+		viewPortCenterY = mapHeight - 4;
+	if (playerX - 4 < 0)
+		viewPortCenterX = 4;
+	if (playerY - 4 < 0)
+		viewPortCenterY = 4;
+	for (double y = -4; y < 4; y += playerStep) {
+		for (double x = -4; x < 4; x += playerStep) {
+			double	mapX = viewPortCenterX + x;
+			double	mapY = viewPortCenterY + y;
+			if (mapX >= 0 && mapY >=0 && mapX < mapWidth &&
+					mapY < mapHeight &&
+						(*map)[mapY][mapX] == '1') {
+				glColor3f(0.3f, 0.3f, 0.3f); // Gray
 			} else {
-				glColor3f(1.0f, 1.0f, 1.0f); // White for empty space
+				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
 			glBegin(GL_QUADS);
-			glVertex2f(x + 0.1f, y + 0.1f);
-			glVertex2f(x + 0.9f, y + 0.1f);
-			glVertex2f(x + 0.9f, y + 0.9f);
-			glVertex2f(x + 0.1f, y + 0.9f);
+			glVertex2f(x + 4, y + 4);
+			glVertex2f(x + 4 + playerStep, y + 4);
+			glVertex2f(x + 4 + playerStep, y + 4 + playerStep);
+			glVertex2f(x + 4, y + 4 + playerStep);
 			glEnd();
 		}
 	}
+	viewPortCenterX = playerX - viewPortCenterX;
+	viewPortCenterY = playerY - viewPortCenterY;
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(playerX, playerY);
-	glVertex2f(playerX + 0.2f, playerY);
-	glVertex2f(playerX + 0.2f, playerY + 0.2f);
-	glVertex2f(playerX, playerY + 0.2f);
+	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
+	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
+	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
+	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
 	glEnd();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 }
