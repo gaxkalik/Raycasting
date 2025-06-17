@@ -4,6 +4,7 @@
 #include "raycast.hpp"
 
 #define playerStep 0.05
+#define rotationSpeed 0.06
 
 struct keyPressed {
 	bool	esc = false;
@@ -12,6 +13,8 @@ struct keyPressed {
 	bool	moveLeft = false;
 	bool	moveRight = false;
 	bool	openMap = false;
+	bool	rotateLeft = false;
+	bool	rotateRight = false;
 };
 
 class player
@@ -24,9 +27,23 @@ class player
 		void	setX(double X) { pX += X; }
 		double	getY(void) const {return pY; }
 		void	setY(double Y) { pY += Y; }
+		double	getAngle(void) const { return angle; }
+		void	setAngle(double angle)
+		{
+			this->angle += angle;
+			if (angle < 0)
+			{
+				angle = 2 * M_PI;
+			}
+			if (angle > 2 * M_PI)
+			{
+				angle = 0;
+			}
+		}
 	private:
 		double	pX;
 		double	pY;
+		double angle;
 };
 
 #endif

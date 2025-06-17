@@ -14,6 +14,7 @@
 #define playerX pl->getX()
 #define playerY pl->getY()
 #define OBJ (it->second)
+#define pAngle pl->getAngle()
 
 class	player;
 class	scene;
@@ -30,13 +31,16 @@ class	raycast
 		const int	initGame(const char *);
 		const int	mapParse(const char *);
 		void		playerInput(void);
+		void		addBottonsToScene(void);
 		void		renderScene(scene &);
-		void		renderBotton(const int &, const int &, const int &, const int &);
+		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMinimap(const int &, const int &, const int &, const int &);
+		void		renderGame(const int &, const int &, const int &, const int &);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);
-		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &);
+		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &,const std::string &);
+		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 		obj	*cursorOnObj(const double &cursorX, const double &cursorY) const;
 		static void	window_size_callback(GLFWwindow*, int, int);
@@ -51,6 +55,7 @@ class	raycast
 		int							mapWidth, mapHeight;
 		int							screenWidth, screenHeight;
 		int							screenBuffWidth, screenBuffHeight;
+		char						brush;
 		double						cursorX, cursorY;
 };
 
