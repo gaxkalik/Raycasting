@@ -65,8 +65,11 @@ const int raycast::initGame(const char *filename) {
 	int	size = std::min(screenBuffWidth, screenBuffHeight);
 	scenes = new std::vector<scene>();
 
+
 	newScene();
+	addObjectToScene((*scenes)[0], 0, 0, screenBuffWidth, screenBuffHeight, "MainGame");
 	addObjectToScene((*scenes)[0], 0, 0, size / 4, size / 4, "minimap");
+
 
 	newScene();
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\

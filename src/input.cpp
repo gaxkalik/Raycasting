@@ -3,6 +3,7 @@
 keyPressed keys;
 
 void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	std::cout << key << "\n";
 	if (key == 65) {
 		if (action)
 			keys.moveLeft = true;
@@ -34,6 +35,21 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == 256)
 		if (action)
 			keys.esc = true;
+	if (key == 263)						//left
+	{ 			
+		if (action)
+			keys.rotateLeft = true;
+		else
+			keys.rotateLeft = false;
+	}
+	if (key == 262)						//right
+	{
+		if (action)
+			keys.rotateRight = true;
+		else
+			keys.rotateRight = false;
+	}	
+
 }
 
 obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
@@ -61,6 +77,10 @@ void	raycast::playerInput(void) {
 			pl->setX(-playerStep);
 		if (keys.moveRight && (*map)[playerY][playerX + playerStep] != '1')
 			pl->setX(playerStep);
+		if(keys.rotateLeft)
+			pl->setAngle(rotationSpeed);
+		if(keys.rotateRight)
+			pl->setAngle(-rotationSpeed);
 	}
 	else if (keys.openMap) {
 		currScene = &(*scenes)[1];

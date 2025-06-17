@@ -14,6 +14,7 @@
 #define playerX pl->getX()
 #define playerY pl->getY()
 #define OBJ (it->second)
+#define pAngle pl->getAngle()
 
 class	player;
 class	scene;
@@ -34,6 +35,7 @@ class	raycast
 		void		renderScene(scene &);
 		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMinimap(const int &, const int &, const int &, const int &);
+		void		renderGame(const int &, const int &, const int &, const int &);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);

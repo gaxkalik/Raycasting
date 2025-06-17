@@ -136,10 +136,72 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
 	glEnd();
 
+	double rayX = 400*sin(pAngle);
+	double rayY = 400*cos(pAngle);
+
+	//glBegin(GL_QUADS);
+	glBegin(GL_LINES);
+	glColor3f(0.0, 0.0, 0.6); 
+	glVertex2f(rayX, rayY - 0.01);
+	//glVertex2f(rayX, rayY +0.01);
+	//glVertex2f(playerX, playerY - 0.01);
+	glVertex2f(playerX, playerY+0.01);
+	glEnd();
+
+
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glDisable(GL_SCISSOR_TEST);
+}
+
+
+void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
+{
+	int resolution = width / 50;
+
+	if (!window || !map) {
+		std::cerr << "Window or map not initialized." << std::endl;
+		return;
+	}
+
+	glViewport(x1, y1, width, height);
+	//glEnable(GL_SCISSOR_TEST);
+	//glScissor(x1, y1, width, height);
+	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, resolution, 0, height, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	for (double y = 0; y < height;  ++y) {
+		for (double x = 0; x < resolution; ++x)
+		{
+			
+		}
+	}
+	
+
+	// glColor3f(1.0f, 0.0f, 0.0f);
+	// glBegin(GL_QUADS);
+	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
+	// glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
+	// glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
+	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
+	// glEnd();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	//glDisable(GL_SCISSOR_TEST);
 }
