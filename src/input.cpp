@@ -3,7 +3,6 @@
 keyPressed keys;
 
 void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	std::cout << key << "\n";
 	if (key == 65) {
 		if (action)
 			keys.moveLeft = true;
@@ -66,21 +65,44 @@ obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
 }
 
 void	raycast::playerInput(void) {
+
+	double dirX = playerStep * sin(pAngle + M_PI_2);
+	double dirY = playerStep * cos(pAngle + M_PI_2);
+
+	double sDirX = playerStep * sin(pAngle);
+	double sDirY = playerStep * cos(pAngle);
+
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		if (keys.moveUp && (*map)[playerY - playerStep][playerX] != '1')
-			pl->setY(-playerStep);
-		if (keys.moveDown && (*map)[playerY + playerStep][playerX] != '1')
-			pl->setY(playerStep);
-		if (keys.moveLeft && (*map)[playerY][playerX - playerStep] != '1')
-			pl->setX(-playerStep);
-		if (keys.moveRight && (*map)[playerY][playerX + playerStep] != '1')
-			pl->setX(playerStep);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if (keys.moveUp && (*map)[playerY - dirY][playerX] != '1' && (*map)[playerY][playerX + dirX] != '1')
+		{			
+			pl->setX(dirX);
+			pl->setY(-dirY);
+		}
+		if (keys.moveDown && (*map)[playerY + dirY][playerX] != '1' && (*map)[playerY][playerX - dirX] != '1')
+		{
+			pl->setX(-dirX);
+			pl->setY(dirY);
+		}
+		if (keys.moveLeft && (*map)[playerY - sDirY][playerX] != '1' && (*map)[playerY][playerX + sDirX] != '1')
+		{
+			pl->setX(sDirX);
+			pl->setY(-sDirY);
+		}
+		if (keys.moveRight && (*map)[playerY + sDirY][playerX] != '1' && (*map)[playerY][playerX - sDirX] != '1')
+		{
+			pl->setX(-sDirX);
+			pl->setY(sDirY);
+		}
 		if(keys.rotateLeft)
-			pl->setAngle(rotationSpeed);
-		if(keys.rotateRight)
+		{
 			pl->setAngle(-rotationSpeed);
+			std::cout << pAngle<<"\n";
+		}
+			
+		if(keys.rotateRight)
+			pl->setAngle(rotationSpeed);
 	}
 	else if (keys.openMap) {
 		currScene = &(*scenes)[1];

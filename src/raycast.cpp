@@ -75,6 +75,19 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
+	std::ifstream	file;
+
+	file.open("textures/hWall");
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file" << std::endl;
+		return 1;
+	}
+
+	std::string line;
+	hWall = new std::vector<std::string>();
+	while (std::getline(file, line))
+		hWall->push_back(line);
+	file.close();
 	return 0;
 }
 
