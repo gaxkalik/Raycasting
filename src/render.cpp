@@ -385,8 +385,10 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
 {
-	const double resolution = width / 60;
-	const double maxWallHeight = height;
+	int				rayCnt = 180 * 2;
+	int				txtRes = 16;
+	const double	resolution = width / rayCnt;
+	const double	maxWallHeight = height;
 
 	if (!window || !map) 
 	{
@@ -400,7 +402,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, 60, height, 0, -1, 1);
+	glOrtho(0, rayCnt, height, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -411,16 +413,16 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glColor3f(0.1f, 0.708f, 1.0f);
 	glBegin(GL_QUADS);
 	glVertex2f(0,0);
-	glVertex2f(60, 0);
-	glVertex2f(60, height/2);
-	glVertex2f(0, height/2);
+	glVertex2f(rayCnt, 0);
+	glVertex2f(rayCnt, height / 2);
+	glVertex2f(0, height / 2);
 	glEnd();
 	//////grass/////////
 	glColor3f(0.1f, 0.9f, 0.4f);
 	glBegin(GL_QUADS);
-	glVertex2f(0, screenBuffHeight/2);
-	glVertex2f(60, screenBuffHeight/2);
-	glVertex2f(60, screenBuffHeight);
+	glVertex2f(0, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight);
 	glVertex2f(0,screenBuffHeight);
 	glEnd();
 	///////fuck you, daltonik em
@@ -429,74 +431,63 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	double posX = 0;
 
 	asd = 0;
-	double	tmpX = ((mX - (int)mX) * 10);
-	//cout << "_______________________________________________\n";
-	for (int i = 0; i < 60; ++i, rAngle += 0.0174533, ++posX)
+	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
 	{
 		char dir = 'a';
 		double dist = getShortestRay(rAngle, dir);
+		double	tmpX = ((mX - (int)mX) * txtRes);
+		double	tmpY2 = ((mY - (int)mY) * txtRes);
 		++asd;
 		double wallHeiht = maxWallHeight / abs(cos(pAngle - rAngle) * dist * 0.55);
-
-		if(wallHeiht > maxWallHeight) 
+		
+		
+		double	posY = (maxWallHeight - wallHeiht)/2;
+		double	tmpY = wallHeiht / txtRes;
+		
+		if (wallHeiht == maxWallHeight) {
+			posY -= 100 / dist;
+			tmpY += 50 / dist;
+		}
+		
+		if(wallHeiht > maxWallHeight)
 			wallHeiht = maxWallHeight;
-
-		double posY = (maxWallHeight - wallHeiht)/2;
-
-	
+		
 		//cout << i << ". " <<"dist\t" << dist << "\twallHeight\t" << wallHeiht << "\tposX\t " << posX << "\tposY\t" << posY <<"\tres\t"<< resolution <<endl;
-
+		
 		//glColor3f(1.0f, 0.0f, 0.0f);
-		double	tmpY = wallHeiht / 10;
 		// std::cout << "x - " << tmpX * 8 << " y - " << mY << " "<< asd<< std::endl;
-		for (double y = 0; y < 10; ++y) 
+		for (double y = 0; y < txtRes; ++y) 
 		{
-				glColor3f(1.0f, 1.0f, 1.0f);
-				if(dir == 'h')
-					glColor3f(0.4f, 0.4f, 0.4f);
-				if ((*hWall)[y][tmpX] == '1')
+			// std::cout << (*hWall)[y][tmpX] << std::endl;
+				glColor3f(1.0f, 0.0f, 0.0f);
+				if(dir == 'h') {
+					glColor3f(0.3f, 0.1f, 0.0f);
+					if ((*hWall)[y][tmpX] == '1')
+						glColor3f(0.0f, 0.0f, 0.0f);
+					glBegin(GL_QUADS);
+					glVertex2f(posX,		posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
+					glVertex2f(posX,		posY + ((y + 1) * tmpY));
+					glEnd();
+				} else {
+					if ((*hWall)[y][tmpY2] == '1')
 					glColor3f(0.0f, 0.0f, 0.0f);
-				glBegin(GL_QUADS);
-				glVertex2f(posX,		posY + (y * tmpY));
-				glVertex2f(posX + 1,	posY + (y * tmpY));
-				glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
-				glVertex2f(posX,		posY + ((y + 1) * tmpY));
-				glEnd();
-			}
-			tmpX += dist/ 10;
-			if (tmpX > 7)
+					glBegin(GL_QUADS);
+					glVertex2f(posX,		posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
+					glVertex2f(posX,		posY + ((y + 1) * tmpY));
+					glEnd();
+				}
+		}
+			if (tmpX > txtRes)
 				tmpX = 0;
-			std::cout << "________________________________\n";
-		// for (double y = 0; y < 8; ++y) 
-		// {
-		// 	for (double x = tmpX; x < 8; ++x) 
-		// 	{
-		// 		if ((*hWall)[y][x] == '1') {
-		// 			glColor3f(1.0f, 0.0f, 0.0f);
-		// 		}
-		// 		else {
-		// 			std::cout << (*hWall)[y][x];
-		// 			glColor3f(0.0f, 0.0f, 1.0f);
-		// 		}
-		// 		glBegin(GL_QUADS);
-		// 		glVertex2f(posX + 0.02,	posY+(y * tmpY));
-		// 		glVertex2f(posX + 0.98,	posY+(y * tmpY));
-		// 		glVertex2f(posX + 0.98,	posY + tmpY +(y * tmpY)- 0.80);
-		// 		glVertex2f(posX  + 0.02,		posY + tmpY+(y * tmpY) - 0.80);
-		// 		glEnd();
-		// 	}
-		// 		std::cout << "\n";
-		// }
-		// glBegin(GL_QUADS);
-		// glVertex2f(posX + 0.02,		posY - 0.05);
-		// glVertex2f(posX + 0.98,	posY - 0.05);
-		// glVertex2f(posX + 0.98,	posY + wallHeiht - 0.90);
-		// glVertex2f(posX  + 0.02,		posY + wallHeiht - 0.90);
-		// glEnd();
-
-		// std::cout << "as - " << asd << " " << (int)(dist * 100 / 49)<< std::endl;
+			// std::cout << "\n";
+		tmpX = ((mY - (int)mY) * txtRes);
 	}
-
+		
+		std::cout << "______________________\n";
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
@@ -538,6 +529,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
 			if ((*map)[mYV][mXV] == '1') {
+				_mX = mXV;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
 			}
@@ -546,6 +538,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 		}
 		else{
 			if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
+				_mX = mXV - 1;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
 			}
@@ -553,7 +546,6 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 			mYV -= offsetY;
 		}
 	}
-	_mX = mXV;
 	_mY = mYV;
 	return distV;
 }
@@ -603,6 +595,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		{
 			if ((*map)[(int)mYH][(int)mXH] == '1') 
 			{
+				_mY = mYH;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
 				break;
 			}
@@ -611,20 +604,19 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		}
 		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[(int)mYH-1][(int)mXH] == '1') 
+			if ((*map)[(int)mYH - 1][(int)mXH] == '1') 
 			{
+				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
 			}
-			
 			--mYH;
 			mXH -= offsetX;
 		}
 		else
-			mXH += offsetX;
+		mXH += offsetX;
 	}
 	_mX = mXH;
-	_mY = mYH;
 	return distH;
 }
 
@@ -632,7 +624,7 @@ const double raycast::getShortestRay(double rayAngle, char &dir)
 {
 	double	xV, yV, xH, yH;
 	double	distV = getVerticalRay(rayAngle, xV, yV);
-	double	distH = getHorizontalRay(rayAngle, xV, yV);
+	double	distH = getHorizontalRay(rayAngle, xH, yH);
 	double	dist = 0;
 
 	if (distV <= distH) {
