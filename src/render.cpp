@@ -230,9 +230,9 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 			}
 			glBegin(GL_QUADS);
 			glVertex2f(x + 0.01f, y + 0.01f);
-            glVertex2f(x + 0.98f, y + 0.01f);
-            glVertex2f(x + 0.98f, y + 0.98f);
-            glVertex2f(x + 0.01f, y + 0.98f);
+			glVertex2f(x + 0.98f, y + 0.01f);
+			glVertex2f(x + 0.98f, y + 0.98f);
+			glVertex2f(x + 0.01f, y + 0.98f);
 			glEnd();
 		}
 	}
@@ -246,134 +246,13 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 	glVertex2f(playerX - 0.1f, playerY + 0.1f);
 	glEnd();
 
+	glBegin(GL_LINES);
+	glVertex2f(playerX, playerY);
+	glVertex2f(playerX + (cos(pAngle) * 1), playerY + (sin(pAngle) * 1));
+	glEnd();
+
 	double rAngle = pAngle + M_PI / 6;
 
-
-	int blockX = (int)playerX;
-	int blockY = (int)playerY;
-
-	double rPX = playerX - blockX;
-	double rPY = playerY - blockY;				//?
-
-
-	cout <<"_______________________________________________________________\n";
-	for (int i = 0; i < 60; ++i, rAngle -= 0.0174533)
-	{
-
-		double vertLengthX = 0;
-		double vertLengthY = 0;
-
-		// std::cout << rAngle<<" "<< rAngle * 180 / M_PI << "\n";
-		if (rAngle < 0)
-			rAngle += 2 * M_PI;
-		else if (rAngle > 2 * M_PI)
-			rAngle = rAngle - 360 * 0.0174533;
-		if ((rAngle >= 0 && rAngle < M_PI_2) || (rAngle > 3 * M_PI_2 && rAngle <= 2 * M_PI))			//right
-		{
-			vertLengthX = abs(1 - rPX);
-			vertLengthY = tan(rAngle) * vertLengthX;
-		}
-		else if ((rAngle == M_PI_2 || rAngle == 3 * M_PI_2)) {
-			vertLengthX = 0;
-			vertLengthY = 0;
-		}
-		else																							//left
-		{
-			vertLengthX = -abs(rPX);
-			vertLengthY = (tan(rAngle) * vertLengthX);
-		}
-		
-		
-		double mXV = playerX + vertLengthX;
-		double mYV = playerY + vertLengthY;
-		double offsetY = tan(rAngle);
-		double distV = 100;
-
-		while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
-			if ((rAngle >= 0 && rAngle <= M_PI_2) || (rAngle > 3 * M_PI_2 && rAngle <= 2 * M_PI))
-			{
-				if ((*map)[mYV][mXV] == '1') {
-					distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
-					break;
-				}
-				mYV += offsetY;
-				++mXV;
-			}
-			else{
-				if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
-					distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
-					break;
-				}
-				--mXV;
-				mYV -= offsetY;
-			}
-		}
-
-		double horLengthX = rPX;
-		double horLengthY = rPY;
-		double offsetX = 0;
-
-
-		if(rAngle < M_PI)
-		{
-			horLengthY = 1 - rPY;
-			horLengthX = horLengthY/tan(rAngle);
-		}
-		if (rAngle> M_PI)	
-		{
-			horLengthY = -rPY;
-			horLengthX = horLengthY/tan(rAngle);
-		}
-		
-
-		double mXH = playerX + horLengthX;
-		double mYH = playerY + horLengthY;
-		
-		double distH = 100;
-
-		while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight) 
-		{
-			if(rAngle == 0 || rAngle == M_PI || rAngle == M_PI/2 || rAngle == 3*M_PI/2)
-				offsetX = 1;
-			else
-				offsetX = 1/tan(rAngle);
-
-			//if ((rAngle > 0 && rAngle < M_PI/2)||(rAngle > M_PI/2 && rAngle < M_PI))			//up
-			if(rAngle<M_PI)
-			{
-				if ((*map)[(int)mYH][(int)mXH] == '1') 
-				{
-					//cout << "    aaaaaaa   " << "mx " << mXH << " my " << mYH << "   ofs " <<offsetX<< "\n";
-					distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
-					break;
-				}
-				++mYH;
-				mXH += offsetX;
-			}
-			else
-			{
-				if (!((*map)[(int)mYH-1][(int)mXH] != '1')) 
-				{
-					
-					distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY)) ;
-					break;
-				}
-				--mYH;
-				mXH -= offsetX;
-			}
-		}
-
-		glBegin(GL_LINES);
-		glColor3f(1.0, 0.0, 0.1); 
-		glVertex2f(playerX, playerY);
-		if(distH<=distV && distH != 0)
-			glVertex2f(mXH, mYH);
-		else
-			glVertex2f(mXV, mYV);
-		glEnd();
-	}
-
-	
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -425,7 +304,6 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glVertex2f(rayCnt, screenBuffHeight);
 	glVertex2f(0,screenBuffHeight);
 	glEnd();
-	///////fuck you, daltonik em
 
 	double rAngle = pAngle - M_PI / 6;
 	double posX = 0;
@@ -451,11 +329,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		
 		if(wallHeiht > maxWallHeight)
 			wallHeiht = maxWallHeight;
-		
-		//cout << i << ". " <<"dist\t" << dist << "\twallHeight\t" << wallHeiht << "\tposX\t " << posX << "\tposY\t" << posY <<"\tres\t"<< resolution <<endl;
-		
-		//glColor3f(1.0f, 0.0f, 0.0f);
-		// std::cout << "x - " << tmpX * 8 << " y - " << mY << " "<< asd<< std::endl;
+
 		for (double y = 0; y < txtRes; ++y) 
 		{
 			// std::cout << (*hWall)[y][tmpX] << std::endl;
@@ -483,11 +357,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		}
 			if (tmpX > txtRes)
 				tmpX = 0;
-			// std::cout << "\n";
 		tmpX = ((mY - (int)mY) * txtRes);
 	}
-		
-		std::cout << "______________________\n";
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 

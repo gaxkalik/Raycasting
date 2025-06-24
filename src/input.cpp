@@ -98,7 +98,6 @@ void	raycast::playerInput(void) {
 		if(keys.rotateLeft)
 		{
 			pl->setAngle(-rotationSpeed);
-			std::cout << pAngle<<"\n";
 		}
 			
 		if(keys.rotateRight)

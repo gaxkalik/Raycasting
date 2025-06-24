@@ -38,7 +38,6 @@ void	raycast::addBottonsToScene(void) {
 	int x = it->second.getX1();
 	int y = it->second.getY1() - tileHegiht;
 
-	std::cout << "y - " << y << std::endl;
 	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
 	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
