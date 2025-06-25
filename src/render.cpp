@@ -1,5 +1,8 @@
 #include "raycast.hpp"
 
+using std::cout;
+using std::endl;
+
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
 	rc->screenWidth = width;
@@ -64,7 +67,12 @@ void	raycast::renderScene(scene &sc) {
 
 	for (auto it = objs.begin(); it != objs.end(); ++it) {
 		if (it->first == "minimap")
-			renderMinimap(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		{
+			//rendTest(0, 0, screenBuffHeight, screenBuffHeight);
+			renderGame(0,0,screenBuffWidth, screenBuffHeight);
+			rendTest(0, 0, screenBuffHeight/4, screenBuffHeight/4);		//like minimap
+			//renderMinimap(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
+		}
 		else if (it->first == "mapCreate")
 			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
 		else if (it->first == "buttonBrush0")
@@ -87,13 +95,13 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glViewport(x1, y1, width, height);
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(x1, y1, width, height);
-	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
+	//glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, 8, 8, 0, -1, 1);
+	glOrtho(0, 8, 0, 8, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -110,7 +118,7 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	for (double y = -4; y < 4; y += playerStep) {
 		for (double x = -4; x < 4; x += playerStep) {
 			double	mapX = viewPortCenterX + x;
-			double	mapY = viewPortCenterY + y;
+			double	mapY = viewPortCenterY - y;
 			if (mapX >= 0 && mapY >=0 && mapX < mapWidth &&
 					mapY < mapHeight &&
 						(*map)[mapY][mapX] == '1') {
@@ -127,7 +135,8 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 		}
 	}
 	viewPortCenterX = playerX - viewPortCenterX;
-	viewPortCenterY = playerY - viewPortCenterY;
+	viewPortCenterY = viewPortCenterY - playerY;
+	//std::cout << "VIEW X - " << viewPortCenterX << " Y - " << viewPortCenterY << "\n";
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
@@ -136,16 +145,48 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
 	glEnd();
 
-	double rayX = 400*sin(pAngle);
-	double rayY = 400*cos(pAngle);
+	double rayX = 400*cos(pAngle);
+	double rayY = 400*sin(pAngle);
 
-	//glBegin(GL_QUADS);
+	using std::cout;
+
+
+
+
+	// glBegin(GL_LINES);
+	// glColor3f(0.0, 0.0, 0.6); 
+	// glVertex2f(rayX, rayY);
+	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
+	// glEnd();
+
+
+
+	int blockX = (int)playerX;
+	int blockY = (int)playerY;
+
+	double rPX = playerX - blockX;
+	double rPY = playerY - blockY;				//?
+
+	double lengthX;
+	double lengthY;
+
+	if ((pAngle >= 0 && pAngle <= M_PI_2) || (pAngle > 3 * M_PI_2 && pAngle <= 2 * M_PI))
+	{
+		lengthX = abs(1 - rPX);
+		lengthY = tan(pAngle) * lengthX;
+	}
+	else
+	{
+		lengthX = -abs(rPX);
+		lengthY = (tan(pAngle) * lengthX);
+	}
+	
+	
+
 	glBegin(GL_LINES);
-	glColor3f(0.0, 0.0, 0.6); 
-	glVertex2f(rayX, rayY - 0.01);
-	//glVertex2f(rayX, rayY +0.01);
-	//glVertex2f(playerX, playerY - 0.01);
-	glVertex2f(playerX, playerY+0.01);
+	glColor3f(1.0, 0.0, 0.1); 
+	glVertex2f(playerX, 4 + viewPortCenterY);
+	glVertex2f(playerX + lengthX, 4 + viewPortCenterY + lengthY);
 	glEnd();
 
 
@@ -157,51 +198,318 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glDisable(GL_SCISSOR_TEST);
 }
 
-
-void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
-{
-	int resolution = width / 50;
+void raycast::rendTest(const int &x1, const int &y1, const int &width, const int &height) {
+	double	viewPortCenterX = playerX;
+	double	viewPortCenterY = playerY;
 
 	if (!window || !map) {
 		std::cerr << "Window or map not initialized." << std::endl;
 		return;
 	}
-
 	glViewport(x1, y1, width, height);
-	//glEnable(GL_SCISSOR_TEST);
-	//glScissor(x1, y1, width, height);
-	glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x1, y1, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, resolution, 0, height, -1, 1);
+	glOrtho(0, mapWidth, mapHeight, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 
-	for (double y = 0; y < height;  ++y) {
-		for (double x = 0; x < resolution; ++x)
-		{
-			
+
+	for (double y = 0; y < mapHeight; y += 1) {
+		for (double x = 0; x < mapWidth; x += 1) {
+						if ((*map)[y][x] == '1') {
+				glColor3f(0.3f, 0.3f, 0.3f); // Gray
+			} else {
+				glColor3f(1.0f, 1.0f, 1.0f); // White
+			}
+			glBegin(GL_QUADS);
+			glVertex2f(x + 0.01f, y + 0.01f);
+			glVertex2f(x + 0.98f, y + 0.01f);
+			glVertex2f(x + 0.98f, y + 0.98f);
+			glVertex2f(x + 0.01f, y + 0.98f);
+			glEnd();
 		}
 	}
-	
 
-	// glColor3f(1.0f, 0.0f, 0.0f);
-	// glBegin(GL_QUADS);
-	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
-	// glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
-	// glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
-	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
-	// glEnd();
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(playerX - 0.1f, playerY - 0.1f);
+	glVertex2f(playerX + 0.1f, playerY - 0.1f);
+	glVertex2f(playerX + 0.1f, playerY + 0.1f);
+	glVertex2f(playerX - 0.1f, playerY + 0.1f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2f(playerX, playerY);
+	glVertex2f(playerX + (cos(pAngle) * 1), playerY + (sin(pAngle) * 1));
+	glEnd();
+
+	double rAngle = pAngle + M_PI / 6;
+
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-	//glDisable(GL_SCISSOR_TEST);
+	glDisable(GL_SCISSOR_TEST);
+}
+
+void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
+{
+	int				rayCnt = 180 * 2;
+	int				txtRes = 16;
+	const double	resolution = width / rayCnt;
+	const double	maxWallHeight = height;
+
+	if (!window || !map) 
+	{
+		std::cerr << "Window or map not initialized." << std::endl;
+		return;
+	}
+
+	glViewport(x1, y1, width, height);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, rayCnt, height, 0, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+
+	////////sky///////
+	glColor3f(0.1f, 0.708f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(0,0);
+	glVertex2f(rayCnt, 0);
+	glVertex2f(rayCnt, height / 2);
+	glVertex2f(0, height / 2);
+	glEnd();
+	//////grass/////////
+	glColor3f(0.1f, 0.9f, 0.4f);
+	glBegin(GL_QUADS);
+	glVertex2f(0, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight);
+	glVertex2f(0,screenBuffHeight);
+	glEnd();
+
+	double rAngle = pAngle - M_PI / 6;
+	double posX = 0;
+
+	asd = 0;
+	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
+	{
+		char dir = 'a';
+		double dist = getShortestRay(rAngle, dir);
+		double	tmpX = ((mX - (int)mX) * txtRes);
+		double	tmpY2 = ((mY - (int)mY) * txtRes);
+		++asd;
+		double wallHeiht = maxWallHeight / abs(cos(pAngle - rAngle) * dist * 0.55);
+		
+		
+		double	posY = (maxWallHeight - wallHeiht)/2;
+		double	tmpY = wallHeiht / txtRes;
+		
+		if (wallHeiht == maxWallHeight) {
+			posY -= 100 / dist;
+			tmpY += 50 / dist;
+		}
+		
+		if(wallHeiht > maxWallHeight)
+			wallHeiht = maxWallHeight;
+
+		for (double y = 0; y < txtRes; ++y) 
+		{
+			// std::cout << (*hWall)[y][tmpX] << std::endl;
+				glColor3f(1.0f, 0.0f, 0.0f);
+				if(dir == 'h') {
+					glColor3f(0.3f, 0.1f, 0.0f);
+					if ((*hWall)[y][tmpX] == '1')
+						glColor3f(0.0f, 0.0f, 0.0f);
+					glBegin(GL_QUADS);
+					glVertex2f(posX,		posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
+					glVertex2f(posX,		posY + ((y + 1) * tmpY));
+					glEnd();
+				} else {
+					if ((*hWall)[y][tmpY2] == '1')
+					glColor3f(0.0f, 0.0f, 0.0f);
+					glBegin(GL_QUADS);
+					glVertex2f(posX,		posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + (y * tmpY));
+					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
+					glVertex2f(posX,		posY + ((y + 1) * tmpY));
+					glEnd();
+				}
+		}
+			if (tmpX > txtRes)
+				tmpX = 0;
+		tmpX = ((mY - (int)mY) * txtRes);
+	}
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
+
+const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) const
+{
+	double vertLengthX = 0;
+	double vertLengthY = 0;
+	double rPX = playerX - (int)playerX;
+
+	if (rayAngle > 2 * M_PI)
+		rayAngle = rayAngle - 360 * 0.0174533;
+	if (rayAngle < 0)
+		rayAngle += 2 * M_PI;
+	if ((rayAngle >= 0 && rayAngle < M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))			//right
+	{
+		vertLengthX = abs(1 - rPX);
+		vertLengthY = tan(rayAngle) * vertLengthX;
+	}
+	else if ((rayAngle == M_PI_2 || rayAngle == 3 * M_PI_2)) {
+		vertLengthX = 0;
+		vertLengthY = 0;
+	}
+	else																							//left
+	{
+		vertLengthX = -abs(rPX);
+		vertLengthY = (tan(rayAngle) * vertLengthX);
+	}
+
+	double mXV = playerX + vertLengthX;
+	double mYV = playerY + vertLengthY;
+	double offsetY = tan(rayAngle);
+	double distV = 100;
+	
+	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
+		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
+		{
+			if ((*map)[mYV][mXV] == '1') {
+				_mX = mXV;
+				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				break;
+			}
+			mYV += offsetY;
+			++mXV;
+		}
+		else{
+			if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
+				_mX = mXV - 1;
+				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				break;
+			}
+			--mXV;
+			mYV -= offsetY;
+		}
+	}
+	_mY = mYV;
+	return distV;
+}
+
+const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
+{
+	double rPX = playerX - (int)playerX;
+	double rPY = playerY - (int)playerY;
+
+	double horLengthX = rPX;
+	double horLengthY = rPY;
+	double offsetX = 0;
+
+	if (rayAngle > 2 * M_PI || rayAngle > 7)
+		rayAngle = rayAngle - 360 * 0.0174533;
+	if (rayAngle < 0)
+		rayAngle += 2 * M_PI;
+	
+	if(rayAngle < M_PI)
+	{
+		horLengthY = 1 - rPY;
+		horLengthX = horLengthY/tan(rayAngle);
+	}
+	if (rayAngle > M_PI)	
+	{
+		horLengthY = -rPY;
+		horLengthX = horLengthY/tan(rayAngle);
+	}
+
+	double mXH = playerX + horLengthX;
+	double mYH = playerY + horLengthY;
+
+	double distH = 100;
+	if (mXH > mapWidth) {
+		mXH = mapWidth;
+		return distH;
+	}
+	
+	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight) 
+	{
+		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
+			offsetX = 0.5;
+		else
+			offsetX = 1/tan(rayAngle);
+
+		if(rayAngle > 0 && rayAngle < M_PI)
+		{
+			if ((*map)[(int)mYH][(int)mXH] == '1') 
+			{
+				_mY = mYH;
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
+				break;
+			}
+			++mYH;
+			mXH += offsetX;
+		}
+		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
+		{
+			if ((*map)[(int)mYH - 1][(int)mXH] == '1') 
+			{
+				_mY = mYH - 1;
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
+				break;
+			}
+			--mYH;
+			mXH -= offsetX;
+		}
+		else
+		mXH += offsetX;
+	}
+	_mX = mXH;
+	return distH;
+}
+
+const double raycast::getShortestRay(double rayAngle, char &dir)
+{
+	double	xV, yV, xH, yH;
+	double	distV = getVerticalRay(rayAngle, xV, yV);
+	double	distH = getHorizontalRay(rayAngle, xH, yH);
+	double	dist = 0;
+
+	if (distV <= distH) {
+		dist = distV;
+		mX = xV;
+		mY = yV;
+	} else {
+		dist = distH;
+		mX = xH;
+		mY = yH;
+	}
+
+	dir = distV <= distH ? 'v' : 'h';
+	// cout << "distH\t" << distH <<"\t distV \t" << distV << "\tdist\t" << dist << "\t angle \t"<< pAngle<<"\t\n";
+	// std::cout << "x - " << mX << " y - " << mY << " "<< asd<< std::endl;
+	return dist;
 }

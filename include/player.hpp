@@ -3,8 +3,8 @@
 
 #include "raycast.hpp"
 
-#define playerStep 0.05
-#define rotationSpeed 0.06
+#define playerStep 0.025
+#define rotationSpeed 0.03
 
 struct keyPressed {
 	bool	esc = false;
@@ -31,13 +31,13 @@ class player
 		void	setAngle(double angle)
 		{
 			this->angle += angle;
-			if (angle < 0)
+			if (this->angle < 0)
 			{
-				angle = 2 * M_PI;
+				this->angle = 2 * M_PI;
 			}
-			if (angle > 2 * M_PI)
+			if (this->angle > 2 * M_PI)
 			{
-				angle = 0;
+				this->angle = 0;
 			}
 		}
 	private:

@@ -30,8 +30,8 @@ const int	raycast::mapParse(const char *filename) {
 	for (int y = 0; y < mapHeight; ++y) {
 		for (int x = 0; x < mapWidth; ++x) {
 			if ((*map)[y][x] == 'P') {
-				pl->setX(x + 0.4);
-				pl->setY(y + 0.4);
+				pl->setX(x + 0.5);
+				pl->setY(y + 0.5);
 			}
 		}
 	}

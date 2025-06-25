@@ -38,7 +38,6 @@ void	raycast::addBottonsToScene(void) {
 	int x = it->second.getX1();
 	int y = it->second.getY1() - tileHegiht;
 
-	std::cout << "y - " << y << std::endl;
 	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
 	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
@@ -75,6 +74,19 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
+	std::ifstream	file;
+
+	file.open("textures/hWall");
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file" << std::endl;
+		return 1;
+	}
+
+	std::string line;
+	hWall = new std::vector<std::string>();
+	while (std::getline(file, line))
+		hWall->push_back(line);
+	file.close();
 	return 0;
 }
 
