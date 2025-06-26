@@ -53,7 +53,7 @@ using std::cerr;
 
 void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const
 {
-	if (x == mapWidth + 2 || x < 0 || y == mapHeight + 2 || y < 0 || map[y][x] == '1')
+	if (x == mapWidth + 2 || x < 0 || y == mapHeight + 2 || y < 0 || (map[y][x] >= '1' && map[y][x] <= '9'))
 		return;
 	map[y][x] = '1';
 	floodFill(x + 1, y, map);
@@ -76,7 +76,7 @@ const int raycast::checkValidity() const
 		{
 			char currentChar = currentLine[calumn];
 			
-			if (currentChar != '0' && currentChar != '1' && currentChar != 'P' && currentChar != '\n')
+			if (currentChar < '0' && currentChar > '9' && currentChar != 'P' && currentChar != '\n')
 			{
 				cerr << "Invalid element in map! \n";
 				return 1; 

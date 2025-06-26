@@ -1,5 +1,7 @@
 #include "raycast.hpp"
 
+double playerStep = 0.05;
+
 extern	keyPressed keys;
 
 raycast::raycast() {
@@ -75,7 +77,7 @@ const int raycast::initGame(const char *filename) {
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
 	openTexture("textures/CASTLEBRICKS.xpm");
-	// openTexture("textures/brick.xpm");
+	openTexture("textures/SPOOKYDOOR.xpm");
 	std::ifstream	file;
 
 	file.open("textures/hWall");
@@ -150,7 +152,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[mYV][mXV] == '1') {
+			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') {
 				_mX = mXV;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
@@ -159,7 +161,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 			++mXV;
 		}
 		else{
-			if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
+			if ((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') {
 				_mX = mXV - 1;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
@@ -215,7 +217,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 
 		if(rayAngle > 0 && rayAngle < M_PI)
 		{
-			if ((*map)[(int)mYH][(int)mXH] == '1') 
+			if ((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') 
 			{
 				_mY = mYH;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
@@ -226,7 +228,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		}
 		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[(int)mYH - 1][(int)mXH] == '1') 
+			if ((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') 
 			{
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));

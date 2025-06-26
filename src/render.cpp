@@ -1,21 +1,8 @@
 #include "raycast.hpp"
 
-#define BLACK 0,0,0					//0
-#define WHITE 255,255,255			//1
-#define WHITE_SHADED 200,200,200	//1
-#define RED 255,0,0					//2
-#define RED_SHADED 179,0,0			//2
-#define GREEN 0,255,0				//3
-#define GREEN_SHADED 0,179,0		//3
-#define BLUE 0,0,255				//4
-#define BLUE_SHADED 0,0,179			//4
-#define GRAY 169,169,169			//5
-#define GRAY_SHADED 118,118,118		//5
-#define TRANSPARENT 255,255,255,0	//6
+
 #define BLUE_SKY 135, 206, 235
 #define GREEN_GRASS 17,124,19
-#define BROWN 110, 38, 14
-#define BROWN_SHADED 77,27,10
 
 using std::cout;
 using std::endl;
@@ -132,15 +119,15 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 		viewPortCenterX = 4;
 	if (playerY - 4 < 0)
 		viewPortCenterY = 4;
-	for (double y = -4; y < 4; y += playerStep) {
+	for (double y = -4; y < 4; y += 0.05) {
 		for (double x = -4; x < 4; x += playerStep) {
 			double	mapX = viewPortCenterX + x;
 			double	mapY = viewPortCenterY - y;
-			if (mapX >= 0 && mapY >=0 && mapX < mapWidth &&
-					mapY < mapHeight &&
-						(*map)[mapY][mapX] == '1') {
+			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && (*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9')
+			{
 				glColor3f(0.3f, 0.3f, 0.3f); // Gray
-			} else {
+			} 
+			else {
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
 			glBegin(GL_QUADS);
@@ -201,24 +188,18 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 		viewPortCenterX = 4;
 	if (playerY - 4 < 0)
 		viewPortCenterY = 4;
-	double pStep = playerStep;
+	double pStep = 0.05;
 	// std::cout << "____________________________\n";
 	for (double y = -4; y < 4; y += pStep) {
 		for (double x = -4; x < 4; x += pStep) {
 			int	mapX = viewPortCenterX + x;
 			int	mapY = viewPortCenterY - y;
-			if (mapX >= 0 && mapY >=0 && mapX < mapWidth &&
-					mapY < mapHeight &&
-						(*map)[mapY][mapX] == '1') {
+			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && (*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9') {
 				glColor3f(0.3f, 0.3f, 0.3f); // Gray
 			} else {
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
-			// std::cout << "x " << mapX << " " << mapY << " Vertex 1: (" << x + 4 << ", " << y + 4 << ") ";
-			// std::cout << "Vertex 2: (" << x + 4 + pStep << ", " << y + 4 << ") ";
-			// std::cout << "Vertex 3: (" << x + 4 + pStep << ", " << y + 4 + pStep << ") ";
-			// std::cout << "Vertex 4: (" << x + 4 << ", " << y + 4 + pStep << ")\n";
-			// std::cout << "x " << x + 4 << " " << x + 4 + pStep <<"\n";
+
 			glBegin(GL_QUADS);
 			glVertex2f(x + 4, y + 4);
 			glVertex2f(x + 4 - pStep, y + 4);
@@ -306,7 +287,17 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
+			if ((*map)[mX][mY] == '1')
+				determineTextureColor(textures[0], dir, y, textureStartHorizon, textureStartVertical);
+			else
+			{
+				
+				determineTextureColor(textures[1], dir, y, textureStartHorizon, textureStartVertical);
+
+			}
+
+				
+
 
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -344,52 +335,32 @@ void raycast::drawBackground(int rayCnt) const
 	glEnd();
 }
 
-void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl)
+void raycast::determineTextureColor(texture &currentTexture, char dir, int level, int horizon, int verticl)
 {
 	std::string key = "";
 	
 	if(dir == 'h')
 	{
-		key += (char)textures[0].tx[level][horizon];
-		// key += (char)textures[0].tx[level][horizon + 1];
-		// std::cout << "key - '" << horizon + 1 << "'\n";
-		// std::cout << "key - '" << key << "' " << textures[0].cl[key].r << " " << textures[0].cl[key].g << " "<< textures[0].cl[key].b << "\n";
-		glColor3ub(textures[0].cl[key].r,textures[0].cl[key].g,textures[0].cl[key].b);
-		// tmp[textures[0].tx[level][horizon]];
-		// if (textures[0].texture[level][horizon] == '0')
-		// 	glColor3ub(BLACK);
-		// else if ((*texture)[level][horizon] == '1')
-		// 	glColor3ub(WHITE);
-		// else if ((*texture)[level][horizon] == '2')
-		// 	glColor3ub(RED);
-		// else if ((*texture)[level][horizon] == '3')
-		// 	glColor3ub(GREEN);
-		// else if ((*texture)[level][horizon] == '4')
-		// 	glColor3ub(BLUE);
-		// else if ((*texture)[level][horizon] == '5')
-		// 	glColor3ub(GRAY);
-		// else if ((*texture)[level][horizon] == '6')
-		// 	glColor4ub(TRANSPARENT);
+		key += (char)currentTexture.tx[level][horizon];
+		
+		glColor3ub(currentTexture.cl[key].r,currentTexture.cl[key].g,currentTexture.cl[key].b);
 	} 
 	else 
 	{
-		key += (char)textures[0].tx[level][verticl];
-		// key += (char)textures[0].tx[level][verticl + 1];
-		glColor3ub(textures[0].cl[key].r, textures[0].cl[key].g, textures[0].cl[key].b);
-		// textures[0].texture[level][verticl];
-		// if ((*texture)[level][verticl] == '0')
-		// 	glColor3ub(BLACK);
-		// else if ((*texture)[level][verticl] == '1')
-		// 	glColor3ub(WHITE_SHADED);
-		// else if ((*texture)[level][verticl] == '2')
-		// 	glColor3ub(RED_SHADED);
-		// else if ((*texture)[level][verticl] == '3')
-		// 	glColor3ub(GREEN_SHADED);
-		// else if ((*texture)[level][verticl] == '4')
-		// 	glColor3ub(BLUE_SHADED);
-		// else if ((*texture)[level][verticl] == '5')
-		// 	glColor3ub(GRAY_SHADED);
-		// else if ((*texture)[level][verticl] == '6')
-		// 	glColor4ub(TRANSPARENT);
+		key += (char)currentTexture.tx[level][verticl];
+
+		int r = currentTexture.cl[key].r;
+		int g = currentTexture.cl[key].g;
+		int b = currentTexture.cl[key].b;
+
+		if(r > 20)	r -= 20;
+		else		r = 3;
+		if(g > 20)	g -= 20;
+		else		g = 3;
+		if(b > 20)	b -= 20;
+		else 		b = 3;
+		
+		glColor3ub(r, g, b);
+
 	}
 }

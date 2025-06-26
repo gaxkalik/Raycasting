@@ -22,6 +22,7 @@
 class	player;
 class	scene;
 class	obj;
+extern double playerStep;
 
 class	raycast
 {
@@ -50,7 +51,7 @@ class	raycast
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 
 		void drawBackground(int rayCnt) const;
-		void			determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl);
+		void			determineTextureColor(texture &, char, int, int, int);
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);

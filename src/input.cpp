@@ -2,7 +2,9 @@
 
 keyPressed keys;
 
-void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+{
+	//std::cout << key<<"\n";
 	if (key == 65) {
 		if (action)
 			keys.moveLeft = true;
@@ -47,6 +49,16 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			keys.rotateRight = true;
 		else
 			keys.rotateRight = false;
+	}
+	if (key == 340)
+	{
+		if(action)
+			keys.run = true;
+		else
+		{
+			keys.run = false;
+			playerStep = 0.05;
+		}
 	}	
 
 }
@@ -75,22 +87,22 @@ void	raycast::playerInput(void) {
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		if (keys.moveUp && (*map)[playerY - dirY][playerX] != '1' && (*map)[playerY][playerX + dirX] != '1')
+		if (keys.moveUp && (*map)[playerY - dirY][playerX] == '0' && (*map)[playerY][playerX + dirX] == '0')
 		{			
 			pl->setX(dirX);
 			pl->setY(-dirY);
 		}
-		if (keys.moveDown && (*map)[playerY + dirY][playerX] != '1' && (*map)[playerY][playerX - dirX] != '1')
+		if (keys.moveDown && (*map)[playerY + dirY][playerX] == '0' && (*map)[playerY][playerX - dirX] == '0')
 		{
 			pl->setX(-dirX);
 			pl->setY(dirY);
 		}
-		if (keys.moveLeft && (*map)[playerY - sDirY][playerX] != '1' && (*map)[playerY][playerX + sDirX] != '1')
+		if (keys.moveLeft && (*map)[playerY - sDirY][playerX] == '0' && (*map)[playerY][playerX + sDirX] == '0')
 		{
 			pl->setX(sDirX);
 			pl->setY(-sDirY);
 		}
-		if (keys.moveRight && (*map)[playerY + sDirY][playerX] != '1' && (*map)[playerY][playerX - sDirX] != '1')
+		if (keys.moveRight && (*map)[playerY + sDirY][playerX] == '0' && (*map)[playerY][playerX - sDirX] == '0')
 		{
 			pl->setX(-sDirX);
 			pl->setY(sDirY);
@@ -99,9 +111,12 @@ void	raycast::playerInput(void) {
 		{
 			pl->setAngle(-rotationSpeed);
 		}
-			
 		if(keys.rotateRight)
 			pl->setAngle(rotationSpeed);
+		if (keys.run)
+		{
+			playerStep = 0.1;
+		}
 	}
 	else if (keys.openMap) {
 		currScene = &(*scenes)[1];

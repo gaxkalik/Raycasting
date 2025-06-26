@@ -3,8 +3,8 @@
 
 #include "raycast.hpp"
 
-#define playerStep 0.05
 #define rotationSpeed 0.06
+
 
 struct keyPressed {
 	bool	esc = false;
@@ -15,6 +15,7 @@ struct keyPressed {
 	bool	openMap = false;
 	bool	rotateLeft = false;
 	bool	rotateRight = false;
+	bool	run = false;
 };
 
 class player
