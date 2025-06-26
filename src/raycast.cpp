@@ -114,3 +114,151 @@ const int	raycast::startGame(void) {
 	}
 	glfwTerminate();
 }
+
+const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) const
+{
+	double vertLengthX = 0;
+	double vertLengthY = 0;
+	double rPX = playerX - (int)playerX;
+
+	if (rayAngle > 2 * M_PI)
+		rayAngle = rayAngle - 360 * 0.0174533;
+	if (rayAngle < 0)
+		rayAngle += 2 * M_PI;
+	if ((rayAngle >= 0 && rayAngle < M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))			//right
+	{
+		vertLengthX = abs(1 - rPX);
+		vertLengthY = tan(rayAngle) * vertLengthX;
+	}
+	else if ((rayAngle == M_PI_2 || rayAngle == 3 * M_PI_2)) {
+		vertLengthX = 0;
+		vertLengthY = 0;
+	}
+	else																							//left
+	{
+		vertLengthX = -abs(rPX);
+		vertLengthY = (tan(rayAngle) * vertLengthX);
+	}
+
+	double mXV = playerX + vertLengthX;
+	double mYV = playerY + vertLengthY;
+	double offsetY = tan(rayAngle);
+	double distV = 100;
+	
+	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
+		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
+		{
+			if ((*map)[mYV][mXV] == '1') {
+				_mX = mXV;
+				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				break;
+			}
+			mYV += offsetY;
+			++mXV;
+		}
+		else{
+			if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
+				_mX = mXV - 1;
+				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				break;
+			}
+			--mXV;
+			mYV -= offsetY;
+		}
+	}
+	_mY = mYV;
+	return distV;
+}
+
+const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
+{
+	double rPX = playerX - (int)playerX;
+	double rPY = playerY - (int)playerY;
+
+	double horLengthX = rPX;
+	double horLengthY = rPY;
+	double offsetX = 0;
+
+	if (rayAngle > 2 * M_PI || rayAngle > 7)
+		rayAngle = rayAngle - 360 * 0.0174533;
+	if (rayAngle < 0)
+		rayAngle += 2 * M_PI;
+	
+	if(rayAngle < M_PI)
+	{
+		horLengthY = 1 - rPY;
+		horLengthX = horLengthY/tan(rayAngle);
+	}
+	if (rayAngle > M_PI)	
+	{
+		horLengthY = -rPY;
+		horLengthX = horLengthY/tan(rayAngle);
+	}
+
+	double mXH = playerX + horLengthX;
+	double mYH = playerY + horLengthY;
+
+	double distH = 100;
+	if (mXH > mapWidth) {
+		mXH = mapWidth;
+		return distH;
+	}
+	
+	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight) 
+	{
+		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
+			offsetX = 0.5;
+		else
+			offsetX = 1/tan(rayAngle);
+
+		if(rayAngle > 0 && rayAngle < M_PI)
+		{
+			if ((*map)[(int)mYH][(int)mXH] == '1') 
+			{
+				_mY = mYH;
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
+				break;
+			}
+			++mYH;
+			mXH += offsetX;
+		}
+		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
+		{
+			if ((*map)[(int)mYH - 1][(int)mXH] == '1') 
+			{
+				_mY = mYH - 1;
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
+				break;
+			}
+			--mYH;
+			mXH -= offsetX;
+		}
+		else
+		mXH += offsetX;
+	}
+	_mX = mXH;
+	return distH;
+}
+
+const double raycast::getShortestRay(double rayAngle, char &dir)
+{
+	double	xV, yV, xH, yH;
+	double	distV = getVerticalRay(rayAngle, xV, yV);
+	double	distH = getHorizontalRay(rayAngle, xH, yH);
+	double	dist = 0;
+
+	if (distV <= distH) {
+		dist = distV;
+		mX = xV;
+		mY = yV;
+	} else {
+		dist = distH;
+		mX = xH;
+		mY = yH;
+	}
+
+	dir = distV <= distH ? 'v' : 'h';
+	// cout << "distH\t" << distH <<"\t distV \t" << distV << "\tdist\t" << dist << "\t angle \t"<< pAngle<<"\t\n";
+	// std::cout << "x - " << mX << " y - " << mY << " "<< asd<< std::endl;
+	return dist;
+}

@@ -254,7 +254,7 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
 {
 	int				rayCnt = 180 * 2;
-	int				txtRes = 16;
+	int				textureResolution = 16;
 	const double	resolution = width / rayCnt;
 	const double	maxWallHeight = height;
 
@@ -289,191 +289,38 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	{
 		char dir = 'a';
 		double dist = getShortestRay(rAngle, dir);
-		double	tmpX = ((mX - (int)mX) * txtRes);
-		double	tmpY2 = ((mY - (int)mY) * txtRes);
+		double textureStartHorizon = ((mX - (int)mX) * textureResolution);
+		double textureStartVertical = ((mY - (int)mY) * textureResolution);
 		double wallHeiht = maxWallHeight / abs(cos(pAngle - rAngle) * dist * 0.55);
-		
-		
 		double	posY = (maxWallHeight - wallHeiht)/2;
-		double	tmpY = wallHeiht / txtRes;
+		double	texturePixelHeight = wallHeiht / textureResolution;
 		
-		if (wallHeiht == maxWallHeight) {
+		if (wallHeiht == maxWallHeight) 
+		{
 			posY -= 100 / dist;
-			tmpY += 50 / dist;
+			texturePixelHeight += 50 / dist;
 		}
 		
 		if(wallHeiht > maxWallHeight)
 			wallHeiht = maxWallHeight;
 
-		for (double y = 0; y < txtRes; ++y) 
+		for (double y = 0; y < textureResolution; ++y) 
 		{
-			determineTextureColor(hWall, dir, y, tmpX, tmpY2);
-
+			determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
 
 			glBegin(GL_QUADS);
-			glVertex2f(posX,		posY + (y * tmpY));
-			glVertex2f(posX + 1,	posY + (y * tmpY));
-			glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
-			glVertex2f(posX,		posY + ((y + 1) * tmpY));
+			glVertex2f(posX,		posY + (y * texturePixelHeight));
+			glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
+			glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
+			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 			glEnd();
 		}
-			if (tmpX > txtRes)
-				tmpX = 0;
-		tmpX = ((mY - (int)mY) * txtRes);
 	}
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-}
-
-const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) const
-{
-	double vertLengthX = 0;
-	double vertLengthY = 0;
-	double rPX = playerX - (int)playerX;
-
-	if (rayAngle > 2 * M_PI)
-		rayAngle = rayAngle - 360 * 0.0174533;
-	if (rayAngle < 0)
-		rayAngle += 2 * M_PI;
-	if ((rayAngle >= 0 && rayAngle < M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))			//right
-	{
-		vertLengthX = abs(1 - rPX);
-		vertLengthY = tan(rayAngle) * vertLengthX;
-	}
-	else if ((rayAngle == M_PI_2 || rayAngle == 3 * M_PI_2)) {
-		vertLengthX = 0;
-		vertLengthY = 0;
-	}
-	else																							//left
-	{
-		vertLengthX = -abs(rPX);
-		vertLengthY = (tan(rayAngle) * vertLengthX);
-	}
-
-	double mXV = playerX + vertLengthX;
-	double mYV = playerY + vertLengthY;
-	double offsetY = tan(rayAngle);
-	double distV = 100;
-	
-	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
-		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
-		{
-			if ((*map)[mYV][mXV] == '1') {
-				_mX = mXV;
-				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
-				break;
-			}
-			mYV += offsetY;
-			++mXV;
-		}
-		else{
-			if (!((*map)[(int)mYV][(int)mXV-1] != '1')) {
-				_mX = mXV - 1;
-				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
-				break;
-			}
-			--mXV;
-			mYV -= offsetY;
-		}
-	}
-	_mY = mYV;
-	return distV;
-}
-
-const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
-{
-	double rPX = playerX - (int)playerX;
-	double rPY = playerY - (int)playerY;
-
-	double horLengthX = rPX;
-	double horLengthY = rPY;
-	double offsetX = 0;
-
-	if (rayAngle > 2 * M_PI || rayAngle > 7)
-		rayAngle = rayAngle - 360 * 0.0174533;
-	if (rayAngle < 0)
-		rayAngle += 2 * M_PI;
-	
-	if(rayAngle < M_PI)
-	{
-		horLengthY = 1 - rPY;
-		horLengthX = horLengthY/tan(rayAngle);
-	}
-	if (rayAngle > M_PI)	
-	{
-		horLengthY = -rPY;
-		horLengthX = horLengthY/tan(rayAngle);
-	}
-
-	double mXH = playerX + horLengthX;
-	double mYH = playerY + horLengthY;
-
-	double distH = 100;
-	if (mXH > mapWidth) {
-		mXH = mapWidth;
-		return distH;
-	}
-	
-	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight) 
-	{
-		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
-			offsetX = 0.5;
-		else
-			offsetX = 1/tan(rayAngle);
-
-		if(rayAngle > 0 && rayAngle < M_PI)
-		{
-			if ((*map)[(int)mYH][(int)mXH] == '1') 
-			{
-				_mY = mYH;
-				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
-				break;
-			}
-			++mYH;
-			mXH += offsetX;
-		}
-		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
-		{
-			if ((*map)[(int)mYH - 1][(int)mXH] == '1') 
-			{
-				_mY = mYH - 1;
-				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
-				break;
-			}
-			--mYH;
-			mXH -= offsetX;
-		}
-		else
-		mXH += offsetX;
-	}
-	_mX = mXH;
-	return distH;
-}
-
-const double raycast::getShortestRay(double rayAngle, char &dir)
-{
-	double	xV, yV, xH, yH;
-	double	distV = getVerticalRay(rayAngle, xV, yV);
-	double	distH = getHorizontalRay(rayAngle, xH, yH);
-	double	dist = 0;
-
-	if (distV <= distH) {
-		dist = distV;
-		mX = xV;
-		mY = yV;
-	} else {
-		dist = distH;
-		mX = xH;
-		mY = yH;
-	}
-
-	dir = distV <= distH ? 'v' : 'h';
-	// cout << "distH\t" << distH <<"\t distV \t" << distV << "\tdist\t" << dist << "\t angle \t"<< pAngle<<"\t\n";
-	// std::cout << "x - " << mX << " y - " << mY << " "<< asd<< std::endl;
-	return dist;
 }
 
 void raycast::drawBackground(int rayCnt) const
@@ -497,40 +344,40 @@ void raycast::drawBackground(int rayCnt) const
 	glEnd();
 }
 
-void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int h, int x, int y) const
+void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl) const
 {
 	if(dir == 'h') 
 	{
-		if ((*texture)[h][x] == '0')
+		if ((*texture)[level][horizon] == '0')
 			glColor3ub(BLACK);
-		if ((*texture)[h][x] == '1')
+		else if ((*texture)[level][horizon] == '1')
 			glColor3ub(WHITE);
-		if ((*texture)[h][x] == '2')
+		else if ((*texture)[level][horizon] == '2')
 			glColor3ub(RED);
-		if ((*texture)[h][x] == '3')
+		else if ((*texture)[level][horizon] == '3')
 			glColor3ub(GREEN);
-		if ((*texture)[h][x] == '4')
+		else if ((*texture)[level][horizon] == '4')
 			glColor3ub(BLUE);
-		if ((*texture)[h][x] == '5')
+		else if ((*texture)[level][horizon] == '5')
 			glColor3ub(GRAY);
-		if ((*texture)[h][x] == '6')
+		else if ((*texture)[level][horizon] == '6')
 			glColor4ub(TRANSPARENT);
 	} 
 	else 
 	{
-		if ((*texture)[h][y] == '0')
+		if ((*texture)[level][verticl] == '0')
 			glColor3ub(BLACK);
-		if ((*texture)[h][y] == '1')
+		else if ((*texture)[level][verticl] == '1')
 			glColor3ub(WHITE_SHADED);
-		if ((*texture)[h][y] == '2')
+		else if ((*texture)[level][verticl] == '2')
 			glColor3ub(RED_SHADED);
-		if ((*texture)[h][y] == '3')
+		else if ((*texture)[level][verticl] == '3')
 			glColor3ub(GREEN_SHADED);
-		if ((*texture)[h][y] == '4')
+		else if ((*texture)[level][verticl] == '4')
 			glColor3ub(BLUE_SHADED);
-		if ((*texture)[h][y] == '5')
+		else if ((*texture)[level][verticl] == '5')
 			glColor3ub(GRAY_SHADED);
-		if ((*texture)[h][y] == '6')
+		else if ((*texture)[level][verticl] == '6')
 			glColor4ub(TRANSPARENT);
 	}
 }
