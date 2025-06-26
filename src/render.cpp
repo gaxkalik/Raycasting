@@ -1,5 +1,22 @@
 #include "raycast.hpp"
 
+#define BLACK 0,0,0					//0
+#define WHITE 255,255,255			//1
+#define WHITE_SHADED 200,200,200	//1
+#define RED 255,0,0					//2
+#define RED_SHADED 179,0,0			//2
+#define GREEN 0,255,0				//3
+#define GREEN_SHADED 0,179,0		//3
+#define BLUE 0,0,255				//4
+#define BLUE_SHADED 0,0,179			//4
+#define GRAY 169,169,169			//5
+#define GRAY_SHADED 118,118,118		//5
+#define TRANSPARENT 255,255,255,0	//6
+#define BLUE_SKY 135, 206, 235
+#define GREEN_GRASS 17,124,19
+#define BROWN 110, 38, 14
+#define BROWN_SHADED 77,27,10
+
 using std::cout;
 using std::endl;
 
@@ -287,35 +304,21 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glPushMatrix();
 	glLoadIdentity();
 
+	glEnable(GL_BLEND);											//to use glColor4ub(255, 0, 0, 100); transparent textures
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	////////sky///////
-	glColor3f(0.1f, 0.708f, 1.0f);
-	glBegin(GL_QUADS);
-	glVertex2f(0,0);
-	glVertex2f(rayCnt, 0);
-	glVertex2f(rayCnt, height / 2);
-	glVertex2f(0, height / 2);
-	glEnd();
-	//////grass/////////
-	glColor3f(0.1f, 0.9f, 0.4f);
-	glBegin(GL_QUADS);
-	glVertex2f(0, screenBuffHeight / 2);
-	glVertex2f(rayCnt, screenBuffHeight / 2);
-	glVertex2f(rayCnt, screenBuffHeight);
-	glVertex2f(0,screenBuffHeight);
-	glEnd();
+	drawBackground(rayCnt);
+
 
 	double rAngle = pAngle - M_PI / 6;
 	double posX = 0;
 
-	asd = 0;
 	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
 	{
 		char dir = 'a';
 		double dist = getShortestRay(rAngle, dir);
 		double	tmpX = ((mX - (int)mX) * txtRes);
 		double	tmpY2 = ((mY - (int)mY) * txtRes);
-		++asd;
 		double wallHeiht = maxWallHeight / abs(cos(pAngle - rAngle) * dist * 0.55);
 		
 		
@@ -332,28 +335,15 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < txtRes; ++y) 
 		{
-			// std::cout << (*hWall)[y][tmpX] << std::endl;
-				glColor3f(1.0f, 0.0f, 0.0f);
-				if(dir == 'h') {
-					glColor3f(0.3f, 0.1f, 0.0f);
-					if ((*hWall)[y][tmpX] == '1')
-						glColor3f(0.0f, 0.0f, 0.0f);
-					glBegin(GL_QUADS);
-					glVertex2f(posX,		posY + (y * tmpY));
-					glVertex2f(posX + 1,	posY + (y * tmpY));
-					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
-					glVertex2f(posX,		posY + ((y + 1) * tmpY));
-					glEnd();
-				} else {
-					if ((*hWall)[y][tmpY2] == '1')
-					glColor3f(0.0f, 0.0f, 0.0f);
-					glBegin(GL_QUADS);
-					glVertex2f(posX,		posY + (y * tmpY));
-					glVertex2f(posX + 1,	posY + (y * tmpY));
-					glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
-					glVertex2f(posX,		posY + ((y + 1) * tmpY));
-					glEnd();
-				}
+			determineTextureColor(hWall, dir, y, tmpX, tmpY2);
+
+
+			glBegin(GL_QUADS);
+			glVertex2f(posX,		posY + (y * tmpY));
+			glVertex2f(posX + 1,	posY + (y * tmpY));
+			glVertex2f(posX + 1,	posY + ((y + 1) * tmpY));
+			glVertex2f(posX,		posY + ((y + 1) * tmpY));
+			glEnd();
 		}
 			if (tmpX > txtRes)
 				tmpX = 0;
@@ -512,4 +502,63 @@ const double raycast::getShortestRay(double rayAngle, char &dir)
 	// cout << "distH\t" << distH <<"\t distV \t" << distV << "\tdist\t" << dist << "\t angle \t"<< pAngle<<"\t\n";
 	// std::cout << "x - " << mX << " y - " << mY << " "<< asd<< std::endl;
 	return dist;
+}
+
+void raycast::drawBackground(int rayCnt) const
+{
+	////////sky///////
+	glColor3ub(BLUE_SKY);
+	//glColor3f(0.1f, 0.708f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(0,0);
+	glVertex2f(rayCnt, 0);
+	glVertex2f(rayCnt, screenBuffHeight / 2);
+	glVertex2f(0, screenBuffHeight / 2);
+	glEnd();
+	//////grass/////////
+	glColor3ub(GREEN_GRASS);
+	glBegin(GL_QUADS);
+	glVertex2f(0, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight / 2);
+	glVertex2f(rayCnt, screenBuffHeight);
+	glVertex2f(0,screenBuffHeight);
+	glEnd();
+}
+
+void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int h, int x, int y) const
+{
+	if(dir == 'h') 
+	{
+		if ((*texture)[h][x] == '0')
+			glColor3ub(BLACK);
+		if ((*texture)[h][x] == '1')
+			glColor3ub(WHITE);
+		if ((*texture)[h][x] == '2')
+			glColor3ub(RED);
+		if ((*texture)[h][x] == '3')
+			glColor3ub(GREEN);
+		if ((*texture)[h][x] == '4')
+			glColor3ub(BLUE);
+		if ((*texture)[h][x] == '5')
+			glColor3ub(GRAY);
+		if ((*texture)[h][x] == '6')
+			glColor4ub(TRANSPARENT);
+	} 
+	else 
+	{
+		if ((*texture)[h][y] == '0')
+			glColor3ub(BLACK);
+		if ((*texture)[h][y] == '1')
+			glColor3ub(WHITE_SHADED);
+		if ((*texture)[h][y] == '2')
+			glColor3ub(RED_SHADED);
+		if ((*texture)[h][y] == '3')
+			glColor3ub(GREEN_SHADED);
+		if ((*texture)[h][y] == '4')
+			glColor3ub(BLUE_SHADED);
+		if ((*texture)[h][y] == '5')
+			glColor3ub(GRAY_SHADED);
+		if ((*texture)[h][y] == '6')
+			glColor4ub(TRANSPARENT);
+	}
 }

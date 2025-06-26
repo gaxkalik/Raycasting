@@ -16,6 +16,8 @@
 #define OBJ (it->second)
 #define pAngle pl->getAngle()
 
+//Colors
+
 class	player;
 class	scene;
 class	obj;
@@ -45,6 +47,8 @@ class	raycast
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 
+		void drawBackground(int rayCnt) const;
+		void determineTextureColor(std::vector<std::string> *texture, char dir, int h, int x, int y) const;
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
