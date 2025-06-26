@@ -11,8 +11,9 @@ struct color
 
 struct texture
 {
+	int							width, height, clCnt, pxLen;
 	std::vector<std::string>	texture;
-	std::map<char, color>		cl;
+	std::map<std::string, color>		cl;
 };
 
 

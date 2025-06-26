@@ -10,6 +10,7 @@
 
 #include "player.hpp"
 #include "scene.hpp"
+#include "texture.hpp"
 
 #define playerX pl->getX()
 #define playerY pl->getY()
@@ -40,6 +41,7 @@ class	raycast
 		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMinimap(const int &, const int &, const int &, const int &);
 		void		renderGame(const int &, const int &, const int &, const int &);
+		void		openTexture(std::string);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);
@@ -71,10 +73,12 @@ class	raycast
 		double							mY = 0;
 		char						brush;
 		double						cursorX, cursorY;
+		std::vector<texture>	textures;
 		std::vector<std::string>	*hWall;
 };
 
 void		key_callback(GLFWwindow*, int, int, int, int);
 const int	inRange(const double, const double, const double);
+std::vector<std::string> strSplit(const std::string &, const char);
 
 #endif

@@ -254,7 +254,7 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
 {
 	int				rayCnt = 180 * 2;
-	int				textureResolution = 16;
+	int				textureResolution = textures[0].width;
 	const double	resolution = width / rayCnt;
 	const double	maxWallHeight = height;
 
@@ -306,7 +306,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
+			// determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
 
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -348,6 +348,7 @@ void raycast::determineTextureColor(std::vector<std::string> *texture, char dir,
 {
 	if(dir == 'h') 
 	{
+		// glColor3b(textures[0].cl)
 		if ((*texture)[level][horizon] == '0')
 			glColor3ub(BLACK);
 		else if ((*texture)[level][horizon] == '1')
