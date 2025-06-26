@@ -50,7 +50,7 @@ class	raycast
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 
 		void drawBackground(int rayCnt) const;
-		void determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl) const;
+		void			determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl);
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
@@ -73,7 +73,7 @@ class	raycast
 		double							mY = 0;
 		char						brush;
 		double						cursorX, cursorY;
-		std::vector<texture>	textures;
+		std::vector<texture>		textures;
 		std::vector<std::string>	*hWall;
 };
 

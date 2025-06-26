@@ -306,7 +306,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			// determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
+			determineTextureColor(hWall, dir, y, textureStartHorizon, textureStartVertical);
 
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -344,41 +344,52 @@ void raycast::drawBackground(int rayCnt) const
 	glEnd();
 }
 
-void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl) const
+void raycast::determineTextureColor(std::vector<std::string> *texture, char dir, int level, int horizon, int verticl)
 {
-	if(dir == 'h') 
+	std::string key = "";
+	
+	if(dir == 'h')
 	{
-		// glColor3b(textures[0].cl)
-		if ((*texture)[level][horizon] == '0')
-			glColor3ub(BLACK);
-		else if ((*texture)[level][horizon] == '1')
-			glColor3ub(WHITE);
-		else if ((*texture)[level][horizon] == '2')
-			glColor3ub(RED);
-		else if ((*texture)[level][horizon] == '3')
-			glColor3ub(GREEN);
-		else if ((*texture)[level][horizon] == '4')
-			glColor3ub(BLUE);
-		else if ((*texture)[level][horizon] == '5')
-			glColor3ub(GRAY);
-		else if ((*texture)[level][horizon] == '6')
-			glColor4ub(TRANSPARENT);
+		key += (char)textures[0].tx[level][horizon];
+		// key += (char)textures[0].tx[level][horizon + 1];
+		// std::cout << "key - '" << horizon + 1 << "'\n";
+		// std::cout << "key - '" << key << "' " << textures[0].cl[key].r << " " << textures[0].cl[key].g << " "<< textures[0].cl[key].b << "\n";
+		glColor3ub(textures[0].cl[key].r,textures[0].cl[key].g,textures[0].cl[key].b);
+		// tmp[textures[0].tx[level][horizon]];
+		// if (textures[0].texture[level][horizon] == '0')
+		// 	glColor3ub(BLACK);
+		// else if ((*texture)[level][horizon] == '1')
+		// 	glColor3ub(WHITE);
+		// else if ((*texture)[level][horizon] == '2')
+		// 	glColor3ub(RED);
+		// else if ((*texture)[level][horizon] == '3')
+		// 	glColor3ub(GREEN);
+		// else if ((*texture)[level][horizon] == '4')
+		// 	glColor3ub(BLUE);
+		// else if ((*texture)[level][horizon] == '5')
+		// 	glColor3ub(GRAY);
+		// else if ((*texture)[level][horizon] == '6')
+		// 	glColor4ub(TRANSPARENT);
 	} 
 	else 
 	{
-		if ((*texture)[level][verticl] == '0')
-			glColor3ub(BLACK);
-		else if ((*texture)[level][verticl] == '1')
-			glColor3ub(WHITE_SHADED);
-		else if ((*texture)[level][verticl] == '2')
-			glColor3ub(RED_SHADED);
-		else if ((*texture)[level][verticl] == '3')
-			glColor3ub(GREEN_SHADED);
-		else if ((*texture)[level][verticl] == '4')
-			glColor3ub(BLUE_SHADED);
-		else if ((*texture)[level][verticl] == '5')
-			glColor3ub(GRAY_SHADED);
-		else if ((*texture)[level][verticl] == '6')
-			glColor4ub(TRANSPARENT);
+		key += (char)textures[0].tx[level][verticl];
+		// key += (char)textures[0].tx[level][verticl + 1];
+		glColor3ub(textures[0].cl[key].r, textures[0].cl[key].g, textures[0].cl[key].b);
+		// textures[0].texture[level][verticl];
+		// if ((*texture)[level][verticl] == '0')
+		// 	glColor3ub(BLACK);
+		// else if ((*texture)[level][verticl] == '1')
+		// 	glColor3ub(WHITE_SHADED);
+		// else if ((*texture)[level][verticl] == '2')
+		// 	glColor3ub(RED_SHADED);
+		// else if ((*texture)[level][verticl] == '3')
+		// 	glColor3ub(GREEN_SHADED);
+		// else if ((*texture)[level][verticl] == '4')
+		// 	glColor3ub(BLUE_SHADED);
+		// else if ((*texture)[level][verticl] == '5')
+		// 	glColor3ub(GRAY_SHADED);
+		// else if ((*texture)[level][verticl] == '6')
+		// 	glColor4ub(TRANSPARENT);
 	}
 }

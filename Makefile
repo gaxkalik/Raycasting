@@ -1,5 +1,5 @@
 CLANG = clang++ -std=c++17
-CFLAGS = -DGL_SILENCE_DEPRECATION -w -MMD -MP -fsanitize=address -g
+CFLAGS = -DGL_SILENCE_DEPRECATION -w -MMD -MP #-fsanitize=address -g
 LDFLAGS = -L/opt/homebrew/lib -lglfw -framework OpenGL
 INCLUDE = -I./include -I/opt/homebrew/include
 RM = rm -rf

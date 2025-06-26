@@ -33,6 +33,7 @@ void	raycast::openTexture(std::string textureName) {
 	txt.height = stoi(tmp[1]);
 	txt.clCnt = stoi(tmp[2]);
 	txt.pxLen = stoi(tmp[3]);
+	// std::cout << txt.width << " " << txt.height << " " << txt.clCnt << " " << txt.pxLen << std::endl;
 	for (int i = 0; i < txt.clCnt; ++i) {
 		std::getline(file, line);
 		txt.cl[line.substr(1, txt.pxLen)] = strgb(line, txt.pxLen);
@@ -40,7 +41,8 @@ void	raycast::openTexture(std::string textureName) {
 	std::getline(file, line);
 	for (int i = 0; i <= txt.height; ++i) {
 		std::getline(file, line);
-		txt.texture.push_back(line);
+		txt.tx.push_back((line.substr(1, line.size() - 3)));
 	}
 	textures.push_back(txt);
+	file.close();
 }

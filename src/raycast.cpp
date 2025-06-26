@@ -74,7 +74,8 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
-	openTexture("textures/wool_colored_magenta.xpm");
+	openTexture("textures/CASTLEBRICKS.xpm");
+	// openTexture("textures/brick.xpm");
 	std::ifstream	file;
 
 	file.open("textures/hWall");

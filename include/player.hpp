@@ -4,7 +4,7 @@
 #include "raycast.hpp"
 
 #define playerStep 0.05
-#define rotationSpeed 0.03
+#define rotationSpeed 0.06
 
 struct keyPressed {
 	bool	esc = false;
