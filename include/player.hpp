@@ -3,7 +3,7 @@
 
 #include "raycast.hpp"
 
-#define playerStep 0.025
+#define playerStep 0.05
 #define rotationSpeed 0.03
 
 struct keyPressed {
