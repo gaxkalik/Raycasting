@@ -232,9 +232,51 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 	glDisable(GL_SCISSOR_TEST);
 }
 
+// void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height) {
+// 	if (!window || !map)
+// 	{
+// 		std::cerr << "Window or map not initialized." << std::endl;
+// 		return;
+// 	}
+
+// 	glViewport(0, 0, width, height);
+// 	glClear(GL_COLOR_BUFFER_BIT);
+
+// 	glMatrixMode(GL_PROJECTION);
+// 	glPushMatrix();
+// 	glLoadIdentity();
+// 	glOrtho(0, 64, 0, 64, -1, 1);
+
+// 	glMatrixMode(GL_MODELVIEW);
+// 	glPushMatrix();
+// 	glLoadIdentity();
+
+// 	glEnable(GL_BLEND);											//to use glColor4ub(255, 0, 0, 100); transparent textures
+// 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+// 	for (int y = 0; y < 64; ++y) {
+// 		for (int x = 0; x < 64; ++x) {
+// 			glColor3ub(txt[y][x])
+// 			glBegin(GL_QUADS);
+// 			glVertex2f(x,		y);
+// 			glVertex2f(x + 1,	y);
+// 			glVertex2f(x + 1,	y + 1);
+// 			glVertex2f(x,		y + 1);
+// 			glEnd();
+// 		}
+// 	}
+
+// 	glMatrixMode(GL_PROJECTION);
+// 	glPopMatrix();
+
+// 	glMatrixMode(GL_MODELVIEW);
+// 	glPopMatrix();
+// }
+
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
 {
 	int				rayCnt = 180 * 2;
+	// int				rayCnt = 1;
 	int				textureResolution = textures[0].width;
 	const double	resolution = width / rayCnt;
 	const double	maxWallHeight = height;
@@ -264,6 +306,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 
 	double rAngle = pAngle - M_PI / 6;
+	// double rAngle = pAngle;
 	double posX = 0;
 
 	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
@@ -287,17 +330,11 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			if ((*map)[mX][mY] == '1')
+			if ((*map)[mY][mX] == '1')
 				determineTextureColor(textures[0], dir, y, textureStartHorizon, textureStartVertical);
-			else
-			{
-				
-				determineTextureColor(textures[1], dir, y, textureStartHorizon, textureStartVertical);
-
-			}
-
-				
-
+			// else {
+			// 	determineTextureColor(textures[1], dir, y, textureStartHorizon, textureStartVertical);
+			// }
 
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -338,17 +375,14 @@ void raycast::drawBackground(int rayCnt) const
 void raycast::determineTextureColor(texture &currentTexture, char dir, int level, int horizon, int verticl)
 {
 	std::string key = "";
-	
+
 	if(dir == 'h')
 	{
-		key += (char)currentTexture.tx[level][horizon];
-		
-		glColor3ub(currentTexture.cl[key].r,currentTexture.cl[key].g,currentTexture.cl[key].b);
+		glColor3ub(txt[level][horizon][0],txt[level][horizon][1],txt[level][horizon][2]);
 	} 
-	else 
+	else
 	{
 		key += (char)currentTexture.tx[level][verticl];
-
 		int r = currentTexture.cl[key].r;
 		int g = currentTexture.cl[key].g;
 		int b = currentTexture.cl[key].b;
@@ -361,6 +395,5 @@ void raycast::determineTextureColor(texture &currentTexture, char dir, int level
 		else 		b = 3;
 		
 		glColor3ub(r, g, b);
-
 	}
 }

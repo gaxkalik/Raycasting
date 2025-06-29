@@ -39,10 +39,12 @@ void	raycast::openTexture(std::string textureName) {
 		txt.cl[line.substr(1, txt.pxLen)] = strgb(line, txt.pxLen);
 	}
 	std::getline(file, line);
-	for (int i = 0; i <= txt.height; ++i) {
+	for (int i = 0; i < txt.height; ++i) {
 		std::getline(file, line);
 		txt.tx.push_back((line.substr(1, line.size() - 3)));
 	}
+	std::getline(file, line);
+	txt.tx.push_back((line.substr(1, line.size() - 2)));
 	textures.push_back(txt);
 	file.close();
 }

@@ -45,6 +45,25 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
 }
 
+void glColorARGB(uint32_t argb) {
+	GLubyte r = (argb >> 16)	& 0xFF;
+	GLubyte g = (argb >> 8)		& 0xFF;
+	GLubyte b = (argb)			& 0xFF;
+	glColor3ub(r, g, b);
+}
+
+const int WIDTH = 64;
+const int HEIGHT = 64;
+const int CHANNELS = 3;
+const int TEXTURE_SIZE = WIDTH * HEIGHT * CHANNELS;
+
+void raycast::loadRawTexture(const char* filename) {
+	std::ifstream file(filename, std::ios::binary);
+	if (!file) return;
+	file.read(reinterpret_cast<char*>(txt), TEXTURE_SIZE);
+	return;
+}
+
 const int raycast::initGame(const char *filename) {
 	pl = new player();
 	if (mapParse(filename)) {
@@ -77,20 +96,13 @@ const int raycast::initGame(const char *filename) {
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
 	openTexture("textures/CASTLEBRICKS.xpm");
-	openTexture("textures/SPOOKYDOOR.xpm");
-	std::ifstream	file;
+	loadRawTexture("textures/output.raw");
+	// loadRawTexture("textures/AnyConv.com__BRICK_4A.raw");
+	// loadRawTexture("textures/brick-4a.raw");
+	// openTexture("textures/SPOOKYDOOR.xpm");
+	// openTexture("textures/BRICK_3D_imresizer.xpm");
+	// openTexture("textures/wool_colored_magenta.xpm");
 
-	file.open("textures/hWall");
-	if (!file.is_open()) {
-		std::cerr << "Failed to open file" << std::endl;
-		return 1;
-	}
-
-	std::string line;
-	hWall = new std::vector<std::string>();
-	while (std::getline(file, line))
-		hWall->push_back(line);
-	file.close();
 	return 0;
 }
 
@@ -189,16 +201,18 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		rayAngle += 2 * M_PI;
 	
 	if(rayAngle < M_PI)
-	{
 		horLengthY = 1 - rPY;
-		horLengthX = horLengthY/tan(rayAngle);
-	}
-	if (rayAngle > M_PI)	
-	{
+	if (rayAngle > M_PI)
 		horLengthY = -rPY;
+	if (rayAngle != 3 * M_PI_2 && rayAngle != M_PI_2 && rayAngle != M_PI && rayAngle != 0){
 		horLengthX = horLengthY/tan(rayAngle);
 	}
-
+	else
+	{
+		horLengthX = 0;
+	}
+	// std::cout<< horLengthX << " " << horLengthY << std::endl;
+	
 	double mXH = playerX + horLengthX;
 	double mYH = playerY + horLengthY;
 
@@ -208,10 +222,10 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		return distH;
 	}
 	
-	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight) 
+	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight)
 	{
 		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
-			offsetX = 0.5;
+			offsetX = 0;
 		else
 			offsetX = 1/tan(rayAngle);
 
@@ -232,15 +246,17 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 			{
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
+				// std::cout <<  mXH << " "<< _mY  << " " << rayAngle<< "\n";
 				break;
 			}
 			--mYH;
 			mXH -= offsetX;
 		}
 		else
-		mXH += offsetX;
+			break;
 	}
 	_mX = mXH;
+	// std::cout<< mXH << " " << mYH << std::endl;
 	return distH;
 }
 

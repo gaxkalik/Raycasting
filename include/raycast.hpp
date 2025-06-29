@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <stdlib.h>
 #include <map>
 
@@ -38,6 +39,7 @@ class	raycast
 		void		NewFunction(double &rAngle);
 		void		playerInput(void);
 		void		addBottonsToScene(void);
+		void		loadRawTexture(const char *);
 		void		renderScene(scene &);
 		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMinimap(const int &, const int &, const int &, const int &);
@@ -75,11 +77,13 @@ class	raycast
 		char						brush;
 		double						cursorX, cursorY;
 		std::vector<texture>		textures;
+		unsigned char				txt[64][64][3];
 		std::vector<std::string>	*hWall;
 };
 
 void		key_callback(GLFWwindow*, int, int, int, int);
 const int	inRange(const double, const double, const double);
+void		glColorARGB(uint32_t argb);
 std::vector<std::string> strSplit(const std::string &, const char);
 
 #endif
