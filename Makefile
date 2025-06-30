@@ -14,6 +14,8 @@ OBJ_DIR = obj
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
+DEPS = $(OBJS:.o=.d)
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
@@ -33,5 +35,6 @@ fclean: clean
 re: fclean all
 
 # Include dependencies
+-include $(DEPS)
 
 .PHONY: all clean fclean re

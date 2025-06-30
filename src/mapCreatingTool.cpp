@@ -13,10 +13,6 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 	glLoadIdentity();
 	glOrtho(0, 32, 32, 0, -1, 1);
 	
-	// glMatrixMode(GL_MODELVIEW);
-	// glPushMatrix();
-	// glLoadIdentity();
-	
 	for (double y = 0; y < 32; ++y) {
 		for (double x = 0; x < 32; ++x) {
 			if ((*newMap)[y][x] == 'K') {
@@ -52,11 +48,9 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 			
 		}
 	}
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
-	
-	// glMatrixMode(GL_MODELVIEW);
-	// glPopMatrix();
+
 	glDisable(GL_SCISSOR_TEST);
 }

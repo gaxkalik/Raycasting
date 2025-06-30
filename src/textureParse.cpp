@@ -21,7 +21,7 @@ int	raycast::loadRawTexture(const char* filename) {
 		std::cerr << "Faild to open '" << filename << "' texture file [dimension mismatch]" << std::endl;
 		return 1;
 	}
-
+	allTextures.emplace(filename, txt);
 	return 0;
 }
 

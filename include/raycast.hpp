@@ -17,7 +17,7 @@
 #define OBJ (it->second)
 #define pAngle pl->getAngle()
 
-#define TEXTURE_SIZE 64*64*3
+#define TEXTURE_SIZE 64*64*4
 
 //Colors
 
@@ -78,13 +78,15 @@ class	raycast
 		char						brush;
 		double						cursorX, cursorY;
 		std::vector<texture>		textures;
-		unsigned char				txt[64][64][3];
+		unsigned char				txt[64][64][4];
+		std::map<const std::string, const unsigned char (*)[64][4]>	allTextures;
 		std::vector<std::string>	*hWall;
 };
 
-void		key_callback(GLFWwindow*, int, int, int, int);
-const int	inRange(const double, const double, const double);
 void		glColorARGB(uint32_t argb);
+void		key_callback(GLFWwindow*, int, int, int, int);
+int***		xpmToRaw(texture &tx);
+const int	inRange(const double, const double, const double);
 std::vector<std::string> strSplit(const std::string &, const char);
 
 #endif

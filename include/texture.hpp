@@ -6,7 +6,7 @@
 
 struct color
 {
-	int r, g, b;
+	int r, g, b, a;
 };
 
 struct texture

@@ -324,16 +324,14 @@ void raycast::drawBackground(int rayCnt) const
 
 void raycast::determineTextureColor(texture &currentTexture, char dir, int level, int horizon, int verticl)
 {
-	std::string key = "";
-
 	if(dir == 'h') {
-		glColor3ub(txt[level][horizon][0],txt[level][horizon][1],txt[level][horizon][2]);
+		glColor4ub(txt[level][horizon][0], txt[level][horizon][1], txt[level][horizon][2], txt[level][horizon][3]);
 	} 
 	else {
-		key += (char)currentTexture.tx[level][verticl];
-		int r = currentTexture.cl[key].r;
-		int g = currentTexture.cl[key].g;
-		int b = currentTexture.cl[key].b;
+		int r = txt[level][verticl][0];
+		int g = txt[level][verticl][1];
+		int b = txt[level][verticl][2];
+		int a = txt[level][verticl][3];
 
 		if(r > 20)	r -= 20;
 		else		r = 3;
@@ -342,6 +340,6 @@ void raycast::determineTextureColor(texture &currentTexture, char dir, int level
 		if(b > 20)	b -= 20;
 		else 		b = 3;
 		
-		glColor3ub(r, g, b);
+		glColor4ub(r, g, b, a);
 	}
 }
