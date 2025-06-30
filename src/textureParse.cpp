@@ -10,13 +10,28 @@ color	strgb(const std::string &line, const int &len) {
 	return tmp;
 }
 
-void	raycast::openTexture(std::string textureName) {
+int	raycast::loadRawTexture(const char* filename) {
+	std::ifstream file(filename, std::ios::binary);
+	if (!file) {
+		std::cerr << "Faild to open '" << filename << "' texture file [invalid path]" << std::endl;
+		return 1;
+	}
+	file.read(reinterpret_cast<char*>(txt), TEXTURE_SIZE);
+	if (file.gcount() == TEXTURE_SIZE) {
+		std::cerr << "Faild to open '" << filename << "' texture file [dimension mismatch]" << std::endl;
+		return 1;
+	}
+
+	return 0;
+}
+
+int	raycast::openTexture(const char *textureName) {
 	std::ifstream	file;
 
 	file.open(textureName);
 	if (!file.is_open()) {
-		std::cerr << "Failed to open texture file" << std::endl;
-		return;
+		std::cerr << "Faild to open '" << textureName << "' texture file [invalid path]" << std::endl;
+		return 1;
 	}
 	int	s1 = 0;
 	int	s2 = 0;
@@ -47,4 +62,5 @@ void	raycast::openTexture(std::string textureName) {
 	txt.tx.push_back((line.substr(1, line.size() - 2)));
 	textures.push_back(txt);
 	file.close();
+	return 0;
 }

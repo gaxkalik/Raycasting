@@ -52,18 +52,6 @@ void glColorARGB(uint32_t argb) {
 	glColor3ub(r, g, b);
 }
 
-const int WIDTH = 64;
-const int HEIGHT = 64;
-const int CHANNELS = 3;
-const int TEXTURE_SIZE = WIDTH * HEIGHT * CHANNELS;
-
-void raycast::loadRawTexture(const char* filename) {
-	std::ifstream file(filename, std::ios::binary);
-	if (!file) return;
-	file.read(reinterpret_cast<char*>(txt), TEXTURE_SIZE);
-	return;
-}
-
 const int raycast::initGame(const char *filename) {
 	pl = new player();
 	if (mapParse(filename)) {
@@ -95,13 +83,10 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
-	openTexture("textures/CASTLEBRICKS.xpm");
-	loadRawTexture("textures/output.raw");
-	// loadRawTexture("textures/AnyConv.com__BRICK_4A.raw");
-	// loadRawTexture("textures/brick-4a.raw");
-	// openTexture("textures/SPOOKYDOOR.xpm");
-	// openTexture("textures/BRICK_3D_imresizer.xpm");
-	// openTexture("textures/wool_colored_magenta.xpm");
+	if (openTexture("textures/CASTLEBRICKS.xpm"))
+		return 1;
+	if (loadRawTexture("textures/output.raw"))
+		return 1;
 
 	return 0;
 }
@@ -246,7 +231,6 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 			{
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
-				// std::cout <<  mXH << " "<< _mY  << " " << rayAngle<< "\n";
 				break;
 			}
 			--mYH;
@@ -256,7 +240,6 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 			break;
 	}
 	_mX = mXH;
-	// std::cout<< mXH << " " << mYH << std::endl;
 	return distH;
 }
 
@@ -278,7 +261,5 @@ const double raycast::getShortestRay(double rayAngle, char &dir)
 	}
 
 	dir = distV <= distH ? 'v' : 'h';
-	// cout << "distH\t" << distH <<"\t distV \t" << distV << "\tdist\t" << dist << "\t angle \t"<< pAngle<<"\t\n";
-	// std::cout << "x - " << mX << " y - " << mY << " "<< asd<< std::endl;
 	return dist;
 }

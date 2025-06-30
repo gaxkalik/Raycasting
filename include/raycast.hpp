@@ -18,6 +18,8 @@
 #define OBJ (it->second)
 #define pAngle pl->getAngle()
 
+#define TEXTURE_SIZE 64*64*3
+
 //Colors
 
 class	player;
@@ -39,18 +41,18 @@ class	raycast
 		void		NewFunction(double &rAngle);
 		void		playerInput(void);
 		void		addBottonsToScene(void);
-		void		loadRawTexture(const char *);
 		void		renderScene(scene &);
 		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMinimap(const int &, const int &, const int &, const int &);
 		void		renderGame(const int &, const int &, const int &, const int &);
-		void		openTexture(std::string);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &,const std::string &);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
+		int			openTexture(const char *);
+		int			loadRawTexture(const char *);
 
 		void drawBackground(int rayCnt) const;
 		void			determineTextureColor(texture &, char, int, int, int);
