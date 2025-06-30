@@ -7,16 +7,12 @@ RM = rm -rf
 NAME = rc
 
 CPP_SRCS = $(wildcard src/*.cpp)
-C_SRCS = src/glad.c
 OTHER_SRCS = main.cpp
-SRCS = $(CPP_SRCS) $(C_SRCS) $(OTHER_SRCS)
+SRCS = $(CPP_SRCS) $(OTHER_SRCS)
 
 OBJ_DIR = obj
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
-OBJS := $(OBJS:%.c=$(OBJ_DIR)/%.o)
-
-DEPS = $(OBJS:.o=.d)
 
 all: $(NAME)
 
@@ -24,10 +20,6 @@ $(NAME): $(OBJS)
 	$(CLANG) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: %.cpp
-	@mkdir -p $(dir $@)
-	$(CLANG) $(CFLAGS) $(INCLUDE) -c $< -o $@
-
-$(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CLANG) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
@@ -41,6 +33,5 @@ fclean: clean
 re: fclean all
 
 # Include dependencies
--include $(DEPS)
 
 .PHONY: all clean fclean re

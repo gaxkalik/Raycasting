@@ -17,7 +17,7 @@ int	raycast::loadRawTexture(const char* filename) {
 		return 1;
 	}
 	file.read(reinterpret_cast<char*>(txt), TEXTURE_SIZE);
-	if (file.gcount() == TEXTURE_SIZE) {
+	if (!file.gcount() == TEXTURE_SIZE) {
 		std::cerr << "Faild to open '" << filename << "' texture file [dimension mismatch]" << std::endl;
 		return 1;
 	}
