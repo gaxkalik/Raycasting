@@ -45,21 +45,21 @@ After compilation, you can run the program using:
 `./rc`
 
 
-#Maps
+# Maps
 You can find several predefined maps in the `maps/` directory. Each map file represents a 2D grid that the engine interprets for wall positions.
 
-#Textures
+# Textures
 Textures are stored in the textures/ directory in .xpm or .raw format.Texture mapping using basic linear algebra (vectors, angles)
 
-#Concepts Used: **Raycasting algorithm**
+# Concepts Used **Raycasting algorithm**
 
 
-#License
+# License
 This project is licensed under the terms of the LICENSE file provided in the repository.
 
 
-#Authors
+# Authors
 Developed by [Hrant Hovhannisyan](https://github.com/TheOlifve) and [Armen Balagyozyan](https://github.com/gaxkalik) — feel free to contribute or fork!
 
-#Contact
+# Contact
 For questions, email [gaxkalik@gmail.com](gaxkalik@gmail.com) or [hrant.hovhannisyan2413@gmail.com](hrant.hovhannisyan2413@gmail.com).
