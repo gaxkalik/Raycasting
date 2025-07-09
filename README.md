@@ -6,7 +6,7 @@ A simple raycasting engine written in **C++**, inspired by classic games like **
 
 ---
 
-## 🚀 Features
+## Features
 
 - 2D to 3D raycasting engine
 - Player movement and input handling
@@ -17,7 +17,7 @@ A simple raycasting engine written in **C++**, inspired by classic games like **
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```bash
 Raycasting-main/
@@ -32,7 +32,7 @@ Raycasting-main/
 └── README.md          # Project documentation
 ```
 
-🛠️ Build Instructions
+Build Instructions
 Prerequisites
 A `C++17` compatible compiler (e.g., **g++, clang++**)
 
@@ -40,12 +40,12 @@ A `C++17` compatible compiler (e.g., **g++, clang++**)
 
 This will compile the project and create an executable in the root directory.
 
-🎮 Running the Program
+Running the Program
 After compilation, you can run the program using:
 `./rc`
 
 
-🗺️ Maps
+Maps
 You can find several predefined maps in the `maps/` directory:
 
 
