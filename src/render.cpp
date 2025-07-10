@@ -217,7 +217,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		{
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
 			{
-				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, y, textureStartHorizon, textureStartVertical);
+				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, rAngle, y, textureStartHorizon, textureStartVertical);
 			}
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
 			glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
@@ -277,16 +277,18 @@ void raycast::drawBackground(int rayCnt)
 	}
 }
 
-void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist, int level, int horizon, int verticl)
+void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist, double angle, int level, int horizon, int verticl)
 {
 	if(dir == 'h') {
+		if (angle >= 0 && angle <= M_PI) horizon = 63 - horizon;
 		int a = txtr[level][horizon][3];
-
+		
 		if (dist >= 10)
-			a = 10 * a / dist;
+		a = 10 * a / dist;
 		glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], a);
 	} 
 	else {
+		if (angle >= M_PI_2 && angle <= 3 * M_PI_2) verticl = 63 - verticl;
 		int r = txtr[level][verticl][0];
 		int g = txtr[level][verticl][1];
 		int b = txtr[level][verticl][2];

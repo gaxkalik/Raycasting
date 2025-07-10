@@ -61,7 +61,7 @@ class	raycast
 		void		drawTexture(int, int);
 
 		void			drawBackground(int);
-		void			determineTextureColor(unsigned char ***, char, double, int, int, int);
+		void			determineTextureColor(unsigned char ***, char, double, double, int, int, int);
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
