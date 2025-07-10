@@ -17,6 +17,12 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.moveRight = false;
 	}
+	if (key == 69) {
+		if (action)
+			keys.use = true;
+		else
+			keys.use = false;
+	}
 	if (key == 83) {
 		if (action)
 			keys.moveDown = true;
@@ -87,6 +93,13 @@ void	raycast::playerInput(void) {
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		if (keys.use == true)
+		{
+			if 		((*map)[playerY][playerX - 1] == 'd')	(*map)[playerY][playerX - 1] = '0';
+			else if ((*map)[playerY][playerX + 1] == 'd')	(*map)[playerY][playerX + 1] = '0';
+			else if ((*map)[playerY - 1][playerX] == 'd')	(*map)[playerY - 1][playerX] = '0';
+			else if ((*map)[playerY + 1][playerX] == 'd')	(*map)[playerY + 1][playerX] = '0';
+		}
 		if (keys.moveUp && (*map)[playerY - dirY][playerX] == '0' && (*map)[playerY][playerX + dirX] == '0')
 		{			
 			pl->setX(dirX);
@@ -140,7 +153,7 @@ void	raycast::playerInput(void) {
 			else if (o->getName() == "buttonBrush0")
 				brush = '0';
 			else if (o->getName() == "buttonBrushP")
-				brush = 'P';
+				brush = 'p';
 		}
 	}
 	if (keys.esc)

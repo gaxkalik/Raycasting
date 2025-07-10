@@ -21,6 +21,8 @@ int	raycast::loadRawTexture(const char c, const char* filename) {
 		}
 	}
 
+
+
 	std::ifstream	file(filename, std::ios::binary);
 	if (!file) {
 		std::cerr << "Faild to open '" << filename << "' texture file [invalid path]" << std::endl;
@@ -48,6 +50,7 @@ int	raycast::openTexture(const char *textureName) {
 		std::cerr << "Faild to open '" << textureName << "' texture file [invalid path]" << std::endl;
 		return 1;
 	}
+
 	int	s1 = 0;
 	int	s2 = 0;
 	texture tmpTexture;

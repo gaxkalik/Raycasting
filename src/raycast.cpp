@@ -15,7 +15,7 @@ raycast::raycast() {
 	screenWidth = 0;
 	screenHeight = 0;
 	brush = '0';
-	std::cout << "[ Raycast default constructor called ]" << std::endl;
+	//std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
 raycast::~raycast() {
@@ -37,7 +37,7 @@ raycast::~raycast() {
 		delete[] it->second;
 	}
 	glfwTerminate();
-	std::cout << "[ Raycast destructor called ]" << std::endl;
+	//std::cout << "[ Raycast destructor called ]" << std::endl;
 }
 
 void	raycast::addBottonsToScene(void) {
@@ -152,7 +152,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	{
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') 
+			if (((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') || ((*map)[mYV][mXV] >= 'A' && (*map)[mYV][mXV] <= 'Z') || (*map)[mYV][mXV] == 'd') 
 			{
 				_mX = mXV;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
@@ -163,7 +163,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 		}
 		else
 		{
-			if ((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') 
+			if (((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') || ((*map)[mYV][mXV-1] >= 'A' && (*map)[mYV][mXV-1] <= 'Z') || (*map)[mYV][mXV-1] == 'd') 
 			{
 				_mX = mXV - 1;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
@@ -201,7 +201,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 	{
 		if(rayAngle < M_PI)
 		{
-			if ((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') 
+			if (((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') || ((*map)[(int)mYH][(int)mXH] >= 'A' && (*map)[(int)mYH - 1][(int)mXH] <= 'Z') || (*map)[(int)mYH][(int)mXH] == 'd') 
 			{
 				_mY = mYH;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
@@ -212,7 +212,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 		}
 		else if (rayAngle > M_PI)
 		{
-			if ((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') 
+			if (((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') || ((*map)[(int)mYH - 1][(int)mXH] >= 'A' && (*map)[(int)mYH - 1][(int)mXH] <= 'Z') || (*map)[(int)mYH - 1][(int)mXH] == 'd') 
 			{
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
@@ -228,6 +228,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 
 const double raycast::getShortestRay(double rayAngle, char &dir)
 {
+	
 	double	dist = 0;
 	double	xV, yV, xH, yH;
 	double	distV = getVerticalRay(rayAngle, xV, yV);

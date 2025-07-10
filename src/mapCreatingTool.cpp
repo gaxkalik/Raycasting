@@ -34,7 +34,7 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 					glColor3f(1.0f, 1.0f, 1.0f);
 				else if ((*newMap)[y][x] >= '1' && (*newMap)[y][x] <= '9')
 					glColor3f(0.3f, 0.3f, 0.3f); // Gray
-				else if ((*newMap)[y][x] == 'P')
+				else if ((*newMap)[y][x] == 'p')
 					glColor3f(1.0f, 0.0f, 0.0f);
 				else
 					return;

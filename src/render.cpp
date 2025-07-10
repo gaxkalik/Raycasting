@@ -117,8 +117,10 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 		for (double x = -4; x < 4; x += pStep) {
 			int	mapX = viewPortCenterX + x;
 			int	mapY = viewPortCenterY - y;
-			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && (*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9') {
+			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && ((*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9') || ((*map)[mapY][mapX] >='A' && (*map)[mapY][mapX] <='Z')) {
 				glColor3f(0.3f, 0.3f, 0.3f); // Gray
+			}else if ((*map)[mapY][mapX] =='d'){
+				glColor3f(0.4f, 0.4f, 0.4f);
 			} else {
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
@@ -217,7 +219,10 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		for (double y = 0; y < textureResolution; ++y) 
 		{
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
+			{
 				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, y, textureStartHorizon, textureStartVertical);
+			}
+		
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
 			glVertex2f(posX + 1,	posY + (y * texturePixelHeight));

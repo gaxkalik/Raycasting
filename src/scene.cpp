@@ -1,11 +1,11 @@
 #include "scene.hpp"
 
 scene::scene() {
-	std::cout << "[ Scene default constructor called ]" << std::endl;
+	//std::cout << "[ Scene default constructor called ]" << std::endl;
 }
 
 scene::~scene() {
-	std::cout << "[ Scene destructor called ]" << std::endl;
+	//std::cout << "[ Scene destructor called ]" << std::endl;
 }
 
 obj	&scene::getObj(const std::string &name) {

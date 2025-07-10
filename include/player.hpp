@@ -15,6 +15,7 @@ struct keyPressed {
 	bool	rotateLeft = false;
 	bool	rotateRight = false;
 	bool	run = false;
+	bool	use = false;
 };
 
 class player

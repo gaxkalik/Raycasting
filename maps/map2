@@ -1,12 +1,13 @@
-T: 1 textures/Brick_Wall.raw
-T: 2 textures/Floor.raw
-T: 3 textures/GRID_2B.raw
+T: 1 textures/TECH_2F.raw
+T: 2 textures/TECH_3B.raw
+T: C textures/CRATE_2C.raw
+T: d textures/DOOR_1A.raw
 
-11111111
+11121111
 10000001
-100P0001
+100pC001
 10000002
-10000001
-10030002
-10000001
-11111111
+10000C01
+11d10002
+10010001
+11111211
