@@ -11,17 +11,32 @@ color	strgb(const std::string &line, const int &len) {
 }
 
 int	raycast::loadRawTexture(const char* filename) {
-	std::ifstream file(filename, std::ios::binary);
+	unsigned char	***tmpTexture = new unsigned char **[64];
+
+	for (int i = 0; i < 64; ++i) {
+		tmpTexture[i] = new unsigned char * [64];
+		for (int j = 0; j < 64; ++j) {
+			tmpTexture[i][j] = new unsigned char [4];
+			memset(tmpTexture[i][j], 0, 4 * sizeof(unsigned char));
+		}
+	}
+
+	std::ifstream	file(filename, std::ios::binary);
 	if (!file) {
 		std::cerr << "Faild to open '" << filename << "' texture file [invalid path]" << std::endl;
 		return 1;
 	}
-	file.read(reinterpret_cast<char*>(txt), TEXTURE_SIZE);
+	for (int i = 0; i < 64; ++i) {
+		for (int j = 0; j < 64; ++j) {
+			if (!file.read(reinterpret_cast<char*>(tmpTexture[i][j]), 4))
+				break;
+		}
+	}
 	if (!file.gcount() == TEXTURE_SIZE) {
 		std::cerr << "Faild to open '" << filename << "' texture file [dimension mismatch]" << std::endl;
 		return 1;
 	}
-	allTextures.emplace(filename, txt);
+	allTextures[filename] = tmpTexture;
 	return 0;
 }
 
@@ -35,7 +50,7 @@ int	raycast::openTexture(const char *textureName) {
 	}
 	int	s1 = 0;
 	int	s2 = 0;
-	texture txt;
+	texture tmpTexture;
 	std::string line;
 
 	std::getline(file, line);
@@ -44,23 +59,22 @@ int	raycast::openTexture(const char *textureName) {
 	std::getline(file, line);
 
 	std::vector<std::string> tmp = strSplit(line, ' ');
-	txt.width = stoi(tmp[0]);
-	txt.height = stoi(tmp[1]);
-	txt.clCnt = stoi(tmp[2]);
-	txt.pxLen = stoi(tmp[3]);
-	// std::cout << txt.width << " " << txt.height << " " << txt.clCnt << " " << txt.pxLen << std::endl;
-	for (int i = 0; i < txt.clCnt; ++i) {
+	tmpTexture.width = stoi(tmp[0]);
+	tmpTexture.height = stoi(tmp[1]);
+	tmpTexture.clCnt = stoi(tmp[2]);
+	tmpTexture.pxLen = stoi(tmp[3]);
+	for (int i = 0; i < tmpTexture.clCnt; ++i) {
 		std::getline(file, line);
-		txt.cl[line.substr(1, txt.pxLen)] = strgb(line, txt.pxLen);
+		tmpTexture.cl[line.substr(1, tmpTexture.pxLen)] = strgb(line, tmpTexture.pxLen);
 	}
 	std::getline(file, line);
-	for (int i = 0; i < txt.height; ++i) {
+	for (int i = 0; i < tmpTexture.height; ++i) {
 		std::getline(file, line);
-		txt.tx.push_back((line.substr(1, line.size() - 3)));
+		tmpTexture.tx.push_back((line.substr(1, line.size() - 3)));
 	}
 	std::getline(file, line);
-	txt.tx.push_back((line.substr(1, line.size() - 2)));
-	textures.push_back(txt);
+	tmpTexture.tx.push_back((line.substr(1, line.size() - 2)));
+	textures.push_back(tmpTexture);
 	file.close();
 	return 0;
 }
