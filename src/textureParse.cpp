@@ -10,7 +10,7 @@ color	strgb(const std::string &line, const int &len) {
 	return tmp;
 }
 
-int	raycast::loadRawTexture(const char* filename) {
+int	raycast::loadRawTexture(const char c, const char* filename) {
 	unsigned char	***tmpTexture = new unsigned char **[64];
 
 	for (int i = 0; i < 64; ++i) {
@@ -36,7 +36,7 @@ int	raycast::loadRawTexture(const char* filename) {
 		std::cerr << "Faild to open '" << filename << "' texture file [dimension mismatch]" << std::endl;
 		return 1;
 	}
-	allTextures[filename] = tmpTexture;
+	allTextures[c] = tmpTexture;
 	return 0;
 }
 

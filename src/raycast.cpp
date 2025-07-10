@@ -92,12 +92,6 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
-	if (openTexture("textures/CASTLEBRICKS.xpm"))
-		return 1;
-	if (loadRawTexture("textures/Brick_Wall.raw"))
-		return 1;
-	if (loadRawTexture("textures/Floor.raw"))
-		return 1;
 	return 0;
 }
 

@@ -1,9 +1,5 @@
 #include "raycast.hpp"
 
-
-#define BLUE_SKY 135, 206, 235
-#define GREEN_GRASS 17,124,19
-
 using std::cout;
 using std::endl;
 
@@ -72,9 +68,8 @@ void	raycast::renderScene(scene &sc) {
 	for (auto it = objs.begin(); it != objs.end(); ++it) {
 		if (it->first == "minimap")
 		{
-			// drawBackground(0);
 			renderGame(0, 0, screenBuffWidth, screenBuffHeight);
-			rendTest(OBJ.getX1(), 1000, screenBuffHeight / 4, screenBuffHeight / 4);
+			renderMinimap(OBJ.getX1(), 1000, screenBuffHeight / 4, screenBuffHeight / 4);
 		}
 		else if (it->first == "mapCreate")
 			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
@@ -87,7 +82,7 @@ void	raycast::renderScene(scene &sc) {
 	}
 }
 
-void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
+void raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
 	double	viewPortCenterX = playerX;
 	double	viewPortCenterY = playerY;
 
@@ -95,78 +90,9 @@ void	raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 		std::cerr << "Window or map not initialized." << std::endl;
 		return;
 	}
-	glViewport(x1, y1, width, height);
+	glViewport(0, 0, width, height);
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(x1, y1, width, height);
-	// glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0, 8, 0, 8, -1, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	if (playerX + 4 > mapWidth)
-		viewPortCenterX = mapWidth - 4;
-	if (playerY + 4 > mapHeight)
-		viewPortCenterY = mapHeight - 4;
-	if (playerX - 4 < 0)
-		viewPortCenterX = 4;
-	if (playerY - 4 < 0)
-		viewPortCenterY = 4;
-	for (double y = -4; y < 4; y += 0.05) {
-		for (double x = -4; x < 4; x += playerStep) {
-			double	mapX = viewPortCenterX + x;
-			double	mapY = viewPortCenterY - y;
-			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && (*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9')
-			{
-				glColor3f(0.3f, 0.3f, 0.3f); // Gray
-			} 
-			else {
-				glColor3f(1.0f, 1.0f, 1.0f); // White
-			}
-			glBegin(GL_QUADS);
-			glVertex2f(x + 4, y + 4);
-			glVertex2f(x + 4 + playerStep, y + 4);
-			glVertex2f(x + 4 + playerStep, y + 4 + playerStep);
-			glVertex2f(x + 4, y + 4 + playerStep);
-			glEnd();
-		}
-	}
-	viewPortCenterX = playerX - viewPortCenterX;
-	viewPortCenterY = viewPortCenterY - playerY;
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_QUADS);
-	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
-	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
-	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
-	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
-	glEnd();
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glDisable(GL_SCISSOR_TEST);
-}
-
-void raycast::rendTest(const int &x1, const int &y1, const int &width, const int &height) {
-	double	viewPortCenterX = playerX;
-	double	viewPortCenterY = playerY;
-
-	if (!window || !map) {
-		std::cerr << "Window or map not initialized." << std::endl;
-		return;
-	}
-	glViewport(x1, y1, width, height);
-	glEnable(GL_SCISSOR_TEST);
-	glScissor(x1, y1, width, height);
-	// glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
+	glScissor(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -187,7 +113,6 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 	if (playerY - 4 < 0)
 		viewPortCenterY = 4;
 	double pStep = 0.05;
-	// std::cout << "____________________________\n";
 	for (double y = -4; y < 4; y += pStep) {
 		for (double x = -4; x < 4; x += pStep) {
 			int	mapX = viewPortCenterX + x;
@@ -220,47 +145,6 @@ void raycast::rendTest(const int &x1, const int &y1, const int &width, const int
 	glVertex2f(4 + viewPortCenterX + 0.1f, 4 + viewPortCenterY + 0.1f);
 	glVertex2f(4 + viewPortCenterX + 0.1f + (cos(pAngle) * 0.5), 4 + 0.1f + viewPortCenterY + (-sin(pAngle) * 0.5));
 	glEnd();
-	// for (double y = mapWidth - 1; y >= 0; y -= 1) {
-	// 	for (double x = 0; x < mapWidth; x += 1) {
-			
-	// 		if ((*map)[y][x] == '1')
-	// 			glColor3f(0.3f, 0.3f, 0.3f); // Gray
-	// 		else
-	// 			glColor3f(1.0f, 1.0f, 1.0f); // White
-
-	// 		glBegin(GL_QUADS);
-	// 		glVertex2f(x + 0.1f, y + 0.1f);
-	// 		glVertex2f(x + 0.9f, y + 0.1f);
-	// 		glVertex2f(x + 0.9f, y + 0.9f);
-	// 		glVertex2f(x + 0.1f, y + 0.9f);
-	// 		glEnd();
-	// 	}
-	// }
-
-	// viewPortCenterX = playerX - viewPortCenterX;
-	// viewPortCenterY = viewPortCenterY - playerY;
-	// glColor3f(1.0f, 0.0f, 0.0f);
-	// glBegin(GL_QUADS);
-	// glVertex2f(playerX, playerY);
-	// glVertex2f(playerX + 0.2f, playerY);
-	// glVertex2f(playerX + 0.2f, playerY + 0.2f);
-	// glVertex2f(playerX, playerY + 0.2f);
-	// glEnd();
-
-	// glBegin(GL_LINES);
-	// glVertex2f(playerX + 0.1f, playerY + 0.1f);
-	// glVertex2f(playerX + 0.1f + (cos(pAngle) * 0.5), playerY + 0.1f + (sin(pAngle) * 0.5));
-	// glEnd();
-
-	// glBegin(GL_LINES);
-	// glVertex2f(playerX + 0.1f, playerY + 0.1f);
-	// glVertex2f(playerX + 0.1f + (cos(pAngle - M_PI/6) * 100), playerY + 0.1f + (sin(pAngle - M_PI/6) * 100));
-	// glEnd();
-
-	// glBegin(GL_LINES);
-	// glVertex2f(playerX + 0.1f, playerY + 0.1f);
-	// glVertex2f(playerX + 0.1f + (cos(pAngle + M_PI/6) * 100), playerY + 0.1f + (sin(pAngle + M_PI/6) * 100));
-	// glEnd();
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -284,7 +168,6 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	}
 	
 	glViewport(x1, y1, width, height);
-	// glClear(GL_COLOR_BUFFER_BIT);
 	
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -325,8 +208,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			if ((*map)[mY][mX] == '1')
-				determineTextureColor(allTextures["textures/Brick_Wall.raw"], dir, y, textureStartHorizon, textureStartVertical);
+			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
+				determineTextureColor(allTextures[(*map)[mY][mX]], dir, y, textureStartHorizon, textureStartVertical);
 
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -335,13 +218,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 			glEnd();
 		}
-		// std::cout << "playerY " << playerY << " " <<  height / 2 + wallHeiht --/ 2<<"\n";
-		// std::cout << dist << " " << height/2 + wallHeiht / 2 << "\n";
 		glEnd();
 	}
-
-	// std::cout << width / 2 << " " << height << "\n";
-	// std::cout << posX + 1 << " " << posY + ((y + 1) * texturePixelHeight) << "\n";
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
@@ -350,7 +228,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 }
 
 void raycast::drawTexture(int startX, int startY) {
-	unsigned char ***txtr = allTextures["textures/Floor.raw"];
+	unsigned char ***txtr = allTextures['1'];
 	std::cout << "startY " << startY <<"\n";
 	glBegin(GL_QUADS);
 	for (int y = 63; y >startY; y -= 1) {
@@ -367,44 +245,32 @@ void raycast::drawTexture(int startX, int startY) {
 
 void raycast::drawBackground(int rayCnt)
 {
-	// glViewport(0, 0, screenBuffWidth, screenBuffHeight / 6);
-
-	// glMatrixMode(GL_PROJECTION);
-	// glPushMatrix();
-	// glLoadIdentity();
-	// glOrtho(0, 64, 0,64, -1, 1);
-
-	// glMatrixMode(GL_MODELVIEW);
-	// glPushMatrix();
-	// glLoadIdentity();
-	// drawTexture(0, (playerY - (int)playerY) * 64);
-	// height / 2 + wallHeiht / 2
-	glColor3ub(BLUE_SKY);
-	glBegin(GL_QUADS);
-	glVertex2f(0,0);
-	glVertex2f(rayCnt, 0);
-	glVertex2f(rayCnt, screenBuffHeight / 2);
-	glVertex2f(0, screenBuffHeight / 2);
-	glEnd();
-	////grass/////////
-	glColor3ub(GREEN_GRASS);
-	glBegin(GL_QUADS);
-	glVertex2f(0, screenBuffHeight / 2);
-	glVertex2f(rayCnt, screenBuffHeight / 2);
-	glVertex2f(rayCnt, screenBuffHeight);
-	glVertex2f(0,screenBuffHeight);
-	glEnd();
-	// glMatrixMode(GL_PROJECTION);
-	// glPopMatrix();
-
-	// glMatrixMode(GL_MODELVIEW);
-	// glPopMatrix();
+	double j = (double)screenBuffHeight / 1000000;
+	double R = 1, G = 1, B = 1;
+	for (int i = 0; i < screenBuffHeight / 2; ++i) {
+		glColor3f(R -= j, G -= j, B -= j);
+		glBegin(GL_QUADS);
+		glVertex2f(0,i);
+		glVertex2f(rayCnt, i);
+		glVertex2f(rayCnt, i + 1);
+		glVertex2f(0, i + 1);
+		glEnd();
+	}
+	R = 0; G = 0; B = 0;
+	for (int i = 1; i < screenBuffHeight / 2; ++i) {
+		glColor3f(R += j, G += j, B += j);
+		glBegin(GL_QUADS);
+		glVertex2f(0, screenBuffHeight / 2 + i);
+		glVertex2f(rayCnt, screenBuffHeight / 2 + i);
+		glVertex2f(rayCnt, screenBuffHeight / 2 + i + 1);
+		glVertex2f(0, screenBuffHeight / 2 + i + 1);
+		glEnd();
+	}
 }
 
 void raycast::determineTextureColor(unsigned char ***txtr, char dir, int level, int horizon, int verticl)
 {
 	if(dir == 'h') {
-		// glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], 200);
 		glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], txtr[level][horizon][3]);
 	} 
 	else {
@@ -421,6 +287,5 @@ void raycast::determineTextureColor(unsigned char ***txtr, char dir, int level, 
 		else 		b = 3;
 		
 		glColor4ub(r, g, b, a);
-		// glColor4ub(r, g, b, 125);
 	}
 }

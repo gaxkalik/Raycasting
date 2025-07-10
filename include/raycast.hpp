@@ -38,14 +38,13 @@ class	raycast
 		const int	checkValidity(void) const;
 		const int	initGame(const char *);
 		const int	mapParse(const char *);
-		void		rendTest(const int &, const int &, const int &, const int &);
 		void		NewFunction(double &rAngle);
 		void		playerInput(void);
 		void		addBottonsToScene(void);
 		void		renderScene(scene &);
-		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
-		void		renderMinimap(const int &, const int &, const int &, const int &);
 		void		renderGame(const int &, const int &, const int &, const int &);
+		void		renderMinimap(const int &, const int &, const int &, const int &);
+		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
 		void		newScene(void);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);
@@ -53,8 +52,8 @@ class	raycast
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const int &, const std::string &, const std::string &);
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 		int			openTexture(const char *);
-		int			loadRawTexture(const char *);
-		void normalizeAngle(double &angle) const;
+		int			loadRawTexture(const char, const char *);
+		void		normalizeAngle(double &angle) const;
 		void		drawTexture(int, int);
 
 		void			drawBackground(int);
@@ -82,13 +81,12 @@ class	raycast
 		char						brush;
 		double						cursorX, cursorY;
 		std::vector<texture>		textures;
-		std::map<const std::string, unsigned char ***>	allTextures;
+		std::map<const char, unsigned char ***>	allTextures;
 		std::vector<std::string>	*hWall;
 };
 
 void		glColorARGB(uint32_t argb);
 void		key_callback(GLFWwindow*, int, int, int, int);
-int***		xpmToRaw(texture &tx);
 const int	inRange(const double, const double, const double);
 std::vector<std::string> strSplit(const std::string &, const char);
 

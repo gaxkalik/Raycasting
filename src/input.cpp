@@ -86,7 +86,7 @@ void	raycast::playerInput(void) {
 
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		if (keys.moveUp && (*map)[playerY - dirY][playerX] == '0' && (*map)[playerY][playerX + dirX] == '0')
 		{			
 			pl->setX(dirX);

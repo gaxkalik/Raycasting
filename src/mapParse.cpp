@@ -1,6 +1,5 @@
 #include "raycast.hpp"
 
-
 const int	raycast::mapParse(const char *filename) {
 	std::ifstream	file;
 
@@ -17,7 +16,20 @@ const int	raycast::mapParse(const char *filename) {
 		newMap->push_back("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 
 	while (std::getline(file, line)) {
-		map->push_back(line);
+		if (!line.compare("\0"))
+			continue;
+		if (line.compare(0, 2, "T:")) {
+			map->push_back(line);
+		}
+		else if (line[0] != '\n'){
+			std::vector<std::string>	tmp = strSplit(line, ' ');
+			if (loadRawTexture(tmp[1][0], tmp[2].c_str()))
+				return 1;
+		}
+		else {
+			std::cerr << "Invalid file" << std::endl;
+			return 1;
+		}
 	}
 	file.close();
 	mapHeight = map->size();
@@ -61,8 +73,6 @@ void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map)
 	floodFill(x, y + 1, map);
 	floodFill(x, y - 1, map);
 }
-
-
 
 const int raycast::checkValidity() const
 {
