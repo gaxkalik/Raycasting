@@ -57,7 +57,7 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 		{
 			keys.run = false;
-			playerStep = 0.05;
+			playerStep = 0.1;
 		}
 	}	
 
@@ -115,7 +115,7 @@ void	raycast::playerInput(void) {
 			pl->setAngle(rotationSpeed);
 		if (keys.run)
 		{
-			playerStep = 0.1;
+			playerStep = 0.2;
 		}
 	}
 	else if (keys.openMap) {

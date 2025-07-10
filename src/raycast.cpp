@@ -1,6 +1,6 @@
 #include "raycast.hpp"
 
-double playerStep = 0.05;
+double playerStep = 0.1;
 
 extern	keyPressed keys;
 

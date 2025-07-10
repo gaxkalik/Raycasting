@@ -208,9 +208,17 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 		for (double y = 0; y < textureResolution; ++y) 
 		{
+			if (dist >= 10 ) {
+				glColor3b(0,0,0);
+				glBegin(GL_QUADS);
+				glVertex2f(posX,		posY + (y * texturePixelHeight));
+				glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
+				glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
+				glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
+				glEnd();
+			}
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
-				determineTextureColor(allTextures[(*map)[mY][mX]], dir, y, textureStartHorizon, textureStartVertical);
-
+				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, y, textureStartHorizon, textureStartVertical);
 			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
 			glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
@@ -245,8 +253,8 @@ void raycast::drawTexture(int startX, int startY) {
 
 void raycast::drawBackground(int rayCnt)
 {
-	double colorStep = 1.0 / 255.0;
-	double R = 1, G = 1, B = 1;
+	double colorStep = 0.5 / 255.0;
+	double R = 0.53, G = 0.71, B = 0.92;
 	double step = (screenBuffHeight / 2.0) / 255;
 
 	if (step == 0) step = 1;
@@ -257,6 +265,11 @@ void raycast::drawBackground(int rayCnt)
 		glVertex2f(rayCnt, i);
 		glVertex2f(rayCnt, i + step);
 		glVertex2f(0, i + step);
+		glEnd();
+	}
+	R = 0.498; G = 0.498; B = 0.529;
+	for (double i = 0; i < screenBuffHeight / 2; i += step) {
+		glColor3f(R -= colorStep, G -= colorStep, B -= colorStep);
 		glBegin(GL_QUADS);
 		glVertex2f(0, screenBuffHeight - i);
 		glVertex2f(rayCnt, screenBuffHeight - i);
@@ -266,10 +279,14 @@ void raycast::drawBackground(int rayCnt)
 	}
 }
 
-void raycast::determineTextureColor(unsigned char ***txtr, char dir, int level, int horizon, int verticl)
+void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist, int level, int horizon, int verticl)
 {
 	if(dir == 'h') {
-		glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], txtr[level][horizon][3]);
+		int a = txtr[level][horizon][3];
+
+		if (dist >= 10)
+			a = 10 * a / dist;
+		glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], a);
 	} 
 	else {
 		int r = txtr[level][verticl][0];
@@ -277,13 +294,9 @@ void raycast::determineTextureColor(unsigned char ***txtr, char dir, int level, 
 		int b = txtr[level][verticl][2];
 		int a = txtr[level][verticl][3];
 
-		if(r > 20)	r -= 20;
-		else		r = 3;
-		if(g > 20)	g -= 20;
-		else		g = 3;
-		if(b > 20)	b -= 20;
-		else 		b = 3;
-		
+		if (dist >= 10)
+			a = 10 * a / dist;
+
 		glColor4ub(r, g, b, a);
 	}
 }

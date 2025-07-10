@@ -57,7 +57,7 @@ class	raycast
 		void		drawTexture(int, int);
 
 		void			drawBackground(int);
-		void			determineTextureColor(unsigned char ***, char, int, int, int);
+		void			determineTextureColor(unsigned char ***, char, double, int, int, int);
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
@@ -88,6 +88,7 @@ class	raycast
 void		glColorARGB(uint32_t argb);
 void		key_callback(GLFWwindow*, int, int, int, int);
 const int	inRange(const double, const double, const double);
+void oASD();
 std::vector<std::string> strSplit(const std::string &, const char);
 
 
