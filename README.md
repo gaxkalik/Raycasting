@@ -2,7 +2,7 @@
 
 A simple raycasting engine written in **C++**, inspired by classic games like **Wolfenstein 3D**. This project demonstrates how to create a pseudo-3D environment using 2D techniques.
 
-![Output Screenshot](output.png)
+![Output Screenshot](Game_demo.png)
 
 ---
 
