@@ -119,7 +119,7 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 			int	mapX = viewPortCenterX + x;
 			int	mapY = viewPortCenterY - y;
 			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && ((*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9') || ((*map)[mapY][mapX] >='A' && (*map)[mapY][mapX] <='Z')) {
-				glColor3f(0.3f, 0.3f, 0.3f); // Gray
+				glColor3f(0.2f, 0.2f, 0.2f); // Gray
 			}else if ((*map)[mapY][mapX] =='d'){
 				glColor3f(0.4f, 0.4f, 0.4f);
 			} else {
@@ -135,13 +135,37 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	viewPortCenterX = playerX - viewPortCenterX;
 	viewPortCenterY = viewPortCenterY - playerY;
 	glColor3f(1.0f, 0.0f, 0.0f);
+	// player
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
 	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
 	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.2f);
+	
+	// map frame
+	glColor3f(0.5f, 0.0f, 0.0f);
+	glVertex2f(0, 0);
+	glVertex2f(8, 0);
+	glVertex2f(8, 0.1f);
+	glVertex2f(0, 0.1f);
+
+	glVertex2f(7.9f, 0);
+	glVertex2f(8, 0);
+	glVertex2f(8, 8);
+	glVertex2f(7.9f, 8);
+
+	glVertex2f(0, 7.9f);
+	glVertex2f(8, 7.9f);
+	glVertex2f(8, 8);
+	glVertex2f(0, 8);
+
+	glVertex2f(0, 0);
+	glVertex2f(0.1f, 0);
+	glVertex2f(0.1f, 8);
+	glVertex2f(0, 8);
 	glEnd();
 
 	glBegin(GL_LINES);
+	// player dir ray
 	glVertex2f(4 + viewPortCenterX + 0.1f, 4 + viewPortCenterY + 0.1f);
 	glVertex2f(4 + viewPortCenterX + 0.1f + (cos(pAngle) * 0.5), 4 + 0.1f + viewPortCenterY + (-sin(pAngle) * 0.5));
 	glEnd();
@@ -152,6 +176,7 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glDisable(GL_SCISSOR_TEST);
+	std::cout << playerX << " " << playerY << "\n";
 }
 
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
@@ -184,17 +209,17 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	
 	drawBackground(rayCnt);
 
-	double rAngle = pAngle - M_PI / 6;
-	double posX = 0;
+	char	dir = 'a';
+	double	rAngle = pAngle - M_PI / 6;
+	double	posX = 0;
 
 	glBegin(GL_QUADS);
 	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
 	{
-		char dir = 'a';
-		double dist = getShortestRay(rAngle, dir);
-		double textureStartHorizon = ((mX - (int)mX) * textureResolution);
-		double textureStartVertical = ((mY - (int)mY) * textureResolution);
-		double wallHeiht = maxWallHeight / (cos(pAngle - rAngle) * dist * 0.55);
+		double	dist = getShortestRay(rAngle, dir);
+		double	textureStartHorizon = ((mX - (int)mX) * textureResolution);
+		double	textureStartVertical = ((mY - (int)mY) * textureResolution);
+		double	wallHeiht = maxWallHeight / (cosArr[i] * dist);
 		double	posY = (maxWallHeight - wallHeiht)/2;
 		double	texturePixelHeight = wallHeiht / textureResolution;
 		

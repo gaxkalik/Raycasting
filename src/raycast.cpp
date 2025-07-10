@@ -1,8 +1,7 @@
 #include "raycast.hpp"
 
-double playerStep = 0.1;
-
-extern	keyPressed keys;
+double playerStep = 0.05;
+double cosArr[360];
 
 raycast::raycast() {
 	window = nullptr;
@@ -92,6 +91,10 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
+
+	double angle = pAngle - M_PI / 6;
+	for (int i = 0; i < 360; ++i, angle += (0.0174533 / 6))
+		cosArr[i] = cos(pAngle - angle) * 0.55;
 	return 0;
 }
 

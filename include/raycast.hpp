@@ -30,7 +30,12 @@
 class	player;
 class	scene;
 class	obj;
+
+struct	keyPressed;
+
 extern double playerStep;
+extern double cosArr[360];
+extern	keyPressed keys;
 
 class	raycast
 {
