@@ -12,10 +12,10 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	raycast *game;
-
+	
 	try {
 		game = new raycast();
-
+		
 		glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 		if (game->initGame(argv[1])) {
 			delete game;

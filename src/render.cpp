@@ -205,18 +205,17 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		
 		if(wallHeiht > maxWallHeight)
 			wallHeiht = maxWallHeight;
-
+		if (dist >= 10 ) {
+			glColor3b(0,0,0);
+			glBegin(GL_QUADS);
+			glVertex2f(posX,		posY);
+			glVertex2f(posX + 1,	posY);
+			glVertex2f(posX + 1,	posY + (64 * texturePixelHeight));
+			glVertex2f(posX,		posY + (64 * texturePixelHeight));
+			glEnd();
+		}
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			if (dist >= 10 ) {
-				glColor3b(0,0,0);
-				glBegin(GL_QUADS);
-				glVertex2f(posX,		posY + (y * texturePixelHeight));
-				glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
-				glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
-				glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
-				glEnd();
-			}
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
 				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, y, textureStartHorizon, textureStartVertical);
 			glBegin(GL_QUADS);
@@ -226,7 +225,6 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 			glEnd();
 		}
-		glEnd();
 	}
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

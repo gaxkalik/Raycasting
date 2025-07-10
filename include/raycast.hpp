@@ -1,6 +1,10 @@
 #ifndef RAYCAST_HPP
 #define RAYCAST_HPP
 
+//UTILS
+#include <chrono>
+#include <thread>
+
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>

@@ -110,13 +110,22 @@ const int	raycast::startGame(void) {
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetWindowSizeCallback(window, window_size_callback);
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	
 	while (!glfwWindowShouldClose(window)) {
+		start = std::chrono::high_resolution_clock::now();
 		glClear(GL_COLOR_BUFFER_BIT);
 		playerInput();
 		renderScene(*currScene);
 		glfwSwapBuffers(window);
+		end = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 	}
+	std::chrono::duration<double> elapsed = end - start;
+	std::cout << "Elapsed time: " << elapsed.count() << " seconds\n";
 	glfwTerminate();
 }
 
