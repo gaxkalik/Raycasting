@@ -245,11 +245,11 @@ void raycast::drawTexture(int startX, int startY) {
 
 void raycast::drawBackground(int rayCnt)
 {
-	double colorStep = 1.0 / 256.0;
+	double colorStep = 1.0 / 255.0;
 	double R = 1, G = 1, B = 1;
-	double step = (screenBuffHeight / 2.0) / 256;
-	if (step == 0)
-		step = 1;
+	double step = (screenBuffHeight / 2.0) / 255;
+
+	if (step == 0) step = 1;
 	for (double i = 0; i < screenBuffHeight / 2; i += step) {
 		glColor3f(R -= colorStep, G -= colorStep, B -= colorStep);
 		glBegin(GL_QUADS);
@@ -257,16 +257,11 @@ void raycast::drawBackground(int rayCnt)
 		glVertex2f(rayCnt, i);
 		glVertex2f(rayCnt, i + step);
 		glVertex2f(0, i + step);
-		glEnd();
-	}
-	R = 0; G = 0; B = 0;
-	for (double i = screenBuffHeight / 2; i < screenBuffHeight; i += step) {
-		glColor3f(R += colorStep, G += colorStep, B += colorStep);
 		glBegin(GL_QUADS);
-		glVertex2f(0, i);
-		glVertex2f(rayCnt, i);
-		glVertex2f(rayCnt, i + step);
-		glVertex2f(0, i + step);
+		glVertex2f(0, screenBuffHeight - i);
+		glVertex2f(rayCnt, screenBuffHeight - i);
+		glVertex2f(rayCnt, screenBuffHeight - i + step);
+		glVertex2f(0, screenBuffHeight - i + step);
 		glEnd();
 	}
 }
