@@ -27,6 +27,15 @@ raycast::~raycast() {
 		delete newMap;
 	if (scenes)
 		delete scenes;
+	for (auto it = allTextures.begin(); it != allTextures.end(); ++it) {
+		for (int i = 0; i < 64; ++i) {
+			for (int j = 0; j < 64; ++j) {
+				delete[] it->second[i][j];
+			}
+			delete[] it->second[i];
+		}
+		delete[] it->second;
+	}
 	glfwTerminate();
 	std::cout << "[ Raycast destructor called ]" << std::endl;
 }
@@ -85,9 +94,10 @@ const int raycast::initGame(const char *filename) {
 	addBottonsToScene();
 	if (openTexture("textures/CASTLEBRICKS.xpm"))
 		return 1;
-	if (loadRawTexture("textures/output.raw"))
+	if (loadRawTexture("textures/Brick_Wall.raw"))
 		return 1;
-
+	if (loadRawTexture("textures/Floor.raw"))
+		return 1;
 	return 0;
 }
 
@@ -147,6 +157,10 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	double distV = 100;
 	
 	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
+		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
+			offsetY = 0;
+		else
+			offsetY = tan(rayAngle);
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
 			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') {
@@ -166,6 +180,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 			--mXV;
 			mYV -= offsetY;
 		}
+		
 	}
 	_mY = mYV;
 	return distV;

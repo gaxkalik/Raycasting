@@ -6,16 +6,18 @@
 #include <fstream>
 #include <iomanip>
 #include <stdlib.h>
+#include <cstdlib>
+#include <unistd.h>
 #include <map>
 
 #include "player.hpp"
 #include "scene.hpp"
 #include "texture.hpp"
 
-#define playerX pl->getX()
-#define playerY pl->getY()
-#define OBJ (it->second)
-#define pAngle pl->getAngle()
+#define playerX	pl->getX()
+#define playerY	pl->getY()
+#define OBJ		(it->second)
+#define pAngle	pl->getAngle()
 
 #define TEXTURE_SIZE 64*64*4
 
@@ -52,9 +54,10 @@ class	raycast
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 		int			openTexture(const char *);
 		int			loadRawTexture(const char *);
+		void		drawTexture(int, int);
 
-		void drawBackground(int rayCnt) const;
-		void			determineTextureColor(texture &, char, int, int, int);
+		void			drawBackground(int);
+		void			determineTextureColor(unsigned char ***, char, int, int, int);
 		const double	getVerticalRay(double rayAngle, double &, double &) const;
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
@@ -73,13 +76,12 @@ class	raycast
 		int							mapWidth, mapHeight;
 		int							screenWidth, screenHeight;
 		int							screenBuffWidth, screenBuffHeight;
-		double							mX = 0;
-		double							mY = 0;
+		double						mX = 0;
+		double						mY = 0;
 		char						brush;
 		double						cursorX, cursorY;
 		std::vector<texture>		textures;
-		unsigned char				txt[64][64][4];
-		std::map<const std::string, const unsigned char (*)[64][4]>	allTextures;
+		std::map<const std::string, unsigned char ***>	allTextures;
 		std::vector<std::string>	*hWall;
 };
 
