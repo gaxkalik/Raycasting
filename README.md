@@ -1,6 +1,6 @@
 # Raycasting Engine
 
-A simple raycasting engine written in **C++**, inspired by classic games like **Wolfenstein 3D**. This project demonstrates how to create a pseudo-3D environment using 2D techniques.
+A simple raycasting engine written in **C++**, inspired by classic games like **Wolfenstein 3D**. This project demonstrates how to create a pseudo-3D environment using **Raycasting algoruthm**.
 
 ![Output Screenshot](Game_demo.png)
 
@@ -49,10 +49,7 @@ After compilation, you can run the program using:
 You can find several predefined maps in the `maps/` directory. Each map file represents a 2D grid that the engine interprets for wall positions.
 
 # Textures
-Textures are stored in the textures/ directory in .xpm or .raw format.Texture mapping using basic linear algebra (vectors, angles)
-
-# Concepts Used **Raycasting algorithm**
-
+Textures are stored in the textures/ directory in .raw format.Texture mapping using basic linear algebra (vectors, angles)
 
 # License
 This project is licensed under the terms of the LICENSE file provided in the repository.
