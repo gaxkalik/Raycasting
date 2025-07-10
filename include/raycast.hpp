@@ -54,6 +54,7 @@ class	raycast
 		void		floodFill(const int, const int, std::vector<std::string> &) const;
 		int			openTexture(const char *);
 		int			loadRawTexture(const char *);
+		void normalizeAngle(double &angle) const;
 		void		drawTexture(int, int);
 
 		void			drawBackground(int);
@@ -90,5 +91,6 @@ void		key_callback(GLFWwindow*, int, int, int, int);
 int***		xpmToRaw(texture &tx);
 const int	inRange(const double, const double, const double);
 std::vector<std::string> strSplit(const std::string &, const char);
+
 
 #endif

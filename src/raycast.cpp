@@ -130,40 +130,27 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 {
 	double vertLengthX = 0;
 	double vertLengthY = 0;
-	double rPX = playerX - (int)playerX;
+	double offsetY = tan(rayAngle);
+	double distV = 100;
 
-	if (rayAngle > 2 * M_PI)
-		rayAngle = rayAngle - 360 * 0.0174533;
-	if (rayAngle < 0)
-		rayAngle += 2 * M_PI;
+	normalizeAngle(rayAngle);
+	
 	if ((rayAngle >= 0 && rayAngle < M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))			//right
-	{
-		vertLengthX = abs(1 - rPX);
-		vertLengthY = tan(rayAngle) * vertLengthX;
-	}
-	else if ((rayAngle == M_PI_2 || rayAngle == 3 * M_PI_2)) {
-		vertLengthX = 0;
-		vertLengthY = 0;
-	}
-	else																							//left
-	{
-		vertLengthX = -abs(rPX);
-		vertLengthY = (tan(rayAngle) * vertLengthX);
-	}
+		vertLengthX = 1 - (playerX - (int)playerX);
+	else if (rayAngle > M_PI_2 && rayAngle < 3 * M_PI_2)													//left
+		vertLengthX = -(playerX - (int)playerX);
+
+	vertLengthY = tan(rayAngle) * vertLengthX;
 
 	double mXV = playerX + vertLengthX;
 	double mYV = playerY + vertLengthY;
-	double offsetY = tan(rayAngle);
-	double distV = 100;
-	
-	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) {
-		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
-			offsetY = 0;
-		else
-			offsetY = tan(rayAngle);
+
+	while (mXV >= 0 && mXV < mapWidth && mYV >= 0 && mYV < mapHeight) 
+	{
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') {
+			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') 
+			{
 				_mX = mXV;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
@@ -171,8 +158,10 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 			mYV += offsetY;
 			++mXV;
 		}
-		else{
-			if ((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') {
+		else
+		{
+			if ((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') 
+			{
 				_mX = mXV - 1;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
@@ -188,48 +177,26 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 
 const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
 {
-	double rPX = playerX - (int)playerX;
-	double rPY = playerY - (int)playerY;
-
-	double horLengthX = rPX;
-	double horLengthY = rPY;
-	double offsetX = 0;
-
-	if (rayAngle > 2 * M_PI || rayAngle > 7)
-		rayAngle = rayAngle - 360 * 0.0174533;
-	if (rayAngle < 0)
-		rayAngle += 2 * M_PI;
+	double horLengthX = 0;
+	double horLengthY = 0;
+	double offsetX = 1/tan(rayAngle);
+	double distH = 100;
 	
+	normalizeAngle(rayAngle);
+
 	if(rayAngle < M_PI)
-		horLengthY = 1 - rPY;
-	if (rayAngle > M_PI)
-		horLengthY = -rPY;
-	if (rayAngle != 3 * M_PI_2 && rayAngle != M_PI_2 && rayAngle != M_PI && rayAngle != 0){
-		horLengthX = horLengthY/tan(rayAngle);
-	}
-	else
-	{
-		horLengthX = 0;
-	}
-	// std::cout<< horLengthX << " " << horLengthY << std::endl;
-	
+		horLengthY = 1 - (playerY - (int)playerY);
+	else if (rayAngle > M_PI)
+		horLengthY = - (playerY - (int)playerY);
+
+	horLengthX = horLengthY/tan(rayAngle);
+
 	double mXH = playerX + horLengthX;
 	double mYH = playerY + horLengthY;
-
-	double distH = 100;
-	if (mXH > mapWidth) {
-		mXH = mapWidth;
-		return distH;
-	}
 	
 	while (mXH >= 0 && mXH < mapWidth && mYH >= 0 && mYH < mapHeight)
 	{
-		if(rayAngle == 0 || rayAngle == M_PI || rayAngle == M_PI/2 || rayAngle == 3*M_PI/2)
-			offsetX = 0;
-		else
-			offsetX = 1/tan(rayAngle);
-
-		if(rayAngle > 0 && rayAngle < M_PI)
+		if(rayAngle < M_PI)
 		{
 			if ((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') 
 			{
@@ -240,7 +207,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 			++mYH;
 			mXH += offsetX;
 		}
-		else if ((rayAngle >= M_PI && rayAngle <= 3 * M_PI_2) || (rayAngle >= 3 * M_PI_2 && rayAngle <= 2 * M_PI))
+		else if (rayAngle > M_PI)
 		{
 			if ((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') 
 			{
@@ -251,8 +218,6 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 			--mYH;
 			mXH -= offsetX;
 		}
-		else
-			break;
 	}
 	_mX = mXH;
 	return distH;
@@ -260,21 +225,33 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 
 const double raycast::getShortestRay(double rayAngle, char &dir)
 {
+	double	dist = 0;
 	double	xV, yV, xH, yH;
 	double	distV = getVerticalRay(rayAngle, xV, yV);
 	double	distH = getHorizontalRay(rayAngle, xH, yH);
-	double	dist = 0;
 
-	if (distV <= distH) {
+	if (distV <= distH) 
+	{
 		dist = distV;
+		dir = 'v';
 		mX = xV;
 		mY = yV;
-	} else {
+	} 
+	else 
+	{
 		dist = distH;
+		dir = 'h';
 		mX = xH;
 		mY = yH;
 	}
 
-	dir = distV <= distH ? 'v' : 'h';
 	return dist;
+}
+
+void raycast::normalizeAngle(double &angle) const
+{
+	if (angle > 2 * M_PI)
+		angle = angle - 360 * 0.0174533;
+	if (angle < 0)
+		angle += 2 * M_PI;
 }
