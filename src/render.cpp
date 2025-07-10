@@ -113,6 +113,7 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	if (playerY - 4 < 0)
 		viewPortCenterY = 4;
 	double pStep = 0.05;
+	glBegin(GL_QUADS);
 	for (double y = -4; y < 4; y += pStep) {
 		for (double x = -4; x < 4; x += pStep) {
 			int	mapX = viewPortCenterX + x;
@@ -125,18 +126,15 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
 
-			glBegin(GL_QUADS);
 			glVertex2f(x + 4 + 0.1f, y + 4 + 0.1f);
 			glVertex2f(x + 4 - pStep - 0.1f, 0.1f + y + 4);
 			glVertex2f(x + 4 - pStep - 0.1f, y + 4 - pStep - 0.1f);
 			glVertex2f(x + 4 + 0.1f, y + 4 - pStep- 0.1f);
-			glEnd();
 		}
 	}
 	viewPortCenterX = playerX - viewPortCenterX;
 	viewPortCenterY = viewPortCenterY - playerY;
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_QUADS);
 	glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
 	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY);
 	glVertex2f(4 + viewPortCenterX + 0.2f, 4 + viewPortCenterY + 0.2f);
@@ -189,13 +187,14 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	double rAngle = pAngle - M_PI / 6;
 	double posX = 0;
 
+	glBegin(GL_QUADS);
 	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
 	{
 		char dir = 'a';
 		double dist = getShortestRay(rAngle, dir);
 		double textureStartHorizon = ((mX - (int)mX) * textureResolution);
 		double textureStartVertical = ((mY - (int)mY) * textureResolution);
-		double wallHeiht = maxWallHeight / abs(cos(pAngle - rAngle) * dist * 0.55);
+		double wallHeiht = maxWallHeight / (cos(pAngle - rAngle) * dist * 0.55);
 		double	posY = (maxWallHeight - wallHeiht)/2;
 		double	texturePixelHeight = wallHeiht / textureResolution;
 		
@@ -209,12 +208,10 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			wallHeiht = maxWallHeight;
 		if (dist >= 10 ) {
 			glColor3b(0,0,0);
-			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY);
 			glVertex2f(posX + 1,	posY);
 			glVertex2f(posX + 1,	posY + (64 * texturePixelHeight));
 			glVertex2f(posX,		posY + (64 * texturePixelHeight));
-			glEnd();
 		}
 		for (double y = 0; y < textureResolution; ++y) 
 		{
@@ -222,18 +219,16 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			{
 				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, y, textureStartHorizon, textureStartVertical);
 			}
-		
-			glBegin(GL_QUADS);
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
 			glVertex2f(posX + 1,	posY + (y * texturePixelHeight));
 			glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
-			glEnd();
 		}
 	}
+	glEnd();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
-
+	
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
