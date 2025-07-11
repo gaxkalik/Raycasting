@@ -63,7 +63,7 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 		{
 			keys.run = false;
-			playerStep = 0.05;
+			playerSpeed = playerStep;
 		}
 	}	
 
@@ -102,11 +102,11 @@ bool	raycast::collision(double &dirX, double &dirY) {
 void	raycast::playerInput(void) {
 
 	
-	double dirX = playerStep * sin(pAngle + M_PI_2);
-	double dirY = playerStep * cos(pAngle + M_PI_2);
+	double dirX = playerSpeed * sin(pAngle + M_PI_2);
+	double dirY = playerSpeed * cos(pAngle + M_PI_2);
 
-	double sDirX = playerStep * sin(pAngle);
-	double sDirY = playerStep * cos(pAngle);
+	double sDirX = playerSpeed * sin(pAngle);
+	double sDirY = playerSpeed * cos(pAngle);
 
 	// if (dirX < 0) dirX = 0;
 	// if (dirY < 0) dirY = 0;
@@ -142,7 +142,7 @@ void	raycast::playerInput(void) {
 			pl->setAngle(rotationSpeed);
 		if (keys.run)
 		{
-			playerStep = 0.1;
+			playerSpeed = 2 * playerStep;
 		}
 	}
 	else if (keys.openMap) {

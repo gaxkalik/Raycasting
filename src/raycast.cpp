@@ -1,6 +1,7 @@
 #include "raycast.hpp"
 
-double playerStep = 0.05;
+double playerStep = 0.025;
+double playerSpeed = playerStep;
 double cosArr[360];
 
 raycast::raycast() {

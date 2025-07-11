@@ -85,7 +85,6 @@ void	raycast::renderScene(scene &sc) {
 void raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
 	double	startX = playerX - 4;
 	double	startY = playerY - 4;
-	bool l, r, b, t;
 
 	if (!window || !map) {
 		std::cerr << "Window or map not initialized." << std::endl;
@@ -103,24 +102,20 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glLoadIdentity();
 
 	if (playerX + 8 > mapWidth) {
-		r = true;
 		startX = mapWidth - 8;
 	}
 	if (playerY + 8 > mapHeight) {
-		b = true;
 		startY = mapHeight - 8;
 	}
 	if (playerX - 8 < 0) {
-		l = true;
 		startX = 0;
 	}
 	if (playerY - 8 < 0) {
-		t = true;
 		startY = 0;
 	}
 	glBegin(GL_QUADS);
-	for (double y = 0; y < 8; ++y) {
-		for (double x = 0; x < 8; ++x) {
+	for (double y = 0; y < 8; y += playerStep) {
+		for (double x = 0; x < 8; x += playerStep) {
 			if (((*map)[startY + y][startX + x] >= '1' && (*map)[startY + y][startX + x] <='9') ||
 					((*map)[startY + y][startX + x]  >='A' && (*map)[startY + y][startX + x]  <='Z')) {
 				glColor3f(0.2f, 0.2f, 0.2f); // Gray
@@ -135,10 +130,8 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 			glVertex2f(x, y + 1);
 		}
 	}
-	glColor3f(1.0f, 0.0f, 0.0f);
 	// player
-
-	// std::cout<< "start - "<< startX << " " << startY << "\n";
+	glColor3f(1.0f, 0.0f, 0.0f);
 	std::pair<double, double> *pHitBox = pl->getHitBox();
 	for (int i = 0; i < 4; ++i) {
 		// std::cout << (pHitBox[i].first)<< " " << (pHitBox[i].second)<< "\n";

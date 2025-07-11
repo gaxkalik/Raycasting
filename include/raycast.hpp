@@ -34,6 +34,7 @@ class	obj;
 struct	keyPressed;
 
 extern double playerStep;
+extern double playerSpeed;
 extern double cosArr[360];
 extern	keyPressed keys;
 
