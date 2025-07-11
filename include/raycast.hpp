@@ -71,6 +71,8 @@ class	raycast
 		const double	getHorizontalRay(double rayAngle, double &, double &) const;
 		const double	getShortestRay(double rayAngle, char &dir);
 
+		bool collision(double &, double &);
+
 		obj	*cursorOnObj(const double &cursorX, const double &cursorY) const;
 		static void	window_size_callback(GLFWwindow*, int, int);
 

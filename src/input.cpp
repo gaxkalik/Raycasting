@@ -82,13 +82,34 @@ obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
 	return nullptr;
 }
 
+bool	raycast::collision(double &dirX, double &dirY) {
+	std::pair<double, double> *pHitBox = pl->getHitBox();
+
+	// std::cout << "dirX " << dirX << " dirY " << dirY << "\n";
+	for (int i = 0; i < 4; ++i) {
+		// std::cout << "c - " << (*map)[pHitBox[i].second - dirY][pHitBox[i].first] << "\n";
+		// std::cout << i << " " << pHitBox[i].second - dirY << " " << pHitBox[i].first << " " << pHitBox[i].second << " " << pHitBox[i].first + dirX <<"\n";
+		if (!((*map)[pHitBox[i].second + dirY][pHitBox[i].first] == '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] == '0')) {
+			return true;
+		}
+	}
+	pl->setX(dirX);
+	pl->setY(dirY);
+	pl->calculateHitBoxPosition();
+	return false;
+}
+
 void	raycast::playerInput(void) {
 
+	
 	double dirX = playerStep * sin(pAngle + M_PI_2);
 	double dirY = playerStep * cos(pAngle + M_PI_2);
 
 	double sDirX = playerStep * sin(pAngle);
 	double sDirY = playerStep * cos(pAngle);
+
+	// if (dirX < 0) dirX = 0;
+	// if (dirY < 0) dirY = 0;
 
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
@@ -100,25 +121,18 @@ void	raycast::playerInput(void) {
 			else if ((*map)[playerY - 1][playerX] == 'd')	(*map)[playerY - 1][playerX] = '0';
 			else if ((*map)[playerY + 1][playerX] == 'd')	(*map)[playerY + 1][playerX] = '0';
 		}
-		if (keys.moveUp && (*map)[playerY - dirY][playerX] == '0' && (*map)[playerY][playerX + dirX] == '0')
-		{			
-			pl->setX(dirX);
-			pl->setY(-dirY);
+		if (keys.moveUp) {
+			collision(dirX, dirY *= -1);
 		}
-		if (keys.moveDown && (*map)[playerY + dirY][playerX] == '0' && (*map)[playerY][playerX - dirX] == '0')
-		{
-			pl->setX(-dirX);
-			pl->setY(dirY);
+		if (keys.moveDown) {
+			collision(dirX *= -1, dirY);
 		}
-		if (keys.moveLeft && (*map)[playerY - sDirY][playerX] == '0' && (*map)[playerY][playerX + sDirX] == '0')
-		{
-			pl->setX(sDirX);
-			pl->setY(-sDirY);
+		if (keys.moveLeft) {
+			collision(sDirX, sDirY *= -1);
 		}
-		if (keys.moveRight && (*map)[playerY + sDirY][playerX] == '0' && (*map)[playerY][playerX - sDirX] == '0')
+		if (keys.moveRight)
 		{
-			pl->setX(-sDirX);
-			pl->setY(sDirY);
+			collision(sDirX *= -1, sDirY);
 		}
 		if(keys.rotateLeft)
 		{

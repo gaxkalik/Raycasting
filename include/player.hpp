@@ -41,9 +41,12 @@ class player
 				this->angle = 0;
 			}
 		}
+		std::pair<double, double> *getHitBox(void) const { return hitbox;}
+		void					calculateHitBoxPosition(void);
 	private:
 		double	pX;
 		double	pY;
+		std::pair<double, double>	*hitbox;
 		double angle;
 };
 
