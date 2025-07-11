@@ -83,8 +83,9 @@ void	raycast::renderScene(scene &sc) {
 }
 
 void raycast::renderMinimap(const int &x1, const int &y1, const int &width, const int &height) {
-	double	viewPortCenterX = playerX;
-	double	viewPortCenterY = playerY;
+	double	startX = playerX - 4;
+	double	startY = playerY - 4;
+	bool l, r, b, t;
 
 	if (!window || !map) {
 		std::cerr << "Window or map not initialized." << std::endl;
@@ -95,57 +96,54 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, mapWidth, mapHeight, 0, -1, 1);
+	glOrtho(0, 8, 8, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 
-	if (playerX + 4 > mapWidth)
-		viewPortCenterX = mapWidth - 4;
-	if (playerY + 4 > mapHeight)
-		viewPortCenterY = mapHeight - 4;
-	if (playerX - 4 < 0)
-		viewPortCenterX = 4;
-	if (playerY - 4 < 0)
-		viewPortCenterY = 4;
-	double pStep = 0.05;
+	if (playerX + 8 > mapWidth) {
+		r = true;
+		startX = mapWidth - 8;
+	}
+	if (playerY + 8 > mapHeight) {
+		b = true;
+		startY = mapHeight - 8;
+	}
+	if (playerX - 8 < 0) {
+		l = true;
+		startX = 0;
+	}
+	if (playerY - 8 < 0) {
+		t = true;
+		startY = 0;
+	}
 	glBegin(GL_QUADS);
-	for (double y = mapHeight - 1; y >= 0; --y) {
-		for (double x = 0; x < mapWidth; ++x) {
-			int	mapX = x;
-			int	mapY = y;
-			if (mapX >= 0 && mapY >=0 && mapX < mapWidth && mapY < mapHeight && ((*map)[mapY][mapX] >= '1' && (*map)[mapY][mapX] <='9') || ((*map)[mapY][mapX] >='A' && (*map)[mapY][mapX] <='Z')) {
+	for (double y = 0; y < 8; ++y) {
+		for (double x = 0; x < 8; ++x) {
+			if (((*map)[startY + y][startX + x] >= '1' && (*map)[startY + y][startX + x] <='9') ||
+					((*map)[startY + y][startX + x]  >='A' && (*map)[startY + y][startX + x]  <='Z')) {
 				glColor3f(0.2f, 0.2f, 0.2f); // Gray
-			}else if ((*map)[mapY][mapX] =='d'){
+			}else if ((*map)[startY + y][startX + x]  =='d'){
 				glColor3f(0.4f, 0.4f, 0.4f);
 			} else {
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
-
-			// glVertex2f(x + 4 + 0.1f, y + 4 + 0.1f);
-			// glVertex2f(x + 4 - pStep - 0.1f, 0.1f + y + 4);
-			// glVertex2f(x + 4 - pStep - 0.1f, y + 4 - pStep - 0.1f);
-			// glVertex2f(x + 4 + 0.1f, y + 4 - pStep- 0.1f);
 			glVertex2f(x, y);
 			glVertex2f(x + 1, y);
 			glVertex2f(x + 1, y + 1);
 			glVertex2f(x, y + 1);
 		}
 	}
-	viewPortCenterX = playerX - viewPortCenterX;
-	viewPortCenterY = viewPortCenterY - playerY;
 	glColor3f(1.0f, 0.0f, 0.0f);
 	// player
+
+	// std::cout<< "start - "<< startX << " " << startY << "\n";
 	std::pair<double, double> *pHitBox = pl->getHitBox();
-	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY);
-	// glVertex2f(4 + viewPortCenterX + 0.25f, 4 + viewPortCenterY);
-	// glVertex2f(4 + viewPortCenterX + 0.25f, 4 + viewPortCenterY + 0.25f);
-	// glVertex2f(4 + viewPortCenterX, 4 + viewPortCenterY + 0.25f);
-	glVertex2f(pHitBox[0].first, pHitBox[0].second);
-	glVertex2f(pHitBox[1].first, pHitBox[1].second);
-	glVertex2f(pHitBox[2].first, pHitBox[2].second);
-	glVertex2f(pHitBox[3].first, pHitBox[3].second);
+	for (int i = 0; i < 4; ++i) {
+		// std::cout << (pHitBox[i].first)<< " " << (pHitBox[i].second)<< "\n";
+		glVertex2f((pHitBox[i].first - startX), (pHitBox[i].second - startY));
+	}
 	
 	// map frame
 	glColor3f(0.5f, 0.0f, 0.0f);
@@ -172,8 +170,8 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 
 	glBegin(GL_LINES);
 	// player dir ray
-	glVertex2f(playerX, playerY);
-	glVertex2f(playerX + (sin(pAngle + M_PI_2) * 0.5), playerY + (-cos(pAngle + M_PI_2) * 0.5));
+	glVertex2f((playerX - startX), (playerY - startY));
+	glVertex2f((playerX - startX) + (sin(pAngle + M_PI_2) * 0.5), (playerY - startY) + (-cos(pAngle + M_PI_2) * 0.5));
 	glEnd();
 
 	glMatrixMode(GL_PROJECTION);
