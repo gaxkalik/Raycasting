@@ -25,18 +25,20 @@
 
 #define TEXTURE_SIZE 64*64*4
 
-//Colors
-
 class	player;
 class	scene;
 class	obj;
 
 struct	keyPressed;
 
+constexpr int rayCnt = 720;
+
+extern double rayStep;
 extern double playerStep;
 extern double playerSpeed;
-extern double cosArr[360];
-extern	keyPressed keys;
+extern double cosArr[rayCnt];
+extern double FOV;
+extern keyPressed keys;
 
 class	raycast
 {
@@ -97,7 +99,6 @@ class	raycast
 		std::vector<std::string>	*hWall;
 };
 
-void		glColorARGB(uint32_t argb);
 void		key_callback(GLFWwindow*, int, int, int, int);
 const int	inRange(const double, const double, const double);
 void oASD();

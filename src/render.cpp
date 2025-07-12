@@ -130,6 +130,7 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 			glVertex2f(x, y + 1);
 		}
 	}
+
 	// player
 	glColor3f(1.0f, 0.0f, 0.0f);
 	std::pair<double, double> *pHitBox = pl->getHitBox();
@@ -176,7 +177,6 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 
 void raycast::renderGame(const int &x1, const int &y1, const int &width, const int &height)
 {
-	int				rayCnt = 180 * 2;
 	int				textureResolution = 64;
 	const double	resolution = width / rayCnt;
 	const double	maxWallHeight = height;
@@ -188,7 +188,6 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	}
 	
 	glViewport(x1, y1, width, height);
-	
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -205,27 +204,28 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	drawBackground(rayCnt);
 
 	char	dir = 'a';
-	double	rAngle = pAngle - M_PI / 6;
-	double	posX = 0;
+	double	rAngle = pAngle - FOV / 2;
 
 	glBegin(GL_QUADS);
-	for (int i = 0; i < rayCnt; ++i, rAngle += (0.0174533 / 6), ++posX)
+	for (int posX = 0; posX < rayCnt; ++posX, rAngle += rayStep)
 	{
 		double	dist = getShortestRay(rAngle, dir);
 		double	textureStartHorizon = ((mX - (int)mX) * textureResolution);
 		double	textureStartVertical = ((mY - (int)mY) * textureResolution);
-		double	wallHeiht = maxWallHeight / (cosArr[i] * dist);
-		double	posY = (maxWallHeight - wallHeiht)/2;
-		double	texturePixelHeight = wallHeiht / textureResolution;
+		double	wallHeight = maxWallHeight / (cosArr[posX] * dist);
+		double	posY = (maxWallHeight - wallHeight) / 2;
+		double	texturePixelHeight = wallHeight / textureResolution;
 		
-		if (wallHeiht == maxWallHeight) 
+		if (rAngle > 2 * M_PI || rAngle < 0)
+			normalizeAngle(rAngle);
+		if (wallHeight == maxWallHeight) 
 		{
 			posY -= 100 / dist;
 			texturePixelHeight += 50 / dist;
 		}
 		
-		if(wallHeiht > maxWallHeight)
-			wallHeiht = maxWallHeight;
+		if(wallHeight > maxWallHeight)
+			wallHeight = maxWallHeight;
 		if (dist >= 10 ) {
 			glColor3b(0,0,0);
 			glVertex2f(posX,		posY);
@@ -304,19 +304,16 @@ void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist
 		int a = txtr[level][horizon][3];
 		
 		if (dist >= 10)
-		a = 10 * a / dist;
+			a = 10 * a / dist;
 		glColor4ub(txtr[level][horizon][0], txtr[level][horizon][1], txtr[level][horizon][2], a);
 	} 
 	else {
 		if (angle >= M_PI_2 && angle <= 3 * M_PI_2) verticl = 63 - verticl;
-		int r = txtr[level][verticl][0];
-		int g = txtr[level][verticl][1];
-		int b = txtr[level][verticl][2];
 		int a = txtr[level][verticl][3];
 
 		if (dist >= 10)
 			a = 10 * a / dist;
 
-		glColor4ub(r, g, b, a);
+		glColor4ub(txtr[level][verticl][0], txtr[level][verticl][1], txtr[level][verticl][2], a);
 	}
 }

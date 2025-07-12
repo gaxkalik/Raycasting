@@ -1,8 +1,6 @@
 #include "player.hpp"
 
-
-
-player::player(): pX(0), pY(0), angle(/*3 **/ M_PI / 2), hitbox(nullptr){ hitbox = new std::pair<double, double>[4]; };
+player::player(): pX(0), pY(0), angle(M_PI), hitbox(nullptr){ hitbox = new std::pair<double, double>[4]; };
 
 player::~player(){ delete[] hitbox; };
 

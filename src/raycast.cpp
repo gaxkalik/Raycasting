@@ -2,7 +2,9 @@
 
 double playerStep = 0.025;
 double playerSpeed = playerStep;
-double cosArr[360];
+double cosArr[rayCnt];
+double rayStep = 0.0174533 * 60 / rayCnt;
+double FOV = M_PI / 3;
 
 raycast::raycast() {
 	window = nullptr;
@@ -54,13 +56,6 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
 }
 
-void glColorARGB(uint32_t argb) {
-	GLubyte r = (argb >> 16)	& 0xFF;
-	GLubyte g = (argb >> 8)		& 0xFF;
-	GLubyte b = (argb)			& 0xFF;
-	glColor3ub(r, g, b);
-}
-
 const int raycast::initGame(const char *filename) {
 	pl = new player();
 	if (mapParse(filename)) {
@@ -93,8 +88,8 @@ const int raycast::initGame(const char *filename) {
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
 
-	double angle = pAngle - M_PI / 6;
-	for (int i = 0; i < 360; ++i, angle += (0.0174533 / 6))
+	double angle = pAngle - FOV / 2;
+	for (int i = 0; i < rayCnt; ++i, angle += rayStep)
 		cosArr[i] = cos(pAngle - angle) * 0.55;
 	return 0;
 }
