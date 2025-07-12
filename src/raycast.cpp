@@ -3,8 +3,8 @@
 double playerStep = 0.025;
 double playerSpeed = playerStep;
 double cosArr[rayCnt];
-double rayStep = 0.0174533 * 60 / rayCnt;
 double FOV = M_PI / 3;
+double rayStep = FOV / rayCnt;
 
 raycast::raycast() {
 	window = nullptr;

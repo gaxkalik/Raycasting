@@ -31,7 +31,7 @@ class	obj;
 
 struct	keyPressed;
 
-constexpr int rayCnt = 720;
+constexpr int rayCnt = 480;
 
 extern double rayStep;
 extern double playerStep;
