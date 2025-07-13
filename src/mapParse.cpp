@@ -27,12 +27,14 @@ const int	raycast::mapParse(const char *filename) {
 		}
 		else if (line[0] != '\n'){
 			std::vector<std::string>	tmp = strSplit(line, ' ');
-		
-			if (loadRawTexture(tmp[1][0], tmp[2].c_str()))
+			if(loadRawTexture(tmp[1][0], tmp[2].c_str())) {
+				file.close();
 				return 1;
+			}
 		}
 		else {
 			std::cerr << "Invalid file" << std::endl;
+			file.close();
 			return 1;
 		}
 	}
@@ -59,7 +61,6 @@ const int	raycast::mapParse(const char *filename) {
 		return 1;
 	
 	(*map)[playerY][playerX] = '0';
-
 	std::cout << "Player coords x: " << pl->getX() << " y: " << pl->getY() << std::endl;
 	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;

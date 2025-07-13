@@ -89,7 +89,8 @@ bool	raycast::collision(double &dirX, double &dirY) {
 	for (int i = 0; i < 4; ++i) {
 		// std::cout << "c - " << (*map)[pHitBox[i].second - dirY][pHitBox[i].first] << "\n";
 		// std::cout << i << " " << pHitBox[i].second - dirY << " " << pHitBox[i].first << " " << pHitBox[i].second << " " << pHitBox[i].first + dirX <<"\n";
-		if (!((*map)[pHitBox[i].second + dirY][pHitBox[i].first] == '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] == '0')) {
+		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first] != '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' &&
+				(*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != 'c') {
 			return true;
 		}
 	}
@@ -101,7 +102,6 @@ bool	raycast::collision(double &dirX, double &dirY) {
 
 void	raycast::playerInput(void) {
 
-	
 	double dirX = playerSpeed * sin(pAngle + M_PI_2);
 	double dirY = playerSpeed * cos(pAngle + M_PI_2);
 

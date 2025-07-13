@@ -209,6 +209,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glBegin(GL_QUADS);
 	for (int posX = 0; posX < rayCnt; ++posX, rAngle += rayStep)
 	{
+		sprites.clear();
 		double	dist = getShortestRay(rAngle, dir);
 		double	textureStartHorizon = ((mX - (int)mX) * textureResolution);
 		double	textureStartVertical = ((mY - (int)mY) * textureResolution);
@@ -235,8 +236,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		}
 		for (double y = 0; y < textureResolution; ++y) 
 		{
-			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end()))
-			{
+			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end())) {
 				determineTextureColor(allTextures[(*map)[mY][mX]], dir, dist, rAngle, y, textureStartHorizon, textureStartVertical);
 			}
 			glVertex2f(posX,		posY + (y * texturePixelHeight));
@@ -244,7 +244,45 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 		}
+		for (std::map<double, std::pair<int, int>>::reverse_iterator it = sprites.rbegin(); it != sprites.rend(); ++it)
+		{
+			for (double y = 16; y < 48; ++y)
+			{
+				double x1, x2, y1, y2, xA;
+				x1 = (posX);
+				x2 = (posX + 1);
+				y1 = (posY + (y * texturePixelHeight));
+				y2 = (posY + ((y + 1) * texturePixelHeight));
+				xA = posX + 0.5;
+				double sinX, cosX;
+				double ang = pAngle;
+				normalizeAngle(ang);
+				sinX = sin(ang);
+				cosX = cos(ang);
+				determineTextureColor2(coinTexture[coinPosition / 5], dir, it->first, rAngle, y, it->second.first, it->second.second);
+				wallHeight = maxWallHeight / (cosArr[posX] * it->first);
+				posY = (maxWallHeight - wallHeight) / 2;
+				texturePixelHeight = wallHeight / textureResolution;
+				glVertex2f((x1 * cosX + xA * sinX),	y1);
+				glVertex2f((x2 * cosX + xA * sinX),	y1);
+				glVertex2f((x2 * cosX + xA * sinX),	y2);
+				glVertex2f((x1 * cosX + xA * sinX),	y2);
+				// glVertex2f((x1),	y1);
+				// glVertex2f((x2),	y1);
+				// glVertex2f((x2),	y2);
+				// glVertex2f((x1),	y2);
+				// std::cout << "Vertex 1: (" << std::abs(x1 * cosX + xA * sinX) << ", " << y1 << ")\n";
+				// std::cout << "Vertex 2: (" << std::abs(x2 * cosX + xA * sinX) << ", " << y1 << ")\n";
+				// std::cout << "Vertex 3: (" << std::abs(x2 * cosX + xA * sinX) << ", " << y2 << ")\n";
+				// std::cout << "Vertex 4: (" << std::abs(x1 * cosX + xA * sinX) << ", " << y2 << ")\n";
+				// std::cout << "______________________________\n";
+
+			}
+		}
 	}
+	++coinPosition;
+	if (coinPosition == 70)
+		coinPosition = 0;
 	glEnd();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -295,6 +333,22 @@ void raycast::drawBackground(int rayCnt)
 		glVertex2f(0, screenBuffHeight - i + step);
 		glEnd();
 	}
+}
+
+void raycast::determineTextureColor2(unsigned char ***txtr, char dir, double dist, double angle, int y, int horizon, int verticl)
+{
+	int start = std::max(horizon, verticl);
+	if (dir == 'h')
+		if (angle >= 0 && angle <= M_PI)
+			start = 63 - start;
+	else
+		if (angle >= M_PI_2 && angle <= 3 * M_PI_2)
+			start = 63 - start;
+	int a = txtr[y][start][3];
+		
+	if (dist >= 10)
+		a = 10 * a / dist;
+	glColor4ub(txtr[y][start][0], txtr[y][start][1], txtr[y][start][2], a);
 }
 
 void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist, double angle, int level, int horizon, int verticl)

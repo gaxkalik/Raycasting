@@ -10,7 +10,43 @@ color	strgb(const std::string &line, const int &len) {
 	return tmp;
 }
 
+int	raycast::loadCoinTexture(const char* filename) {
+	
+	for (int k = 0; k < 14; ++k) {
+		unsigned char	***tmpTexture = new unsigned char **[64];
+		for (int i = 0; i < 64; ++i) {
+			tmpTexture[i] = new unsigned char * [64];
+			for (int j = 0; j < 64; ++j) {
+				tmpTexture[i][j] = new unsigned char [4];
+				memset(tmpTexture[i][j], 0, 4 * sizeof(unsigned char));
+			}
+		}
+
+		std::string	tFilename = filename + std::to_string(k) + std::string(".raw");
+		std::ifstream	file(tFilename, std::ios::binary);
+		if (!file) {
+			std::cerr << "Faild to open '" << tFilename << "' texture file [invalid path]" << std::endl;
+			return 1;
+		}
+		for (int i = 0; i < 64; ++i) {
+			for (int j = 0; j < 64; ++j) {
+				if (!file.read(reinterpret_cast<char*>(tmpTexture[i][j]), 4))
+					break;
+			}
+		}
+		if (!file.gcount() == TEXTURE_SIZE) {
+			std::cerr << "Faild to open '" << tFilename << "' texture file [dimension mismatch]" << std::endl;
+			return 1;
+		}
+		coinTexture[k] = tmpTexture;
+		file.close();
+	}
+	return 0;
+}
+
 int	raycast::loadRawTexture(const char c, const char* filename) {
+	if (c == 'c')
+		return loadCoinTexture(filename);
 	unsigned char	***tmpTexture = new unsigned char **[64];
 
 	for (int i = 0; i < 64; ++i) {
@@ -20,8 +56,6 @@ int	raycast::loadRawTexture(const char c, const char* filename) {
 			memset(tmpTexture[i][j], 0, 4 * sizeof(unsigned char));
 		}
 	}
-
-
 
 	std::ifstream	file(filename, std::ios::binary);
 	if (!file) {
@@ -39,6 +73,7 @@ int	raycast::loadRawTexture(const char c, const char* filename) {
 		return 1;
 	}
 	allTextures[c] = tmpTexture;
+	file.close();
 	return 0;
 }
 

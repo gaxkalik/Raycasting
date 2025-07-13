@@ -17,6 +17,7 @@ raycast::raycast() {
 	screenWidth = 0;
 	screenHeight = 0;
 	brush = '0';
+	coinPosition = 0;
 	//std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
@@ -30,6 +31,15 @@ raycast::~raycast() {
 	if (scenes)
 		delete scenes;
 	for (auto it = allTextures.begin(); it != allTextures.end(); ++it) {
+		for (int i = 0; i < 64; ++i) {
+			for (int j = 0; j < 64; ++j) {
+				delete[] it->second[i][j];
+			}
+			delete[] it->second[i];
+		}
+		delete[] it->second;
+	}
+	for (auto it = coinTexture.begin(); it != coinTexture.end(); ++it) {
 		for (int i = 0; i < 64; ++i) {
 			for (int j = 0; j < 64; ++j) {
 				delete[] it->second[i][j];
@@ -128,7 +138,7 @@ const int	raycast::startGame(void) {
 	glfwTerminate();
 }
 
-const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) const
+const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY)
 {
 	double vertLengthX = 0;
 	double vertLengthY = 0;
@@ -154,8 +164,11 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 			if (((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') || ((*map)[mYV][mXV] >= 'A' && (*map)[mYV][mXV] <= 'Z') || (*map)[mYV][mXV] == 'd') 
 			{
 				_mX = mXV;
-				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				distV = sqrt((mXV - playerX) * (mXV - playerX) + (mYV-playerY) * (mYV-playerY));
 				break;
+			}
+			if ((*map)[mYV][mXV] == 'c') {
+				sprites[sqrt((mXV - playerX) * (mXV - playerX) + (mYV - playerY) * (mYV - playerY))].first = (mYV - (int)mYV) * 64;
 			}
 			mYV += offsetY;
 			++mXV;
@@ -168,6 +181,9 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
 			}
+			if ((*map)[mYV][mXV - 1] == 'c') {
+				sprites[sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY))].first = (mYV - (int)mYV) * 64;
+			}
 			--mXV;
 			mYV -= offsetY;
 		}
@@ -177,7 +193,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	return distV;
 }
 
-const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
+const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY)
 {
 	double horLengthX = 0;
 	double horLengthY = 0;
@@ -200,11 +216,14 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 	{
 		if(rayAngle < M_PI)
 		{
-			if (((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') || ((*map)[(int)mYH][(int)mXH] >= 'A' && (*map)[(int)mYH - 1][(int)mXH] <= 'Z') || (*map)[(int)mYH][(int)mXH] == 'd') 
+			if (((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') || ((*map)[(int)mYH][(int)mXH] >= 'A' && (*map)[(int)mYH][(int)mXH] <= 'Z') || (*map)[(int)mYH][(int)mXH] == 'd')
 			{
 				_mY = mYH;
-				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
+			}
+			if ((*map)[(int)mYH][(int)mXH] == 'c') {
+				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			++mYH;
 			mXH += offsetX;
@@ -216,6 +235,9 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
+			}
+			if ((*map)[(int)mYH - 1][(int)mXH] == 'c') {
+				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			--mYH;
 			mXH -= offsetX;

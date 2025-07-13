@@ -7,6 +7,7 @@ void check_leaks() {
 
 int main(int argc, char **argv) {
 	// std::atexit(check_leaks);
+	// oASD();
 	if (argc != 2) {
 		std::cerr << "Usage: " << argv[0] << " <map_file>" << std::endl;
 		return 1;

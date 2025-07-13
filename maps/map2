@@ -6,12 +6,13 @@ T: A textures/CRATE_2C.raw
 T: B textures/CRATE_1E.raw
 T: C textures/CRATE_1D.raw
 T: d textures/DOOR_1A.raw
+T: c textures/Coin
 
 11121141
 10000001
-10p0A001
-10000002
-10000C03
-11d10002
-10010B01
+1000A001
+10000c02
+10000c03
+10000c02
+1c00pc01
 11111211
