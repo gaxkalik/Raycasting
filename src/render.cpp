@@ -244,6 +244,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 		}
+		/*
 		for (std::map<double, std::pair<int, int>>::reverse_iterator it = sprites.rbegin(); it != sprites.rend(); ++it)
 		{
 			for (double y = 16; y < 48; ++y)
@@ -279,6 +280,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 
 			}
 		}
+		*/
 	}
 	++coinPosition;
 	if (coinPosition == 70)
