@@ -3,6 +3,7 @@
 A simple raycasting engine written in **C++**, inspired by classic games like **Wolfenstein 3D**. This project demonstrates how to create a pseudo-3D environment using 2D techniques.
 Raycasting is a rendering method used to simulate a 3D view from a 2D map. In the early days of computing, real-time 3D engines were too demanding, so raycasting became the go-to solution. It’s highly efficient because it only requires one calculation per vertical screen column.
 
+
 ![Output Screenshot](Game_demo.png)
 
 ---
