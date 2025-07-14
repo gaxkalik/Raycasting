@@ -3,7 +3,7 @@
 
 #include "raycast.hpp"
 
-#define rotationSpeed 0.06
+#define rotationSpeed 0.05
 
 struct keyPressed {
 	bool	esc = false;
@@ -15,6 +15,7 @@ struct keyPressed {
 	bool	rotateLeft = false;
 	bool	rotateRight = false;
 	bool	run = false;
+	bool	use = false;
 };
 
 class player
@@ -40,9 +41,12 @@ class player
 				this->angle = 0;
 			}
 		}
+		std::pair<double, double> *getHitBox(void) const { return hitbox;}
+		void					calculateHitBoxPosition(void);
 	private:
 		double	pX;
 		double	pY;
+		std::pair<double, double>	*hitbox;
 		double angle;
 };
 

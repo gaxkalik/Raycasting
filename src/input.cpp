@@ -17,6 +17,12 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.moveRight = false;
 	}
+	if (key == 69) {
+		if (action)
+			keys.use = true;
+		else
+			keys.use = false;
+	}
 	if (key == 83) {
 		if (action)
 			keys.moveDown = true;
@@ -57,7 +63,7 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 		{
 			keys.run = false;
-			playerStep = 0.05;
+			playerSpeed = playerStep;
 		}
 	}	
 
@@ -76,36 +82,57 @@ obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
 	return nullptr;
 }
 
+bool	raycast::collision(double &dirX, double &dirY) {
+	std::pair<double, double> *pHitBox = pl->getHitBox();
+
+	// std::cout << "dirX " << dirX << " dirY " << dirY << "\n";
+	for (int i = 0; i < 4; ++i) {
+		// std::cout << "c - " << (*map)[pHitBox[i].second - dirY][pHitBox[i].first] << "\n";
+		// std::cout << i << " " << pHitBox[i].second - dirY << " " << pHitBox[i].first << " " << pHitBox[i].second << " " << pHitBox[i].first + dirX <<"\n";
+		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first] != '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' &&
+				(*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != 'c') {
+			return true;
+		}
+	}
+	pl->setX(dirX);
+	pl->setY(dirY);
+	pl->calculateHitBoxPosition();
+	return false;
+}
+
 void	raycast::playerInput(void) {
 
-	double dirX = playerStep * sin(pAngle + M_PI_2);
-	double dirY = playerStep * cos(pAngle + M_PI_2);
+	double dirX = playerSpeed * sin(pAngle + M_PI_2);
+	double dirY = playerSpeed * cos(pAngle + M_PI_2);
 
-	double sDirX = playerStep * sin(pAngle);
-	double sDirY = playerStep * cos(pAngle);
+	double sDirX = playerSpeed * sin(pAngle);
+	double sDirY = playerSpeed * cos(pAngle);
+
+	// if (dirX < 0) dirX = 0;
+	// if (dirY < 0) dirY = 0;
 
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		if (keys.moveUp && (*map)[playerY - dirY][playerX] == '0' && (*map)[playerY][playerX + dirX] == '0')
-		{			
-			pl->setX(dirX);
-			pl->setY(-dirY);
-		}
-		if (keys.moveDown && (*map)[playerY + dirY][playerX] == '0' && (*map)[playerY][playerX - dirX] == '0')
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		if (keys.use == true)
 		{
-			pl->setX(-dirX);
-			pl->setY(dirY);
+			if 		((*map)[playerY][playerX - 1] == 'd')	(*map)[playerY][playerX - 1] = '0';
+			else if ((*map)[playerY][playerX + 1] == 'd')	(*map)[playerY][playerX + 1] = '0';
+			else if ((*map)[playerY - 1][playerX] == 'd')	(*map)[playerY - 1][playerX] = '0';
+			else if ((*map)[playerY + 1][playerX] == 'd')	(*map)[playerY + 1][playerX] = '0';
 		}
-		if (keys.moveLeft && (*map)[playerY - sDirY][playerX] == '0' && (*map)[playerY][playerX + sDirX] == '0')
-		{
-			pl->setX(sDirX);
-			pl->setY(-sDirY);
+		if (keys.moveUp) {
+			collision(dirX, dirY *= -1);
 		}
-		if (keys.moveRight && (*map)[playerY + sDirY][playerX] == '0' && (*map)[playerY][playerX - sDirX] == '0')
+		if (keys.moveDown) {
+			collision(dirX *= -1, dirY);
+		}
+		if (keys.moveLeft) {
+			collision(sDirX, sDirY *= -1);
+		}
+		if (keys.moveRight)
 		{
-			pl->setX(-sDirX);
-			pl->setY(sDirY);
+			collision(sDirX *= -1, sDirY);
 		}
 		if(keys.rotateLeft)
 		{
@@ -115,7 +142,7 @@ void	raycast::playerInput(void) {
 			pl->setAngle(rotationSpeed);
 		if (keys.run)
 		{
-			playerStep = 0.1;
+			playerSpeed = 2 * playerStep;
 		}
 	}
 	else if (keys.openMap) {
@@ -140,7 +167,7 @@ void	raycast::playerInput(void) {
 			else if (o->getName() == "buttonBrush0")
 				brush = '0';
 			else if (o->getName() == "buttonBrushP")
-				brush = 'P';
+				brush = 'p';
 		}
 	}
 	if (keys.esc)

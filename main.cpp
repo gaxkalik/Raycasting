@@ -7,14 +7,16 @@ void check_leaks() {
 
 int main(int argc, char **argv) {
 	// std::atexit(check_leaks);
+	// oASD();
 	if (argc != 2) {
 		std::cerr << "Usage: " << argv[0] << " <map_file>" << std::endl;
 		return 1;
 	}
 	raycast *game;
+	
 	try {
 		game = new raycast();
-
+		
 		glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 		if (game->initGame(argv[1])) {
 			delete game;

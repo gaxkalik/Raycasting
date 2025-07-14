@@ -1,5 +1,8 @@
 #include "raycast.hpp"
 
+using std::string;
+using std::cout;
+using std::cerr;
 
 const int	raycast::mapParse(const char *filename) {
 	std::ifstream	file;
@@ -17,7 +20,23 @@ const int	raycast::mapParse(const char *filename) {
 		newMap->push_back("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 
 	while (std::getline(file, line)) {
-		map->push_back(line);
+		if (!line.compare("\0"))
+			continue;
+		if (line.compare(0, 2, "T:")) {
+			map->push_back(line);
+		}
+		else if (line[0] != '\n'){
+			std::vector<std::string>	tmp = strSplit(line, ' ');
+			if(loadRawTexture(tmp[1][0], tmp[2].c_str())) {
+				file.close();
+				return 1;
+			}
+		}
+		else {
+			std::cerr << "Invalid file" << std::endl;
+			file.close();
+			return 1;
+		}
 	}
 	file.close();
 	mapHeight = map->size();
@@ -29,9 +48,11 @@ const int	raycast::mapParse(const char *filename) {
 
 	for (int y = 0; y < mapHeight; ++y) {
 		for (int x = 0; x < mapWidth; ++x) {
-			if ((*map)[y][x] == 'P') {
+			if ((*map)[y][x] == 'p') {
 				pl->setX(x + 0.5);
 				pl->setY(y + 0.5);
+				pl->calculateHitBoxPosition();
+				break;
 			}
 		}
 	}
@@ -40,29 +61,24 @@ const int	raycast::mapParse(const char *filename) {
 		return 1;
 	
 	(*map)[playerY][playerX] = '0';
-
 	std::cout << "Player coords x: " << pl->getX() << " y: " << pl->getY() << std::endl;
 	std::cout<< "Map width: " << mapWidth << " Map height: " << mapHeight << std::endl;
 	return 0;
 }
 
-using std::string;
-using std::cout;
-using std::cerr;
-
-
 void	raycast::floodFill(const int x, const int y, std::vector<std::string> &map) const
 {
-	if (x == mapWidth + 2 || x < 0 || y == mapHeight + 2 || y < 0 || (map[y][x] >= '1' && map[y][x] <= '9'))
-		return;
+	if (x == mapWidth + 2 || x < 0 || y == mapHeight + 2 || y < 0 || 
+		(map[y][x] >= '1' && map[y][x] <= '9') || (map[y][x] >= 'A' && map[y][x] <= 'Z'))
+		{
+			return;
+		}
 	map[y][x] = '1';
 	floodFill(x + 1, y, map);
 	floodFill(x - 1, y, map);
 	floodFill(x, y + 1, map);
 	floodFill(x, y - 1, map);
 }
-
-
 
 const int raycast::checkValidity() const
 {
@@ -76,12 +92,12 @@ const int raycast::checkValidity() const
 		{
 			char currentChar = currentLine[calumn];
 			
-			if (currentChar < '0' && currentChar > '9' && currentChar != 'P' && currentChar != '\n')
+			if (currentChar < '0' && currentChar > '9' && currentChar != 'p' && currentChar != '\n' && currentChar < 'A' && currentChar >'Z')
 			{
 				cerr << "Invalid element in map! \n";
 				return 1; 
 			}
-			else if (currentChar == 'P')
+			else if (currentChar == 'p')
 			{
 				if (foundPlayer)
 				{

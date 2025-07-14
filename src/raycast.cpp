@@ -1,8 +1,10 @@
 #include "raycast.hpp"
 
-double playerStep = 0.05;
-
-extern	keyPressed keys;
+double playerStep = 0.025;
+double playerSpeed = playerStep;
+double cosArr[rayCnt];
+double FOV = M_PI / 3;
+double rayStep = FOV / rayCnt;
 
 raycast::raycast() {
 	window = nullptr;
@@ -15,7 +17,8 @@ raycast::raycast() {
 	screenWidth = 0;
 	screenHeight = 0;
 	brush = '0';
-	std::cout << "[ Raycast default constructor called ]" << std::endl;
+	coinPosition = 0;
+	//std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
 raycast::~raycast() {
@@ -36,8 +39,17 @@ raycast::~raycast() {
 		}
 		delete[] it->second;
 	}
+	for (auto it = coinTexture.begin(); it != coinTexture.end(); ++it) {
+		for (int i = 0; i < 64; ++i) {
+			for (int j = 0; j < 64; ++j) {
+				delete[] it->second[i][j];
+			}
+			delete[] it->second[i];
+		}
+		delete[] it->second;
+	}
 	glfwTerminate();
-	std::cout << "[ Raycast destructor called ]" << std::endl;
+	//std::cout << "[ Raycast destructor called ]" << std::endl;
 }
 
 void	raycast::addBottonsToScene(void) {
@@ -52,13 +64,6 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
 	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
-}
-
-void glColorARGB(uint32_t argb) {
-	GLubyte r = (argb >> 16)	& 0xFF;
-	GLubyte g = (argb >> 8)		& 0xFF;
-	GLubyte b = (argb)			& 0xFF;
-	glColor3ub(r, g, b);
 }
 
 const int raycast::initGame(const char *filename) {
@@ -92,12 +97,10 @@ const int raycast::initGame(const char *filename) {
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
 	addBottonsToScene();
-	if (openTexture("textures/CASTLEBRICKS.xpm"))
-		return 1;
-	if (loadRawTexture("textures/Brick_Wall.raw"))
-		return 1;
-	if (loadRawTexture("textures/Floor.raw"))
-		return 1;
+
+	double angle = pAngle - FOV / 2;
+	for (int i = 0; i < rayCnt; ++i, angle += rayStep)
+		cosArr[i] = cos(pAngle - angle) * 0.55;
 	return 0;
 }
 
@@ -116,17 +119,26 @@ const int	raycast::startGame(void) {
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetWindowSizeCallback(window, window_size_callback);
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	
 	while (!glfwWindowShouldClose(window)) {
+		start = std::chrono::high_resolution_clock::now();
 		glClear(GL_COLOR_BUFFER_BIT);
 		playerInput();
 		renderScene(*currScene);
 		glfwSwapBuffers(window);
+		end = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 	}
+	std::chrono::duration<double> elapsed = end - start;
+	std::cout << "Elapsed time: " << elapsed.count() << " seconds\n";
 	glfwTerminate();
 }
 
-const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) const
+const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY)
 {
 	double vertLengthX = 0;
 	double vertLengthY = 0;
@@ -149,22 +161,28 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	{
 		if ((rayAngle >= 0 && rayAngle <= M_PI_2) || (rayAngle > 3 * M_PI_2 && rayAngle <= 2 * M_PI))
 		{
-			if ((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') 
+			if (((*map)[mYV][mXV] >= '1' && (*map)[mYV][mXV] <= '9') || ((*map)[mYV][mXV] >= 'A' && (*map)[mYV][mXV] <= 'Z') || (*map)[mYV][mXV] == 'd') 
 			{
 				_mX = mXV;
-				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
+				distV = sqrt((mXV - playerX) * (mXV - playerX) + (mYV-playerY) * (mYV-playerY));
 				break;
+			}
+			if ((*map)[mYV][mXV] == 'c') {
+				sprites[sqrt((mXV - playerX) * (mXV - playerX) + (mYV - playerY) * (mYV - playerY))].first = (mYV - (int)mYV) * 64;
 			}
 			mYV += offsetY;
 			++mXV;
 		}
 		else
 		{
-			if ((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') 
+			if (((*map)[(int)mYV][(int)mXV-1] >= '1' && (*map)[(int)mYV][(int)mXV-1] <= '9') || ((*map)[mYV][mXV-1] >= 'A' && (*map)[mYV][mXV-1] <= 'Z') || (*map)[mYV][mXV-1] == 'd') 
 			{
 				_mX = mXV - 1;
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
+			}
+			if ((*map)[mYV][mXV - 1] == 'c') {
+				sprites[sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY))].first = (mYV - (int)mYV) * 64;
 			}
 			--mXV;
 			mYV -= offsetY;
@@ -175,7 +193,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY) 
 	return distV;
 }
 
-const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY) const
+const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_mY)
 {
 	double horLengthX = 0;
 	double horLengthY = 0;
@@ -198,22 +216,28 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 	{
 		if(rayAngle < M_PI)
 		{
-			if ((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') 
+			if (((*map)[(int)mYH][(int)mXH] >= '1' && (*map)[(int)mYH][(int)mXH] <= '9') || ((*map)[(int)mYH][(int)mXH] >= 'A' && (*map)[(int)mYH][(int)mXH] <= 'Z') || (*map)[(int)mYH][(int)mXH] == 'd')
 			{
 				_mY = mYH;
-				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));			
+				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
+			}
+			if ((*map)[(int)mYH][(int)mXH] == 'c') {
+				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			++mYH;
 			mXH += offsetX;
 		}
 		else if (rayAngle > M_PI)
 		{
-			if ((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') 
+			if (((*map)[(int)mYH - 1][(int)mXH] >= '1' && (*map)[(int)mYH - 1][(int)mXH] <= '9') || ((*map)[(int)mYH - 1][(int)mXH] >= 'A' && (*map)[(int)mYH - 1][(int)mXH] <= 'Z') || (*map)[(int)mYH - 1][(int)mXH] == 'd') 
 			{
 				_mY = mYH - 1;
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
+			}
+			if ((*map)[(int)mYH - 1][(int)mXH] == 'c') {
+				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			--mYH;
 			mXH -= offsetX;
@@ -225,6 +249,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 
 const double raycast::getShortestRay(double rayAngle, char &dir)
 {
+	
 	double	dist = 0;
 	double	xV, yV, xH, yH;
 	double	distV = getVerticalRay(rayAngle, xV, yV);
