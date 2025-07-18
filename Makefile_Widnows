@@ -1,0 +1,44 @@
+CLANG = clang++ -std=c++17
+CFLAGS = -DGL_SILENCE_DEPRECATION -w -MMD -MP
+
+GLFW_ROOT = C:\Users\Bart\Raycasting\glfw-3.4.bin.WIN64
+GLFW_LIB_DIR = $(GLFW_ROOT)/lib
+GLFW_INCLUDE_DIR = $(GLFW_ROOT)/include
+
+LDFLAGS = -L"$(GLFW_LIB_DIR)" -lglfw3 -lopengl32 -lgdi32 -luser32 -lkernel32 -lshell32
+
+INCLUDE = -I./include -I"$(GLFW_INCLUDE_DIR)"
+
+NAME = rc.exe
+
+CPP_SRCS = $(wildcard src/*.cpp)
+OTHER_SRCS = main.cpp
+SRCS = $(CPP_SRCS) $(OTHER_SRCS)
+
+OBJ_DIR = obj
+
+OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+
+DEPS = $(OBJS:.o=.d)
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CLANG) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
+
+$(OBJ_DIR)/%.o: %.cpp
+	@if not exist "$(subst /,\\,$(dir $@))" mkdir "$(subst /,\\,$(dir $@))"
+	$(CLANG) $(CFLAGS) $(INCLUDE) -c $< -o $@
+
+clean:
+	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)" 2>NUL || true
+	@del /s /q $(subst /,\,$(DEPS)) 2>NUL || true
+	
+fclean: clean
+	@del /s /q $(NAME) 2>NUL || true
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all clean fclean re
