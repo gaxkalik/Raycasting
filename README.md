@@ -75,4 +75,4 @@ This project is licensed under the terms of the LICENSE file provided in the rep
 Developed by [Hrant Hovhannisyan](https://github.com/TheOlifve) and [Armen Balagyozyan](https://github.com/gaxkalik) — feel free to contribute or fork!
 
 ## Contact
-For questions, email [gaxkalik@gmail.com](gaxkalik@gmail.com) or [hrant.hovhannisyan2413@gmail.com](hrant.hovhannisyan2413@gmail.com).
+For questions, email [gaxkalik@gmail.com](mailto:gaxkalik@gmail.com) or [hrant.hovhannisyan2413@gmail.com](mailto:hrant.hovhannisyan2413@gmail.com).
