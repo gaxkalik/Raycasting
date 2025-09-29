@@ -30,12 +30,14 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 				glEnd();
 			} else 
 			{
-				if ((*newMap)[y][x] == '0')
-					glColor3f(1.0f, 1.0f, 1.0f);
-				else if ((*newMap)[y][x] >= '1' && (*newMap)[y][x] <= '9')
-					glColor3f(0.3f, 0.3f, 0.3f); // Gray
+				if ((*newMap)[y][x] == '1')
+					glColor3f(1.0f, 1.0f, 1.0f);//white
+				else if ((*newMap)[y][x] == '2')
+					glColor3f(0.4f, 0.4f, 0.4f); // Gray
+				else if ((*newMap)[y][x] == 'd')
+					glColor3f(1.0f, 1.0f, 0.0f); //yellow
 				else if ((*newMap)[y][x] == 'p')
-					glColor3f(1.0f, 0.0f, 0.0f);
+					glColor3f(1.0f, 0.0f, 0.0f);//red
 				else
 					return;
 				glBegin(GL_QUADS);
@@ -49,8 +51,42 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 		}
 	}
 
+	if(keys.saveMap)
+		saveMap();
+
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	glDisable(GL_SCISSOR_TEST);
+}
+
+bool raycast::saveMap() const
+{
+	std::fstream customMap("maps/customMap", std::ios::out | std::ios::trunc);
+	
+	customMap << "T: 2 textures/TECH_2F.raw\n";
+	customMap << "T: 1 textures/CRATE_1D.raw\n";
+	customMap << "T: d textures/DOOR_1A.raw\n";
+
+	for(int i = 0; i < 32; ++i )
+	{
+		for (int j = 0; j < 32; ++j)
+		{
+			if(customMap.is_open())
+			{
+				if((*newMap)[i][j] != 'K')
+					customMap << (*newMap)[i][j];
+				else
+					customMap << '0';
+			}
+			else
+				std::cout << "Couldn't open custom map file"<<std::endl;
+		}
+		//std::cout << "\n";
+		if(i != 31)
+			customMap << "\n";
+	}
+
+	customMap.close();
+	return true;
 }

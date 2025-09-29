@@ -39,6 +39,14 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (action)
 			keys.openMap = !keys.openMap;
 	}
+	if(key == 46)					//46 = '>' save map
+	{
+		if (action)
+			keys.saveMap = true;
+		else
+			keys.saveMap = false;	
+	}
+
 	if (key == 256)
 		if (action)
 			keys.esc = true;
@@ -163,11 +171,13 @@ void	raycast::playerInput(void) {
 					(*newMap)[y][x] = brush;
 			}
 			else if (o->getName() == "buttonBrush1")
-				brush = '1';
+				brush = '2';
 			else if (o->getName() == "buttonBrush0")
-				brush = '0';
+				brush = '1';
 			else if (o->getName() == "buttonBrushP")
 				brush = 'p';
+			else if (o->getName() == "buttonBrushD")
+				brush = 'd';	
 		}
 	}
 	if (keys.esc)

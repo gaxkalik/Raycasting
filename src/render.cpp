@@ -44,9 +44,15 @@ void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const
 	if (color == "white")
 		glColor3f(1.0f, 1.0f, 1.0f);
 	else if (color == "gray")
-		glColor3f(0.3f, 0.3f, 0.3f);
+		glColor3f(0.4f, 0.4f, 0.4f);
 	else if (color == "red")
 		glColor3f(1.0f, 0.0f, 0.0f);
+	else if (color == "blue")
+		glColor3f(0.0f, 0.0f, 1.0f);
+	else if (color == "green")
+		glColor3f(0.0f, 1.0f, 0.0f);
+	else if (color == "yellow")
+		glColor3f(1.0f, 1.0f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
 	glVertex2f(1, 0);
@@ -78,6 +84,8 @@ void	raycast::renderScene(scene &sc) {
 		else if (it->first == "buttonBrush1")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 		else if (it->first == "buttonBrushP")
+			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
+		else if (it->first == "buttonBrushD")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 	}
 }

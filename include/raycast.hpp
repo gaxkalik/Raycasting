@@ -63,6 +63,7 @@ class	raycast
 		void		renderMinimap(const int &, const int &, const int &, const int &);
 		void		renderBotton(const int &, const int &, const int &, const int &, const std::string &);
 		void		renderMapCreateToolField(const int &, const int &, const int &, const int &);
+		bool		saveMap() const;
 		void		newScene(void);
 		int			loadCoinTexture(const char*);
 		void		addObjectToScene(scene &, const int &, const int &, const int &, const int &, const std::string &);

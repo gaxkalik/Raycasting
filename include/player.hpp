@@ -20,6 +20,7 @@ struct keyPressed {
 	bool	rotateRight = false;
 	bool	run = false;
 	bool	use = false;
+	bool	saveMap = false;
 };
 
 class player

@@ -67,6 +67,8 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
 	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
+	addObjectToScene((*scenes)[1], x + tileWidth * 3, y, tileWidth, tileHegiht, 1, "buttonBrushD", "yellow");
+
 }
 
 const int raycast::initGame(const char *filename) {
@@ -83,7 +85,7 @@ const int raycast::initGame(const char *filename) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	screenWidth = mode->width;
 	screenHeight = mode->height;
-	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", glfwGetPrimaryMonitor() , NULL);
+	window = glfwCreateWindow(screenWidth, screenHeight, "RayCasting", /*glfwGetPrimaryMonitor()*/ NULL , NULL);
 	glfwGetFramebufferSize(window, &screenBuffWidth, &screenBuffHeight);
 	std::cout << "Screen: " << screenWidth << ":" << screenHeight << std::endl;
 
