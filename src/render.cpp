@@ -235,6 +235,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		
 		if(wallHeight > maxWallHeight)
 			wallHeight = maxWallHeight;
+
 		if (dist >= 10 ) {
 			glColor3b(0,0,0);
 			glVertex2f(posX,		posY);
@@ -242,6 +243,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX + 1,	posY + (64 * texturePixelHeight));
 			glVertex2f(posX,		posY + (64 * texturePixelHeight));
 		}
+		
 		for (double y = 0; y < textureResolution; ++y) 
 		{
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end())) {
@@ -262,7 +264,6 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 				x2 = (posX + 1);
 				y1 = (posY + (y * texturePixelHeight));
 				y2 = (posY + ((y + 1) * texturePixelHeight));
-				xA = posX + 0.5;
 				double sinX, cosX;
 				double ang = pAngle;
 				normalizeAngle(ang);
@@ -272,19 +273,11 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 				wallHeight = maxWallHeight / (cosArr[posX] * it->first);
 				posY = (maxWallHeight - wallHeight) / 2;
 				texturePixelHeight = wallHeight / textureResolution;
-				// glVertex2f((x1 * cosX + xA * sinX),	y1);
-				// glVertex2f((x2 * cosX + xA * sinX),	y1);
-				// glVertex2f((x2 * cosX + xA * sinX),	y2);
-				// glVertex2f((x1 * cosX + xA * sinX),	y2);
+
 				glVertex2f((x1),	y1);
 				glVertex2f((x2),	y1);
 				glVertex2f((x2),	y2);
 				glVertex2f((x1),	y2);
-				// std::cout << "Vertex 1: (" << std::abs(x1 * cosX + xA * sinX) << ", " << y1 << ")\n";
-				// std::cout << "Vertex 2: (" << std::abs(x2 * cosX + xA * sinX) << ", " << y1 << ")\n";
-				// std::cout << "Vertex 3: (" << std::abs(x2 * cosX + xA * sinX) << ", " << y2 << ")\n";
-				// std::cout << "Vertex 4: (" << std::abs(x1 * cosX + xA * sinX) << ", " << y2 << ")\n";
-				// std::cout << "______________________________\n";
 
 			}
 		}
@@ -293,6 +286,15 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	++coinPosition;
 	if (coinPosition == 70)
 		coinPosition = 0;
+
+	
+	if((*map)[playerY][playerX] == 'c')
+	{
+		(*map)[playerY][playerX] = '0';
+		cout <<"+1 coin!\n";
+	}
+		
+	
 	glEnd();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

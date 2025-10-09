@@ -19,7 +19,7 @@ raycast::raycast() {
 	mapHeight = 0;
 	screenWidth = 0;
 	screenHeight = 0;
-	brush = '0';
+	brush = '2';
 	coinPosition = 0;
 	//std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
