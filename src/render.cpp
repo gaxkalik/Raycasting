@@ -293,6 +293,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		(*map)[playerY][playerX] = '0';
 		cout <<"+1 coin!\n";
 	}
+
+	
 		
 	
 	glEnd();

@@ -53,6 +53,15 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 
 	if(keys.saveMap)
 		saveMap();
+		
+	if(keys.loadCustom)
+	{
+		//std::cout<< "ewfwfwfwfwfwef";
+		system("./rc maps/customMap &\n\n");
+		exit(1);
+
+		
+	}
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

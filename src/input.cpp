@@ -46,6 +46,14 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.saveMap = false;	
 	}
+	if(key == 48)					//48 = '0' load map
+	{
+		//std::cout << "000\n";
+		if (action)
+			keys.loadCustom = true;
+		else
+			keys.loadCustom = false;	
+	}
 
 	if (key == 256)
 		if (action)
