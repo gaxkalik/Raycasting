@@ -74,5 +74,8 @@ This project is licensed under the terms of the LICENSE file provided in the rep
 ## Authors
 Developed by [Hrant Hovhannisyan](https://github.com/TheOlifve) and [Armen Balagyozyan](https://github.com/gaxkalik) — feel free to contribute or fork!
 
+## Sources Used
+[Lode's Computer Graphics Tutorial](https://lodev.org/cgtutor/raycasting.html)
+
 ## Contact
 For questions, email [gaxkalik@gmail.com](mailto:gaxkalik@gmail.com) or [hrant.hovhannisyan2413@gmail.com](mailto:hrant.hovhannisyan2413@gmail.com).
