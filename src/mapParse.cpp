@@ -13,6 +13,7 @@ const int	raycast::mapParse(const char *filename) {
 		return 1;
 	}
 
+
 	std::string line;
 	map = new std::vector<std::string>();
 	newMap = new std::vector<std::string>();
@@ -56,8 +57,8 @@ const int	raycast::mapParse(const char *filename) {
 			}
 		}
 	}
-	
-	if(checkValidity())
+	std::string f = filename;
+	if(checkValidity() && f != "maps/customMap")
 		return 1;
 	
 	(*map)[playerY][playerX] = '0';
@@ -122,6 +123,8 @@ const int raycast::checkValidity() const
 	for (string &s : *map)
 		s = "B" + s + "B";
 
+	//cout << "valid but not fludfill\n";
+
 	floodFill(playerX + 1, playerY + 1, *map);
 	for (int i = 0; i < map->size(); ++i) {
 		if ((*map)[i].find('0') != std::string::npos) {
@@ -129,6 +132,8 @@ const int raycast::checkValidity() const
 			return 1;
 		}
 	}
+
+	//cout << "valid but not fludfill\n";
 
 	if (!foundPlayer)
 	{
