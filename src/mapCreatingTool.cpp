@@ -32,18 +32,32 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 				glEnd();
 			} else 
 			{
-				if ((*newMap)[y][x] == 'B')
+				if ((*newMap)[y][x] == '0')
 					glColor3f(1.0f, 1.0f, 1.0f);//white
-				else if ((*newMap)[y][x] >= '1' && (*newMap)[y][x] <= '4')
+				else if ((*newMap)[y][x] == '1')
 					glColor3f(0.4f, 0.4f, 0.4f); // Gray
+				else if ((*newMap)[y][x] == '2')
+					glColor3f(0.5f, 0.5f, 0.5f); // Gray
+				else if ((*newMap)[y][x] == '3')
+					glColor3f(0.6f, 0.6f, 0.6f); // Gray
+				else if ((*newMap)[y][x] == '4')
+					glColor3f(0.7f, 0.7f, 0.7f); // Gray
 				else if ((*newMap)[y][x] == 'd')
-					glColor3f(1.0f, 1.0f, 0.0f); //yellow
+					glColor3f(0.0f, 0.0f, 1.0f);//blue
 				else if ((*newMap)[y][x] == 'p')
 					glColor3f(1.0f, 0.0f, 0.0f);//red
 				else if ((*newMap)[y][x] == 'c')
-					glColor3f(0.0f, 0.0f, 1.0f);//blue
+					glColor3f(1.0f, 1.0f, 0.0f); //yellow
+				else if ((*newMap)[y][x] == 'A')
+					glColor3f(0.0f, 0.6f, 0.0f); //green
+				else if ((*newMap)[y][x] == 'B')
+					glColor3f(0.0f, 0.5f, 0.0f); //green
+				else if ((*newMap)[y][x] == 'C')
+					glColor3f(0.0f, 0.4f, 0.0f); //green													
 				else
 					glColor3f(0.0f, 1.0f, 0.0f);//green
+
+
 				glBegin(GL_QUADS);
 				glVertex2f(x, y);
 				glVertex2f(x + 1.0f, y);
@@ -64,8 +78,6 @@ void	raycast::renderMapCreateToolField(const int &x1, const int &y1, const int &
 		//std::cout<< "ewfwfwfwfwfwef";
 		system("./rc maps/customMap &\n\n");
 		exit(1);
-
-		
 	}
 
 	glMatrixMode(GL_PROJECTION);
@@ -130,8 +142,15 @@ void raycast::showTextForMapCreationTool()
 
 	drawString(175,50,"map editor");
 	drawString(10, 200, screenMessege);
-	if(brush != 'p' && brush != 'c')
+
+	drawString(13, 895, "save map");
+	drawString(36, 1095, "load");
+
+
+	if(brush != 'p' && brush != 'c' && brush != '0' && brush != 'K')
 		draw2DTexture(10,300,brush);
+	if(brush == 'c')
+		draw2DTexture(10,300,'x');
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

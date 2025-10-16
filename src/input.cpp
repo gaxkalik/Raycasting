@@ -54,6 +54,13 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else
 			keys.loadCustom = false;	
 	}
+		if(key == 32)					//48 = space shoot
+	{
+		if (action)
+			keys.shoot = true;
+		else
+			keys.shoot = false;	
+	}
 
 	if (key == 256)
 		if (action)
@@ -180,13 +187,13 @@ void	raycast::playerInput(void) {
 			}
 			else if (o->getName() == "buttonBrush1")
 			{
-				brush = '2';
+				brush = '1';
 				screenMessege = "wall 1";
 			}
 			else if (o->getName() == "buttonBrush2")
 			{
-				brush = 'B';
-				screenMessege = "crate";
+				brush = '2';
+				screenMessege = "wall 2";
 			}
 			else if (o->getName() == "buttonBrushP")
 			{
@@ -203,6 +210,46 @@ void	raycast::playerInput(void) {
 				brush = 'c';
 				screenMessege = "coin";
 			}	
+			else if (o->getName() == "buttonBrush3")
+			{
+				brush = '3';
+				screenMessege = "wall 3";
+			}
+			else if (o->getName() == "buttonBrush4")
+			{
+				brush = '4';
+				screenMessege = "wall 4";
+			}
+			else if (o->getName() == "buttonBrushA")
+			{
+				brush = 'A';
+				screenMessege = "crate 1";
+			}
+			else if (o->getName() == "buttonBrushB")
+			{
+				brush = 'B';
+				screenMessege = "crate 2";
+			}
+			else if (o->getName() == "buttonBrushC")
+			{
+				brush = 'C';
+				screenMessege = "crate 3";
+			}
+			else if (o->getName() == "buttonBrushCL")
+			{
+				brush = 'K';
+				screenMessege = "delate";
+			}
+			else if (o->getName() == "Save")
+			{
+				saveMap();
+				screenMessege = "SAVED";
+			}
+			else if (o->getName() == "Load")
+			{
+				keys.loadCustom=true;
+			}
+
 		}
 	}
 	if (keys.esc)

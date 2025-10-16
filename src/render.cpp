@@ -2,6 +2,7 @@
 
 using std::cout;
 using std::endl;
+int gunAnim=0;
 
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
@@ -44,14 +45,28 @@ void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const
 
 	if (color == "white")
 		glColor3f(1.0f, 1.0f, 1.0f);
-	else if (color == "gray")
+
+	else if (color == "gray1")
 		glColor3f(0.4f, 0.4f, 0.4f);
+	else if (color == "gray2")
+		glColor3f(0.5f, 0.5f, 0.5f);
+	else if (color == "gray3")
+		glColor3f(0.6f, 0.6f, 0.6f);
+	else if (color == "gray4")
+		glColor3f(0.7f, 0.7f, 0.7f);
+
 	else if (color == "red")
 		glColor3f(1.0f, 0.0f, 0.0f);
 	else if (color == "blue")
 		glColor3f(0.0f, 0.0f, 1.0f);
-	else if (color == "green")
-		glColor3f(0.0f, 1.0f, 0.0f);
+
+	else if (color == "green1")
+		glColor3f(0.0f, 0.6f, 0.0f);
+	else if (color == "green2")
+		glColor3f(0.0f, 0.5f, 0.0f);
+	else if (color == "green3")
+		glColor3f(0.0f, 0.4f, 0.0f);
+
 	else if (color == "yellow")
 		glColor3f(1.0f, 1.0f, 0.0f);
 
@@ -135,6 +150,8 @@ void raycast::renderMinimap(const int &x1, const int &y1, const int &width, cons
 				glColor3f(0.2f, 0.2f, 0.2f); // Gray
 			}else if ((*map)[startY + y][startX + x]  =='d'){
 				glColor3f(0.4f, 0.4f, 0.4f);
+			}else if ((*map)[startY + y][startX + x]  =='c'){
+				glColor3f(1.0f, 1.0f, 0.0f);
 			} else {
 				glColor3f(1.0f, 1.0f, 1.0f); // White
 			}
@@ -223,6 +240,18 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	glBegin(GL_QUADS);
 	for (int posX = 0; posX < rayCnt; ++posX, rAngle += rayStep)
 	{
+		if(keys.shoot && posX == rayCnt/2 && gunAnim==0) 
+		{
+		
+			if((*map)[mY][mX]>='A' && (*map)[mY][mX] <= 'C')
+			{
+				(*map)[mY][mX] = 'c';
+			}
+			keys.shoot=0;
+			gunAnim++;
+		}
+
+
 		sprites.clear();
 		double	dist = getShortestRay(rAngle, dir);
 		double	textureStartHorizon = ((mX - (int)mX) * textureResolution);
@@ -280,10 +309,12 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 				posY = (maxWallHeight - wallHeight) / 2;
 				texturePixelHeight = wallHeight / textureResolution;
 
-				glVertex2f((x1),	y1);
-				glVertex2f((x2),	y1);
-				glVertex2f((x2),	y2);
-				glVertex2f((x1),	y2);
+
+
+				glVertex2f((x1-5),	y1);
+				glVertex2f((x2+5),	y1);
+				glVertex2f((x2+5),	y2);
+				glVertex2f((x1-5),	y2);
 
 			}
 		}
@@ -300,6 +331,13 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		//screenMessege = 
 		cout <<"+1 coin!\n";
 	}
+	if(gunAnim)
+		if(coinPosition%7 == 0)
+			gunAnim++;
+
+	if(gunAnim == 5)	gunAnim = 0;
+
+	draw2DTexture(rayCnt/2,height/1.3,(char)('q'+gunAnim));
 
 	//text
 	

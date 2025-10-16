@@ -64,11 +64,23 @@ void	raycast::addBottonsToScene(void) {
 	int x = it->second.getX1();
 	int y = it->second.getY1() - tileHegiht;
 
-	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
-	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush2", "white");
-	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
-	addObjectToScene((*scenes)[1], x + tileWidth * 3, y, tileWidth, tileHegiht, 1, "buttonBrushD", "yellow");
-	addObjectToScene((*scenes)[1], x + tileWidth * 4, y, tileWidth, tileHegiht, 1, "buttonBrushc", "blue");
+	addObjectToScene((*scenes)[1], x				, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray1");
+	addObjectToScene((*scenes)[1], x + tileWidth * 1, y, tileWidth, tileHegiht, 1, "buttonBrush2", "gray2");
+	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrush3", "gray3");
+	addObjectToScene((*scenes)[1], x + tileWidth * 3, y, tileWidth, tileHegiht, 1, "buttonBrush4", "gray4");
+
+	addObjectToScene((*scenes)[1], x + tileWidth * 5, y, tileWidth, tileHegiht, 1, "buttonBrushA", "green1");
+	addObjectToScene((*scenes)[1], x + tileWidth * 6, y, tileWidth, tileHegiht, 1, "buttonBrushB", "green2");
+	addObjectToScene((*scenes)[1], x + tileWidth * 7, y, tileWidth, tileHegiht, 1, "buttonBrushC", "green3");
+
+	addObjectToScene((*scenes)[1], x + tileWidth * 9, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
+	addObjectToScene((*scenes)[1], x + tileWidth * 10, y, tileWidth, tileHegiht, 1, "buttonBrushD", "blue");
+	addObjectToScene((*scenes)[1], x + tileWidth * 11, y, tileWidth, tileHegiht, 1, "buttonBrushc", "yellow");
+
+	addObjectToScene((*scenes)[1], x + tileWidth * 13, y, tileWidth, tileHegiht, 1, "buttonBrushCL", "white");
+
+	addObjectToScene((*scenes)[1],50, 700, 670, 150, 1, "Save", "gray1");
+	addObjectToScene((*scenes)[1],50, 500, 670, 150, 1, "Load", "gray1");
 
 }
 
@@ -122,6 +134,15 @@ const int raycast::initGame(const char *filename) {
 		loadLetter(name+i);
 	for (char i = '0'; i <= '9'; ++i)
 		loadLetter(name+i);
+
+	loadRawTexture('x', "textures/Coin0.raw");
+
+	loadRawTexture('q', "textures/gun0.raw");
+	loadRawTexture('r', "textures/gun1.raw");
+	loadRawTexture('s', "textures/gun2.raw");
+	loadRawTexture('t', "textures/gun3.raw");
+	loadRawTexture('u', "textures/gun4.raw");
+
 	
 
 	newScene();
@@ -217,6 +238,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY)
 			}
 			if ((*map)[mYV][mXV] == 'c') {
 				sprites[sqrt((mXV - playerX) * (mXV - playerX) + (mYV - playerY) * (mYV - playerY))].first = (mYV - (int)mYV) * 64;
+				//sprites[distV].first = (mYV - (int)mYV) * 64;
 			}
 			mYV += offsetY;
 			++mXV;
@@ -229,7 +251,7 @@ const double raycast::getVerticalRay(double rayAngle, double &_mX, double &_mY)
 				distV = sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY));
 				break;
 			}
-			if ((*map)[mYV][mXV - 1] == 'c') {
+			if ((*map)[mYV][mXV] == 'c') {
 				sprites[sqrt((mXV-playerX)*(mXV-playerX) + (mYV-playerY)*(mYV-playerY))].first = (mYV - (int)mYV) * 64;
 			}
 			--mXV;
@@ -271,7 +293,7 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 				break;
 			}
 			if ((*map)[(int)mYH][(int)mXH] == 'c') {
-				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
+				//sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			++mYH;
 			mXH += offsetX;
@@ -284,8 +306,8 @@ const double  raycast::getHorizontalRay(double rayAngle, double &_mX, double &_m
 				distH = sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY));
 				break;
 			}
-			if ((*map)[(int)mYH - 1][(int)mXH] == 'c') {
-				// sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
+			if ((*map)[(int)mYH][(int)mXH] == 'c') {
+				//sprites[sqrt((mXH-playerX)*(mXH-playerX) + (mYH-playerY)*(mYH-playerY))].second = (mXH - (int)mXH) * 64;
 			}
 			--mYH;
 			mXH -= offsetX;

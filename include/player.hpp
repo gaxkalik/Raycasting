@@ -22,6 +22,7 @@ struct keyPressed {
 	bool	use = false;
 	bool	saveMap = false;
 	bool	loadCustom = false;
+	bool	shoot = false;
 };
 
 class player
