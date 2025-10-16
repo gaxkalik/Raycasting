@@ -82,6 +82,14 @@ class	raycast
 		const double	getHorizontalRay(double rayAngle, double &, double &);
 		const double	getShortestRay(double rayAngle, char &dir);
 
+		void loadLetter(std::string);
+		void drawLetter(int,int,const char);
+		void drawPoint(int,int,int,int,int,int);
+		void drawString(int,int,std::string);
+		void showTextForMapCreationTool();
+		void draw2DTexture(int,int,char);
+
+
 		bool collision(double &, double &);
 
 		obj	*cursorOnObj(const double &cursorX, const double &cursorY) const;
@@ -107,6 +115,11 @@ class	raycast
 		std::map<const char, unsigned char ***>	allTextures;
 		std::map<int, unsigned char ***>		coinTexture;
 		std::map<double, std::pair<int, int>>					sprites;
+
+		std::map<const char, std::string[5]> allLetters;
+		std::string screenMessege = "";
+		char textureKey;
+
 };
 
 void		key_callback(GLFWwindow*, int, int, int, int);

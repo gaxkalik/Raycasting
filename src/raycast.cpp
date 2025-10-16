@@ -20,8 +20,8 @@ raycast::raycast() {
 	screenWidth = 0;
 	screenHeight = 0;
 	brush = '2';
+	screenMessege = "wall 1";
 	coinPosition = 0;
-	//std::cout << "[ Raycast default constructor called ]" << std::endl;
 }
 
 raycast::~raycast() {
@@ -65,10 +65,34 @@ void	raycast::addBottonsToScene(void) {
 	int y = it->second.getY1() - tileHegiht;
 
 	addObjectToScene((*scenes)[1], x, y, tileWidth, tileHegiht, 1, "buttonBrush1", "gray");
-	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush0", "white");
+	addObjectToScene((*scenes)[1], x + tileWidth, y, tileWidth, tileHegiht, 1, "buttonBrush2", "white");
 	addObjectToScene((*scenes)[1], x + tileWidth * 2, y, tileWidth, tileHegiht, 1, "buttonBrushP", "red");
 	addObjectToScene((*scenes)[1], x + tileWidth * 3, y, tileWidth, tileHegiht, 1, "buttonBrushD", "yellow");
+	addObjectToScene((*scenes)[1], x + tileWidth * 4, y, tileWidth, tileHegiht, 1, "buttonBrushc", "blue");
 
+}
+
+void raycast::loadLetter(std::string filename)
+{
+	std::ifstream	file;
+
+	file.open(filename);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file" << std::endl;
+		return;
+	}
+
+	char let = filename[9];
+	int i = 0;
+	std::string line;
+	while (std::getline(file, line)) {
+		if (!line.compare("\0"))
+			continue;
+		allLetters[let][i++] = line;
+	}
+	file.close();
+	// for(int j = 0; j<5; j++)
+	// 	std::cout<< allLetters.at(let)[j]<<"\n";
 }
 
 const int raycast::initGame(const char *filename) {
@@ -77,6 +101,7 @@ const int raycast::initGame(const char *filename) {
 		std::cerr << "Failed to parse map" << std::endl;
 		return 1;
 	}
+
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return 1;
@@ -92,6 +117,12 @@ const int raycast::initGame(const char *filename) {
 	int	size = std::min(screenBuffWidth, screenBuffHeight);
 	scenes = new std::vector<scene>();
 
+	std::string name = "textures/";
+	for (char i = 'A'; i <= 'Z'; ++i)
+		loadLetter(name+i);
+	for (char i = '0'; i <= '9'; ++i)
+		loadLetter(name+i);
+	
 
 	newScene();
 	addObjectToScene((*scenes)[0], 0, 0, screenBuffWidth, screenBuffHeight, "MainGame");

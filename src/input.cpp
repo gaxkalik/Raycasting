@@ -179,13 +179,30 @@ void	raycast::playerInput(void) {
 					(*newMap)[y][x] = brush;
 			}
 			else if (o->getName() == "buttonBrush1")
+			{
 				brush = '2';
-			else if (o->getName() == "buttonBrush0")
-				brush = '1';
+				screenMessege = "wall 1";
+			}
+			else if (o->getName() == "buttonBrush2")
+			{
+				brush = 'B';
+				screenMessege = "crate";
+			}
 			else if (o->getName() == "buttonBrushP")
+			{
 				brush = 'p';
+				screenMessege = "player";
+			}
 			else if (o->getName() == "buttonBrushD")
-				brush = 'd';	
+			{
+				brush = 'd';
+				screenMessege = "door";
+			}	
+			else if (o->getName() == "buttonBrushc")
+			{
+				brush = 'c';
+				screenMessege = "coin";
+			}	
 		}
 	}
 	if (keys.esc)

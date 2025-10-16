@@ -41,6 +41,7 @@ void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
+
 	if (color == "white")
 		glColor3f(1.0f, 1.0f, 1.0f);
 	else if (color == "gray")
@@ -53,6 +54,7 @@ void	raycast::renderBotton(const int &x1, const int &y1, const int &width, const
 		glColor3f(0.0f, 1.0f, 0.0f);
 	else if (color == "yellow")
 		glColor3f(1.0f, 1.0f, 0.0f);
+
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
 	glVertex2f(1, 0);
@@ -78,15 +80,19 @@ void	raycast::renderScene(scene &sc) {
 			renderMinimap(OBJ.getX1(), 1000, screenBuffHeight / 4, screenBuffHeight / 4);
 		}
 		else if (it->first == "mapCreate")
+		{
 			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
-		else if (it->first == "buttonBrush0")
+		}
+		else //if (it->first == "buttonBrush1")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
-		else if (it->first == "buttonBrush1")
+		/* else if (it->first == "buttonBrush2")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 		else if (it->first == "buttonBrushP")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
 		else if (it->first == "buttonBrushD")
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
+		else if (it->first == "buttonBrushc")
+			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());*/
 	}
 }
 
@@ -291,13 +297,16 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	if((*map)[playerY][playerX] == 'c')
 	{
 		(*map)[playerY][playerX] = '0';
+		//screenMessege = 
 		cout <<"+1 coin!\n";
 	}
 
-	
-		
+	//text
 	
 	glEnd();
+
+	drawString(30,30,"abc 123");
+
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	
@@ -383,5 +392,38 @@ void raycast::determineTextureColor(unsigned char ***txtr, char dir, double dist
 			a = 10 * a / dist;
 
 		glColor4ub(txtr[level][verticl][0], txtr[level][verticl][1], txtr[level][verticl][2], a);
+	}
+}
+
+void raycast::drawLetter(int x,int y, char letter)
+{
+
+	for(int i = 0; i < 5; ++i)
+		for(int j = 0; j < 5; ++j)
+			if(allLetters[letter][j][i] == '1')
+				drawPoint(x+i*2, y+j*10 ,255,255,255,255);
+
+}
+
+void raycast::drawPoint(int x,int y,int red,int green, int blue, int alpha)
+{
+	glColor4ub(red,green,blue,alpha);
+	glBegin(GL_QUADS);
+	glVertex2f(x,	y);
+	glVertex2f(x+2,y);
+	glVertex2f(x+2,y+10);
+	glVertex2f(x,y+10);
+	glEnd();
+}
+
+void raycast::drawString(int x,int y,std::string word)
+{
+	int realX = x;
+	for(int i = 0; i < word.length(); ++i)
+	{
+		if (word[i]>='a' && word[i]<='z')
+			word[i] = word[i]-32;
+		drawLetter(realX, y, word[i]);
+		realX+=13;
 	}
 }
