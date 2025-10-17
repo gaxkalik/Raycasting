@@ -10,7 +10,7 @@
 #define rotationSpeed 0.05
 
 struct keyPressed {
-	bool	esc = false;
+	bool	esc = true;
 	bool	moveUp = false;
 	bool	moveDown = false;
 	bool	moveLeft = false;

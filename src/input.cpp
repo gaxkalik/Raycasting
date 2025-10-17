@@ -256,10 +256,8 @@ void	raycast::playerInput(void) {
 		}
 	}
 
-
 	if (keys.esc)
 	{
-		
 		currScene = &(*scenes)[2];
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1) {
@@ -278,17 +276,22 @@ void	raycast::playerInput(void) {
 				// 	(*newMap)[y][x] = brush;
 
 			}
-
-			if (o->getName() == "start")
-			{
-				saveMap();
-				screenMessege = "SAVED";
-			}
 			else if (o->getName() == "exit")
 			{
-				std::cout << "aaaaa\n";
 				glfwSetWindowShouldClose(window, GLFW_TRUE);
 			}
+			else if (o->getName() == "editor")
+			{
+				keys.esc = false;
+				keys.openMap = true;
+			}
+			else if (o->getName() == "Start")
+			{
+				keys.openMap = 0;
+				keys.esc = 0;
+				currScene = &(*scenes)[0];
+			}
+			
 
 		}
 	}

@@ -190,9 +190,20 @@ void raycast::renderMainMenu()
 	glEnable(GL_BLEND);											//to use glColor4ub(255, 0, 0, 100); transparent textures
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	
-	//drawBackground(rayCnt);
+	// draw2DTexture(0,0,'z');
+	// draw2DTexture(65,0,'z');
+	// draw2DTexture(0,419,'z');
+
+	for(int i = 0; i < screenBuffWidth; i+=65)
+		for (int j = 0; j < screenBuffHeight; j+=419)
+				draw2DTexture(i,j,'z');
+		
 	drawString(50,50, "raycasting engine");
+
+	drawString(123, 685/1.5, "start");
+	drawString(114, 885/1.5, "editor");
+	drawString(128, 1085/1.5, "exit");
+	
 
 
 	glMatrixMode(GL_PROJECTION);

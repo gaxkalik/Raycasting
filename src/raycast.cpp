@@ -82,8 +82,13 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1],50, 700, 670, 150, 1, "Save", "gray1");
 	addObjectToScene((*scenes)[1],50, 500, 670, 150, 1, "Load", "gray1");
 
-	addObjectToScene((*scenes)[2],50, 700, 670, 150, 1, "start", "gray1");
-	addObjectToScene((*scenes)[2],50, 500, 670, 150, 1, "exit", "gray1");
+	
+	
+	addObjectToScene((*scenes)[2],1000, 900, 800, 150, 1, "Start", "gray1");
+	addObjectToScene((*scenes)[2],1000, 700, 800, 150, 1, "editor", "gray1");
+	addObjectToScene((*scenes)[2],1000, 500, 800, 150, 1, "exit", "gray1");
+	//addObjectToScene((*scenes)[2],50, 700, 670, 150, 1, "start", "gray1");
+	//addObjectToScene((*scenes)[2],300, 300, 670, 150, 1, "st", "gray2");
 
 }
 
@@ -139,6 +144,7 @@ const int raycast::initGame(const char *filename) {
 		loadLetter(name+i);
 
 	loadRawTexture('x', "textures/Coin0.raw");
+	loadRawTexture('z', "textures/BRICK_1A.raw");
 
 	loadRawTexture('q', "textures/gun0.raw");
 	loadRawTexture('r', "textures/gun1.raw");
