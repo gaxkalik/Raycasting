@@ -2,7 +2,6 @@
 
 using std::cout;
 using std::endl;
-int gunAnim=0;
 
 void raycast::window_size_callback(GLFWwindow* window, int width, int height) {
 	raycast *rc = static_cast<raycast*>(glfwGetWindowUserPointer(window));
@@ -98,16 +97,14 @@ void	raycast::renderScene(scene &sc) {
 		{
 			renderMapCreateToolField(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight());
 		}
-		else //if (it->first == "buttonBrush1")
+		else if (it->first == "mainMenu")
+		{
+			renderMainMenu();
+		}
+		else
+		{
 			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
-		/* else if (it->first == "buttonBrush2")
-			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
-		else if (it->first == "buttonBrushP")
-			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
-		else if (it->first == "buttonBrushD")
-			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());
-		else if (it->first == "buttonBrushc")
-			renderBotton(OBJ.getX1(), OBJ.getY1(), OBJ.getWidth(), OBJ.getHeight(), OBJ.getColor());*/
+		}
 	}
 }
 
@@ -242,12 +239,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	{
 		if(keys.shoot && posX == rayCnt/2 && gunAnim==0) 
 		{
-		
-			if((*map)[mY][mX]>='A' && (*map)[mY][mX] <= 'C')
-			{
-				(*map)[mY][mX] = 'c';
-			}
-			keys.shoot=0;
+			if((*map)[mY][mX]>='A' && (*map)[mY][mX] <= 'C')	(*map)[mY][mX] = 'c';
+			keys.shoot = 0;
 			gunAnim++;
 		}
 
@@ -279,6 +272,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX,		posY + (64 * texturePixelHeight));
 		}
 		
+		//textures
 		for (double y = 0; y < textureResolution; ++y) 
 		{
 			if ((*map)[mY][mX] != '0' && (allTextures.find((*map)[mY][mX]) != allTextures.end())) {
@@ -289,7 +283,8 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 			glVertex2f(posX + 1,	posY + ((y + 1) * texturePixelHeight));
 			glVertex2f(posX,		posY + ((y + 1) * texturePixelHeight));
 		}
-		
+
+		//coins
 		for (std::map<double, std::pair<int, int>>::reverse_iterator it = sprites.rbegin(); it != sprites.rend(); ++it)
 		{
 			for (double y = 16; y < 48; ++y)
@@ -320,30 +315,32 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 		}
 		
 	}
-	++coinPosition;
-	if (coinPosition == 70)
-		coinPosition = 0;
 
-	
+	++coinPosition;
+	if (coinPosition == 70)		coinPosition = 0;
+		
 	if((*map)[playerY][playerX] == 'c')
 	{
 		(*map)[playerY][playerX] = '0';
-		//screenMessege = 
+		coins++; 
 		cout <<"+1 coin!\n";
 	}
-	if(gunAnim)
-		if(coinPosition%7 == 0)
-			gunAnim++;
 
-	if(gunAnim == 5)	gunAnim = 0;
+	
+	glEnd();
 
+	//gun
+	if(gunAnim && coinPosition%7 == 0)	gunAnim= (gunAnim+1)%5;
 	draw2DTexture(rayCnt/2,height/1.3,(char)('q'+gunAnim));
 
 	//text
 	
-	glEnd();
 
-	drawString(30,30,"abc 123");
+	std::string coinText =std::to_string(coins) + " coins ";
+
+	//cout<< coinText<<"\n";
+
+	drawString(30,30,coinText);
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

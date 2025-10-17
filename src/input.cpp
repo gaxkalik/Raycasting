@@ -63,8 +63,11 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 
 	if (key == 256)
+	{
 		if (action)
-			keys.esc = true;
+			keys.esc = !keys.esc;
+		
+	}
 	if (key == 263)						//left
 	{ 			
 		if (action)
@@ -252,6 +255,42 @@ void	raycast::playerInput(void) {
 
 		}
 	}
+
+
 	if (keys.esc)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	{
+		
+		currScene = &(*scenes)[2];
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1) {
+			glfwGetCursorPos(window, &cursorX, &cursorY);
+			cursorX *= 2;
+			cursorY *= 2;
+			cursorY = screenBuffHeight - cursorY;
+			obj	*o = cursorOnObj(cursorX, cursorY);
+			if (o == nullptr)
+				return;
+			else if (o->getName() == "mainMenu") 
+			{
+				int	x = (cursorX - o->getX1()) / o->getTileWidth();
+				int	y = (screenBuffHeight - cursorY - o->getY1()) / o->getTileHeight();
+				// if (x < 32 && y < 32)
+				// 	(*newMap)[y][x] = brush;
+
+			}
+
+			if (o->getName() == "start")
+			{
+				saveMap();
+				screenMessege = "SAVED";
+			}
+			else if (o->getName() == "exit")
+			{
+				std::cout << "aaaaa\n";
+				glfwSetWindowShouldClose(window, GLFW_TRUE);
+			}
+
+		}
+	}
+		
 }

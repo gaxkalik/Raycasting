@@ -85,9 +85,10 @@ class	raycast
 		void loadLetter(std::string);
 		void drawLetter(int,int,const char);
 		void drawPoint(int,int,int,int,int,int);
-		void drawString(int,int,std::string);
+		void drawString(int,int,const std::string);
 		void showTextForMapCreationTool();
 		void draw2DTexture(int,int,char);
+		void renderMainMenu();
 
 
 		bool collision(double &, double &);
@@ -118,6 +119,8 @@ class	raycast
 
 		std::map<const char, std::string[5]> allLetters;
 		std::string screenMessege = "";
+		int coins = 0;
+		int gunAnim = 0;
 		char textureKey;
 
 };

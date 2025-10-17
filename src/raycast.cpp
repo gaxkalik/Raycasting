@@ -82,6 +82,9 @@ void	raycast::addBottonsToScene(void) {
 	addObjectToScene((*scenes)[1],50, 700, 670, 150, 1, "Save", "gray1");
 	addObjectToScene((*scenes)[1],50, 500, 670, 150, 1, "Load", "gray1");
 
+	addObjectToScene((*scenes)[2],50, 700, 670, 150, 1, "start", "gray1");
+	addObjectToScene((*scenes)[2],50, 500, 670, 150, 1, "exit", "gray1");
+
 }
 
 void raycast::loadLetter(std::string filename)
@@ -153,6 +156,10 @@ const int raycast::initGame(const char *filename) {
 	newScene();
 	addObjectToScene((*scenes)[1], (screenBuffWidth - size / 1.2) / 2,\
 	(screenBuffHeight - size / 1.2) / 2, size / 1.2, size / 1.2, 32, "mapCreate");
+
+	newScene();
+	addObjectToScene((*scenes)[2], 0, 0, screenBuffWidth, screenBuffHeight, "mainMenu");
+
 	addBottonsToScene();
 
 	double angle = pAngle - FOV / 2;

@@ -174,3 +174,30 @@ void raycast::draw2DTexture(int x,int y, char key)
 		}
 	}
 }
+
+void raycast::renderMainMenu()
+{
+	glViewport(0, 0, screenBuffWidth, screenBuffHeight);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, rayCnt/1.5, screenBuffHeight/1.5, 0, -1, 1);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	
+	glEnable(GL_BLEND);											//to use glColor4ub(255, 0, 0, 100); transparent textures
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	
+	//drawBackground(rayCnt);
+	drawString(50,50, "raycasting engine");
+
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
