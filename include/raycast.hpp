@@ -6,6 +6,7 @@
 #include <thread>
 
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -123,6 +124,7 @@ class	raycast
 };
 
 void		key_callback(GLFWwindow*, int, int, int, int);
+void		playAudio(std::string file);
 const int	inRange(const double, const double, const double);
 void oASD();
 std::vector<std::string> strSplit(const std::string &, const char);

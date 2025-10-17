@@ -242,11 +242,16 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	{
 		if(keys.shoot && posX == rayCnt/2 && gunAnim==0) 
 		{
-		
 			if((*map)[mY][mX]>='A' && (*map)[mY][mX] <= 'C')
 			{
 				(*map)[mY][mX] = 'c';
+				playAudio("audio/boxCrash.mp3");
 			}
+			else
+			{
+				playAudio("audio/bullet.mp3");
+			}
+			playAudio("audio/shoot.mp3");
 			keys.shoot=0;
 			gunAnim++;
 		}
@@ -328,6 +333,7 @@ void raycast::renderGame(const int &x1, const int &y1, const int &width, const i
 	if((*map)[playerY][playerX] == 'c')
 	{
 		(*map)[playerY][playerX] = '0';
+		playAudio("audio/coin.mp3");
 		//screenMessege = 
 		cout <<"+1 coin!\n";
 	}
