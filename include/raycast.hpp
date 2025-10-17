@@ -92,7 +92,7 @@ class	raycast
 		void renderMainMenu();
 
 
-		bool collision(double &, double &);
+		void collision(double &, double &);
 
 		obj	*cursorOnObj(const double &cursorX, const double &cursorY) const;
 		static void	window_size_callback(GLFWwindow*, int, int);

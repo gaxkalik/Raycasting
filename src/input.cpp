@@ -108,18 +108,23 @@ obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
 	return nullptr;
 }
 
-bool	raycast::collision(double &dirX, double &dirY) {
+void	raycast::collision(double &dirX, double &dirY) {
 	std::pair<double, double> *pHitBox = pl->getHitBox();
+	bool	x = false;
+	bool	y = false;
+
 
 	for (int i = 0; i < 4; ++i) {
-		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first + dirX] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first + dirX] != 'c') {
-			return true;
-		}
+		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c')
+			y = true;
+		if ((*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c')
+			x = true;
 	}
-	pl->setX(dirX);
-	pl->setY(dirY);
+	if (!x)
+		pl->setX(dirX);
+	if (!y)
+		pl->setY(dirY);
 	pl->calculateHitBoxPosition();
-	return false;
 }
 
 void	raycast::playerInput(void) {
