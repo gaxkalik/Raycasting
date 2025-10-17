@@ -144,7 +144,7 @@ const int raycast::initGame(const char *filename) {
 		loadLetter(name+i);
 
 	loadRawTexture('x', "textures/Coin0.raw");
-	loadRawTexture('z', "textures/BRICK_1A.raw");
+	loadRawTexture('z', "textures/BRICK_3D.raw");
 
 	loadRawTexture('q', "textures/gun0.raw");
 	loadRawTexture('r', "textures/gun1.raw");
