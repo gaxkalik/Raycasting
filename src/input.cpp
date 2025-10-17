@@ -117,7 +117,7 @@ void	raycast::collision(double &dirX, double &dirY) {
 	for (int i = 0; i < 4; ++i) {
 		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c')
 			y = true;
-		if ((*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c')
+		if ((*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != 'c')
 			x = true;
 	}
 	if (!x)
