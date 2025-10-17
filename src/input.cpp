@@ -111,12 +111,8 @@ obj	*raycast::cursorOnObj(const double &cursorX, const double &cursorY) const {
 bool	raycast::collision(double &dirX, double &dirY) {
 	std::pair<double, double> *pHitBox = pl->getHitBox();
 
-	// std::cout << "dirX " << dirX << " dirY " << dirY << "\n";
 	for (int i = 0; i < 4; ++i) {
-		// std::cout << "c - " << (*map)[pHitBox[i].second - dirY][pHitBox[i].first] << "\n";
-		// std::cout << i << " " << pHitBox[i].second - dirY << " " << pHitBox[i].first << " " << pHitBox[i].second << " " << pHitBox[i].first + dirX <<"\n";
-		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first] != '0' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != '0' &&
-				(*map)[pHitBox[i].second + dirY][pHitBox[i].first] != 'c' && (*map)[pHitBox[i].second][pHitBox[i].first + dirX] != 'c') {
+		if ((*map)[pHitBox[i].second + dirY][pHitBox[i].first + dirX] != '0' && (*map)[pHitBox[i].second + dirY][pHitBox[i].first + dirX] != 'c') {
 			return true;
 		}
 	}
@@ -133,9 +129,6 @@ void	raycast::playerInput(void) {
 
 	double sDirX = playerSpeed * sin(pAngle);
 	double sDirY = playerSpeed * cos(pAngle);
-
-	// if (dirX < 0) dirX = 0;
-	// if (dirY < 0) dirY = 0;
 
 	if (keys.openMap == false) {
 		currScene = &(*scenes)[0];
@@ -272,9 +265,6 @@ void	raycast::playerInput(void) {
 			{
 				int	x = (cursorX - o->getX1()) / o->getTileWidth();
 				int	y = (screenBuffHeight - cursorY - o->getY1()) / o->getTileHeight();
-				// if (x < 32 && y < 32)
-				// 	(*newMap)[y][x] = brush;
-
 			}
 			else if (o->getName() == "exit")
 			{
@@ -291,8 +281,6 @@ void	raycast::playerInput(void) {
 				keys.esc = 0;
 				currScene = &(*scenes)[0];
 			}
-			
-
 		}
 	}
 		
